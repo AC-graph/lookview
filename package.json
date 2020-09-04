@@ -1,0 +1,23 @@
+{
+  "name": "lookview",
+  "version": "2.0.0-dev",
+  "description": "提供更友好的数据可视化解决方案",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AC-graph/lookview.git"
+  },
+  "keywords": [
+    "image2d",
+    "graph"
+  ],
+  "author": "心叶",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/AC-graph/lookview/issues"
+  },
+  "homepage": "https://github.com/AC-graph/lookview#readme"
+}
