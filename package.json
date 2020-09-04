@@ -2,9 +2,11 @@
   "name": "lookview",
   "version": "2.0.0-dev",
   "description": "提供更友好的数据可视化解决方案",
-  "main": "index.js",
+  "main": "dist/lookview.min.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm install && npm run dev",
+    "dev": "rollup --config rollup.config.js --watch",
+    "build": "cuf --delete dist && rollup --config rollup.config.js && uglifyjs ./dist/lookview.js -o ./dist/lookview.min.js && cuf --config ./cuf.config.js"
   },
   "repository": {
     "type": "git",
@@ -19,5 +21,19 @@
   "bugs": {
     "url": "https://github.com/AC-graph/lookview/issues"
   },
-  "homepage": "https://github.com/AC-graph/lookview#readme"
+  "homepage": "https://github.com/AC-graph/lookview#readme",
+  "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
+    "@yelloxing/core.js": "^0.3.7",
+    "cuf": "^1.2.0",
+    "rollup": "^1.17.0",
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.0.1",
+    "rollup-plugin-node-resolve": "^5.2.0",
+    "uglify-js": "^3.10.2"
+  },
+  "dependencies": {
+    "image2d": "^1.8.11"
+  }
 }
