@@ -5,6 +5,8 @@ export function painterMixin(LookView) {
   // 绘制方法
   LookView.prototype.$$painter = function () {
 
+    // todo
+
   };
 
   /**
@@ -14,6 +16,7 @@ export function painterMixin(LookView) {
 
   // 画布大小改变调用的重绘方法
   LookView.prototype.$updateByResize = function (__notPainter) {
+    this.$$lifecycle('beforeResize');
 
     // 和别的绘图方法相比，我们唯一需要额外处理的是画布大小相关的内容
     let size = $$(this.__el).size('content');
@@ -30,6 +33,8 @@ export function painterMixin(LookView) {
     this.$$initValue(size);
 
     if (!__notPainter) this.$$painter();
+
+    this.$$lifecycle('resized');
   };
 
   // 数据改变调用的重绘方法

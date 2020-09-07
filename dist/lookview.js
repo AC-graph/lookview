@@ -15,7 +15,7 @@
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Mon Sep 07 2020 16:16:38 GMT+0800 (GMT+08:00)
+* Date:Mon Sep 07 2020 17:16:15 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2272,9 +2272,9 @@
       }
 
       if ([// 对象创建完毕
-      'created', // 对象和画布关联前、后
-      'beforeMount', 'mounted', // 对象和画布解关联前、后
-      'beforeUnmount', 'unmounted', // 数据改动导致的重绘前、后
+      'created', // 对象和页面关联前、后
+      'beforeMount', 'mounted', // 对象和页面解关联前、后
+      'beforeUnmount', 'unmounted', // 数据改动前、后
       'beforeUpdate', 'updated', // 画布大小改变导致的重绘前、后
       'beforeResize', 'resized', // 销毁组件
       'beforeDestroy', 'destroyed'].indexOf(callbackName) > -1 && isFunction(this.__options[callbackName])) {
@@ -2324,34 +2324,34 @@
   }
 
   // 圆弧
-  function arc (painter, options) {}
+  function arc (painter, source, target) {}
 
   // 圆
-  function circle (options) {}
+  function circle (painter, source, target) {}
 
   // 连线
-  function line (options) {}
+  function line (painter, source, target) {}
 
   // 矩形
-  function rect (options) {}
+  function rect (painter, source, target) {}
 
   // 文字
-  function text (options) {}
+  function text (painter, source, target) {}
 
   // 圆弧组合
-  function arcs (options) {}
+  function arcs (painter, source, target) {}
 
   // 圆组合
-  function circles (options) {}
+  function circles (painter, source, target) {}
 
   // 极坐标刻度尺
-  function polarRuler (options) {}
+  function polarRuler (painter, source, target) {}
 
   // 矩形组合
-  function rects (options) {}
+  function rects (painter, source, target) {}
 
   // 刻度尺
-  function ruler (options) {}
+  function ruler (painter, source, target) {}
 
   // 基本图形
   function seriesMixin(LookView) {
@@ -2446,7 +2446,8 @@
 
   function painterMixin(LookView) {
     // 绘制方法
-    LookView.prototype.$$painter = function () {};
+    LookView.prototype.$$painter = function () {// todo
+    };
     /**
      * --------------------------
      * 下面是对外暴露的接口
@@ -2455,7 +2456,8 @@
 
 
     LookView.prototype.$updateByResize = function (__notPainter) {
-      // 和别的绘图方法相比，我们唯一需要额外处理的是画布大小相关的内容
+      this.$$lifecycle('beforeResize'); // 和别的绘图方法相比，我们唯一需要额外处理的是画布大小相关的内容
+
       var size = image2D_min(this.__el).size('content'); // 设置画布大小
 
       this.__canvas.attr({
@@ -2467,6 +2469,7 @@
 
       this.$$initValue(size);
       if (!__notPainter) this.$$painter();
+      this.$$lifecycle('resized');
     }; // 数据改变调用的重绘方法
 
 
@@ -2520,6 +2523,39 @@
     };
   }
 
+  function watcher (that) {
+    var _loop = function _loop(key) {
+      // 由于key的特殊性，注册前需要进行校验
+      isValidKey(key);
+
+      if (isFunction(that[key])) {
+        console.error('[LookView warn]: Data property "' + key + '" has already been defined as a Method.');
+      }
+
+      var value = that.__data[key];
+      that[key] = value; // 针对data进行拦截，后续对data的数据添加不会自动监听了
+      // this._data的数据是初始化以后的，后续保持不变，方便组件被重新使用（可能的设计，当前预留一些余地）
+      // 当前对象数据会和方法一样直接挂载在根节点
+
+      Object.defineProperty(that, key, {
+        get: function get() {
+          return value;
+        },
+        set: function set(newValue) {
+          value = newValue;
+          that.$$lifecycle('beforeUpdate'); // 数据改变，触发更新
+
+          if (that._isMounted && !this._isDestroyed) that.$updateByData();
+          that.$$lifecycle('updated');
+        }
+      });
+    };
+
+    for (var key in that.__data) {
+      _loop(key);
+    }
+  }
+
   function LookView(options) {
     if (!(this instanceof LookView)) {
       console.error('[LookView warn]: LookView is a constructor and should be called with the `new` keyword');
@@ -2528,7 +2564,9 @@
     this.$$lifecycle(options.beforeCreate); // 创建对象
 
     this.$$init(options);
-    this.$$lifecycle('created'); // 这里的登记是为了后续重新挂载的时候判断是否需要重置render
+    this.$$lifecycle('created'); // 对象创建好了以后，启动监听
+
+    watcher(this); // 这里的登记是为了后续重新挂载的时候判断是否需要重置render
 
     this.__renderFlag = !!options.render || !!options.template;
 
@@ -2567,7 +2605,7 @@
     }
 
     this.$$lifecycle('beforeMount'); // 如果我们没有在初始化对象的时候传递render（template也算传递了）
-    // 那么我们在每次挂载的时候都为使用挂载地的内容进行组合
+    // 那么我们在每次挂载的时候都会使用挂载地的内容进行组合
 
     if (!this.__renderFlag) {
       this.__render = compileTemplate(el.innerHTML);
@@ -2580,7 +2618,7 @@
     this.$updateView();
     this._isMounted = true;
     this.$$lifecycle('mounted');
-  }; // 解挂的意思是LookView对象和页面中的画布解除关联
+  }; // 解挂的意思是LookView对象和页面解除关联
   // 因此，后续绘制会停止，不过计算不会
   // 因此，后续你可以重新挂载
 

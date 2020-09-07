@@ -18,13 +18,13 @@ export function lifecycleMixin(LookView) {
       // 对象创建完毕
       'created',
 
-      // 对象和画布关联前、后
+      // 对象和页面关联前、后
       'beforeMount', 'mounted',
 
-      // 对象和画布解关联前、后
+      // 对象和页面解关联前、后
       'beforeUnmount', 'unmounted',
 
-      // 数据改动导致的重绘前、后
+      // 数据改动前、后
       'beforeUpdate', 'updated',
 
       // 画布大小改变导致的重绘前、后

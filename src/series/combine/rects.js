@@ -1,6 +1,8 @@
 
 // 矩形组合
 
-export default function (options) {
+export default function (painter, source, target) {
+
+
 
 };

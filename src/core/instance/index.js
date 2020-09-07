@@ -5,6 +5,7 @@ import { seriesMixin } from '../../series/index';
 import compileTemplate from '../vnode/compile-template';
 import { painterMixin } from './painter';
 import { valueMixin } from './value';
+import watcher from '../observe/watcher';
 
 // LookView对象
 
@@ -20,6 +21,9 @@ function LookView(options) {
   this.$$init(options);
 
   this.$$lifecycle('created');
+
+  // 对象创建好了以后，启动监听
+  watcher(this);
 
   // 这里的登记是为了后续重新挂载的时候判断是否需要重置render
   this.__renderFlag = !!options.render || !!options.template;
