@@ -9,6 +9,7 @@ export function valueMixin(LookView) {
     min = w > h ? h : w;
     max = w > h ? w : h;
 
+    return this;
   };
 
   // 针对特殊内心提供前置（交付给具体的绘图方法前）的数据计算方法

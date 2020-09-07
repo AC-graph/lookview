@@ -27,6 +27,9 @@ initGlobalApi(LookView);
 // 挂载的意思是LookView对象和页面关联起来
 // 这样挂载了，才会真的绘制
 LookView.prototype.$mount = function (el, __isFocus) {
+
+    this.__el = el;
+
     if (this._isMounted) {
         console.error('[LookView warn]: The object is already mounted!');
         return;
@@ -48,14 +51,16 @@ LookView.prototype.$mount = function (el, __isFocus) {
     }
 
     // 初始化添加画布
-    this.__el.innerHTML = '';
-    this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(this.__el);
+    el.innerHTML = '';
+    this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(el);
 
     // 绘制
     this.$updateView();
 
     this._isMounted = true;
     this.$$lifecycle('mounted');
+
+    return this;
 };
 
 // 解挂的意思是LookView对象和页面解除关联
@@ -73,6 +78,8 @@ LookView.prototype.$unmount = function () {
 
     this._isMounted = false;
     this.$$lifecycle('unmounted');
+
+    return this;
 };
 
 // 彻底销毁资源，无法再重新挂载
@@ -89,6 +96,8 @@ LookView.prototype.$destory = function () {
 
     this._isDestroyed = true;
     this.$$lifecycle('destroyed');
+
+    return this;
 };
 
 // 对外暴露调用接口

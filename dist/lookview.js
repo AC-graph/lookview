@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.0-alpha
+* version 2.0.0-alpha.1
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Mon Sep 07 2020 17:23:39 GMT+0800 (GMT+08:00)
+* Date:Mon Sep 07 2020 17:54:29 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2220,28 +2220,11 @@
     }
   }
 
-  /**
-   * 判断一个值是不是String。
-   *
-   * @since V0.1.2
-   * @public
-   * @param {*} value 需要判断类型的值
-   * @returns {boolean} 如果是String返回true，否则返回false
-   */
-
-  function isString (value) {
-    var type = _typeof(value);
-
-    return type === 'string' || type === 'object' && value != null && !Array.isArray(value) && getType(value) === '[object String]';
-  }
-
   function initMixin(LookView) {
     LookView.prototype.$$init = function (options) {
       this.__options = options; // 需要双向绑定的数据
 
-      this.__data = isFunction(options.data) ? options.data() : options.data; // 挂载点
-
-      this.__el = isString(options.el) ? document.querySelector(options.el) : options.el; // 记录状态
+      this.__data = isFunction(options.data) ? options.data() : options.data; // 记录状态
 
       this._isMounted = false;
       this._isDestroyed = false; // 挂载方法
@@ -2257,6 +2240,8 @@
         // 数据的校验在监听的时候进行
         this[_key] = this.__data[_key];
       }
+
+      return this;
     };
   }
 
@@ -2268,18 +2253,19 @@
       // beforeCreate，对象创建前
       if (isFunction(callbackName)) {
         callbackName();
-        return;
+      } else {
+        if ([// 对象创建完毕
+        'created', // 对象和页面关联前、后
+        'beforeMount', 'mounted', // 对象和页面解关联前、后
+        'beforeUnmount', 'unmounted', // 数据改动前、后
+        'beforeUpdate', 'updated', // 画布大小改变导致的重绘前、后
+        'beforeResize', 'resized', // 销毁组件
+        'beforeDestroy', 'destroyed'].indexOf(callbackName) > -1 && isFunction(this.__options[callbackName])) {
+          this.__options[callbackName].call(this);
+        }
       }
 
-      if ([// 对象创建完毕
-      'created', // 对象和页面关联前、后
-      'beforeMount', 'mounted', // 对象和页面解关联前、后
-      'beforeUnmount', 'unmounted', // 数据改动前、后
-      'beforeUpdate', 'updated', // 画布大小改变导致的重绘前、后
-      'beforeResize', 'resized', // 销毁组件
-      'beforeDestroy', 'destroyed'].indexOf(callbackName) > -1 && isFunction(this.__options[callbackName])) {
-        this.__options[callbackName].call(this);
-      }
+      return this;
     };
   }
 
@@ -2446,7 +2432,9 @@
 
   function painterMixin(LookView) {
     // 绘制方法
-    LookView.prototype.$$painter = function () {// todo
+    LookView.prototype.$$painter = function () {
+      // todo
+      return this;
     };
     /**
      * --------------------------
@@ -2470,21 +2458,22 @@
       this.$$initValue(size);
       if (!__notPainter) this.$$painter();
       this.$$lifecycle('resized');
+      return this;
     }; // 数据改变调用的重绘方法
 
 
     LookView.prototype.$updateByData = function (__notPainter) {
       // todo
       if (!__notPainter) this.$$painter();
+      return this;
     }; // 初始化调用的绘制方法
 
 
     LookView.prototype.$updateView = function () {
-      // 初始化一些参数
-      this.$updateByResize(true);
-      this.$updateByData(true); // 绘制
-
-      this.$$painter();
+      this // 初始化一些参数
+      .$updateByResize(true).$updateByData(true) // 绘制
+      .$$painter();
+      return this;
     };
   }
 
@@ -2496,6 +2485,7 @@
       h = size.height * 0.01;
       min = w > h ? h : w;
       max = w > h ? w : h;
+      return this;
     }; // 针对特殊内心提供前置（交付给具体的绘图方法前）的数据计算方法
 
 
@@ -2579,9 +2569,9 @@
     // 可以后续主动挂载
 
 
-    if (isElement(this.__el)) {
+    if (isElement(options.el)) {
       // 挂载
-      this.$mount(this.__el, true);
+      this.$mount(options.el, true);
     }
   }
 
@@ -2594,6 +2584,8 @@
   // 这样挂载了，才会真的绘制
 
   LookView.prototype.$mount = function (el, __isFocus) {
+    this.__el = el;
+
     if (this._isMounted) {
       console.error('[LookView warn]: The object is already mounted!');
       return;
@@ -2612,12 +2604,13 @@
     } // 初始化添加画布
 
 
-    this.__el.innerHTML = '';
-    this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(this.__el); // 绘制
+    el.innerHTML = '';
+    this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(el); // 绘制
 
     this.$updateView();
     this._isMounted = true;
     this.$$lifecycle('mounted');
+    return this;
   }; // 解挂的意思是LookView对象和页面解除关联
   // 因此，后续绘制会停止，不过计算不会
   // 因此，后续你可以重新挂载
@@ -2633,6 +2626,7 @@
 
     this._isMounted = false;
     this.$$lifecycle('unmounted');
+    return this;
   }; // 彻底销毁资源，无法再重新挂载
   // 主要是为了释放一些内置资源
 
@@ -2647,6 +2641,7 @@
 
     this._isDestroyed = true;
     this.$$lifecycle('destroyed');
+    return this;
   }; // 对外暴露调用接口
 
 

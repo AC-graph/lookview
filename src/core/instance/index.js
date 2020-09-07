@@ -36,10 +36,10 @@ function LookView(options) {
   // 如果初始化创建的时候没有传递el
   // 表示开始的时候不需要挂载
   // 可以后续主动挂载
-  if (isElement(this.__el)) {
+  if (isElement(options.el)) {
 
     // 挂载
-    this.$mount(this.__el, true);
+    this.$mount(options.el, true);
 
   }
 

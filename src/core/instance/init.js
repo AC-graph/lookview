@@ -11,9 +11,6 @@ export function initMixin(LookView) {
     // 需要双向绑定的数据
     this.__data = isFunction(options.data) ? options.data() : options.data;
 
-    // 挂载点
-    this.__el = isString(options.el) ? document.querySelector(options.el) : options.el;
-
     // 记录状态
     this._isMounted = false; this._isDestroyed = false;
 
@@ -32,6 +29,7 @@ export function initMixin(LookView) {
       this[key] = this.__data[key];
     }
 
+    return this;
   };
 
 };

@@ -7,6 +7,7 @@ export function painterMixin(LookView) {
 
     // todo
 
+    return this;
   };
 
   /**
@@ -35,6 +36,8 @@ export function painterMixin(LookView) {
     if (!__notPainter) this.$$painter();
 
     this.$$lifecycle('resized');
+
+    return this;
   };
 
   // 数据改变调用的重绘方法
@@ -43,18 +46,21 @@ export function painterMixin(LookView) {
     // todo
 
     if (!__notPainter) this.$$painter();
+    return this;
   };
 
   // 初始化调用的绘制方法
   LookView.prototype.$updateView = function () {
 
-    // 初始化一些参数
-    this.$updateByResize(true);
-    this.$updateByData(true);
+    this
+      // 初始化一些参数
+      .$updateByResize(true)
+      .$updateByData(true)
 
-    // 绘制
-    this.$$painter();
+      // 绘制
+      .$$painter();
 
+    return this;
   };
 
 };
