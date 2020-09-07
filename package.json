@@ -25,7 +25,6 @@
   "devDependencies": {
     "@babel/core": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
-    "@yelloxing/core.js": "^0.3.7",
     "cuf": "^1.2.0",
     "rollup": "^1.17.0",
     "rollup-plugin-babel": "^4.4.0",
@@ -34,6 +33,7 @@
     "uglify-js": "^3.10.2"
   },
   "dependencies": {
+    "@yelloxing/core.js": "^0.3.7",
     "image2d": "^1.8.11"
   }
 }

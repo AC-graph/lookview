@@ -11,6 +11,40 @@
 
 <body>
 
+    <div id="root" style='width:500px;height:300px'></div>
+
+    <script>
+
+        var lookview = new LookView({
+
+            // 挂载点
+            el: document.getElementById('root'),
+
+            // 数据
+            data: function () {
+                return {
+                    info: "整体测试"
+                };
+            },
+
+            // 生命周期
+            beforeCreate: function () { console.log('beforeCreate'); },
+            created: function () { console.log('created'); },
+            beforeMount: function () { console.log('beforeMount'); },
+            mounted: function () { console.log('mounted'); },
+            beforeUnmount: function () { console.log('beforeUnmount'); },
+            unmounted: function () { console.log('unmounted'); },
+            beforeDestroy: function () { console.log('beforeDestroy'); },
+            destroyed: function () { console.log('destroyed'); }
+
+        });
+
+        lookview.$mount();
+
+        console.log(lookview);
+
+    </script>
+
 </body>
 
 </html>

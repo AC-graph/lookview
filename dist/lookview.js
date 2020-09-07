@@ -15,7 +15,7 @@
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Fri Sep 04 2020 17:25:09 GMT+0800 (GMT+08:00)
+* Date:Mon Sep 07 2020 11:29:05 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2162,7 +2162,234 @@
     })();
   });
 
-  var LookView = null; // 对外暴露调用接口
+  var toString = Object.prototype.toString;
+  /**
+   * 获取一个值的类型字符串[object type]
+   *
+   * @private
+   * @param {*} value 需要返回类型的值
+   * @returns {string} 返回类型字符串
+   */
+
+  function getType (value) {
+    if (value == null) {
+      return value === undefined ? '[object Undefined]' : '[object Null]';
+    }
+
+    return toString.call(value);
+  }
+
+  /**
+   * 判断一个值是不是Object。
+   *
+   * @since V0.1.2
+   * @public
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是Object返回true，否则返回false
+   */
+  function isObject (value) {
+    var type = _typeof(value);
+
+    return value != null && (type === 'object' || type === 'function');
+  }
+
+  /**
+   * 判断一个值是不是Function。
+   *
+   * @since V0.1.2
+   * @public
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是Function返回true，否则返回false
+   */
+
+  function isFunction (value) {
+    if (!isObject(value)) {
+      return false;
+    }
+
+    var type = getType(value);
+    return type === '[object Function]' || type === '[object AsyncFunction]' || type === '[object GeneratorFunction]' || type === '[object Proxy]';
+  }
+
+  // 判断是否是一个合法的方法名或变量名
+  function isValidKey (key) {
+    // 判断是不是_或者$开头的
+    // 这两个内部预留了
+    if (/^[_$]/.test(key)) {
+      console.error('[LookView warn]: The beginning of _ or $ is not allowed：' + key);
+    }
+  }
+
+  /**
+   * 判断一个值是不是String。
+   *
+   * @since V0.1.2
+   * @public
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是String返回true，否则返回false
+   */
+
+  function isString (value) {
+    var type = _typeof(value);
+
+    return type === 'string' || type === 'object' && value != null && !Array.isArray(value) && getType(value) === '[object String]';
+  }
+
+  function initMixin(LookView) {
+    LookView.prototype.$$init = function (options) {
+      this.__options = options; // 需要双向绑定的数据
+
+      this.__data = isFunction(options.data) ? options.data() : options.data; // 挂载点
+
+      this.__el = isString(options.el) ? document.querySelector(options.el) : options.el; // 记录状态
+
+      this._isMounted = false;
+      this._isDestroyed = false; // 挂载方法
+
+      for (var key in options.methods) {
+        // 由于key的特殊性，注册前需要进行校验
+        isValidKey(key);
+        this[key] = options.methods[key];
+      } // 挂载数据
+
+
+      for (var _key in this.__data) {
+        // 数据的校验在监听的时候进行
+        this[_key] = this.__data[_key];
+      }
+    };
+  }
+
+  function lifecycleMixin(LookView) {
+    // 生命周期调用钩子
+    // 整个过程，进行到对应时期，都需要调用一下这里对应的钩子
+    // 整合在一起的目的是方便维护
+    LookView.prototype.$$lifecycle = function (callbackName) {
+      // beforeCreate，对象创建前
+      if (isFunction(callbackName)) {
+        callbackName();
+        return;
+      }
+
+      if ([// 对象创建完毕
+      'created', // 对象和画布关联前、后
+      'beforeMount', 'mounted', // 对象和画布解关联前、后
+      'beforeUnmount', 'unmounted', // 销毁组件
+      'beforeDestroy', 'destroyed'].indexOf(callbackName) > -1 && isFunction(this.__options[callbackName])) {
+        this.__options[callbackName].call(this);
+      }
+    };
+  }
+
+  /**
+   * 判断一个值是不是一个朴素的'对象'
+   *
+   * @private
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是朴素的'对象'返回true，否则返回false
+   */
+
+  function isPlainObject (value) {
+    if (value === null || _typeof(value) !== 'object' || getType(value) != '[object Object]') {
+      return false;
+    } // 如果原型为null
+
+
+    if (Object.getPrototypeOf(value) === null) {
+      return true;
+    }
+
+    var proto = value;
+
+    while (Object.getPrototypeOf(proto) !== null) {
+      proto = Object.getPrototypeOf(proto);
+    }
+
+    return Object.getPrototypeOf(value) === proto;
+  }
+
+  /**
+   * 判断一个值是不是结点元素。
+   *
+   * @since V0.1.2
+   * @public
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是结点元素返回true，否则返回false
+   */
+
+  function isElement (value) {
+    return value !== null && _typeof(value) === 'object' && (value.nodeType === 1 || value.nodeType === 9 || value.nodeType === 11) && !isPlainObject(value);
+  }
+
+  function LookView(options) {
+    if (!(this instanceof LookView)) {
+      console.error('[LookView warn]: LookView is a constructor and should be called with the `new` keyword');
+    }
+
+    this.$$lifecycle(options.beforeCreate); // 创建对象
+
+    this.$$init(options);
+    this.$$lifecycle('created'); // 如果初始化创建的时候没有传递el
+    // 表示开始的时候不需要挂载
+    // 可以后续主动挂载
+
+    if (isElement(this.__el)) {
+      // 挂载
+      this.$mount(this.__el, true);
+    }
+  }
+
+  initMixin(LookView);
+  lifecycleMixin(LookView);
+
+  // 这样挂载了，才会真的绘制
+
+  LookView.prototype.$mount = function (el, isFocus) {
+    if (this._isMounted) {
+      console.error('[LookView warn]: The object is already mounted!');
+      return;
+    }
+
+    if (!isFocus && !isElement(el)) {
+      console.error('[LookView warn]: Mount node does not exist!');
+      return;
+    }
+
+    this.$$lifecycle('beforeMount'); // todo
+
+    this._isMounted = true;
+    this.$$lifecycle('mounted');
+  }; // 解挂的意思是LookView对象和页面中的画布解除关联
+  // 因此，后续绘制会停止，不过计算不会
+  // 因此，后续你可以重新挂载
+
+
+  LookView.prototype.$unmount = function () {
+    if (!this._isMounted) {
+      console.error('[LookView warn]: Object not mounted!');
+      return;
+    }
+
+    this.$$lifecycle('beforeUnmount'); // todo
+
+    this._isMounted = false;
+    this.$$lifecycle('unmounted');
+  }; // 彻底销毁资源，无法再重新挂载
+  // 主要是为了释放一些内置资源
+
+
+  LookView.prototype.$destory = function () {
+    if (this._isDestroyed) {
+      console.error('[LookView warn]: The object has been destroyed!');
+      return;
+    }
+
+    this.$$lifecycle('beforeDestroy'); // todo
+
+    this._isDestroyed = true;
+    this.$$lifecycle('destroyed');
+  }; // 对外暴露调用接口
+
 
   if ((typeof module === "undefined" ? "undefined" : _typeof(module)) === "object" && _typeof(module.exports) === "object") {
     module.exports = {
