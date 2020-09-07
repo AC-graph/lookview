@@ -2,18 +2,19 @@ import image2D from 'image2d';
 import LookView from './core/instance/index';
 import initGlobalApi from './core/global-api/index';
 import isElement from '@yelloxing/core.js/isElement';
+import compileTemplate from './core/vnode/compile-template';
 
 initGlobalApi(LookView);
 
 // 挂载的意思是LookView对象和页面中的画布关联起来
 // 这样挂载了，才会真的绘制
-LookView.prototype.$mount = function (el, isFocus) {
+LookView.prototype.$mount = function (el, __isFocus) {
     if (this._isMounted) {
         console.error('[LookView warn]: The object is already mounted!');
         return;
     }
 
-    if (!isFocus && !isElement(el)) {
+    if (!__isFocus && !isElement(el)) {
 
         console.error('[LookView warn]: Mount node does not exist!');
         return;
@@ -22,7 +23,18 @@ LookView.prototype.$mount = function (el, isFocus) {
 
     this.$$lifecycle('beforeMount');
 
-    // todo
+    // 如果我们没有在初始化对象的时候传递render（template也算传递了）
+    // 那么我们在每次挂载的时候都为使用挂载地的内容进行组合
+    if (!this.__renderFlag) {
+        this.__render = compileTemplate(el.innerHTML);
+    }
+
+    // 初始化添加画布
+    this.__el.innerHTML = '';
+    this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(this.__el);
+
+    // 绘制
+    this.$updateView();
 
     this._isMounted = true;
     this.$$lifecycle('mounted');

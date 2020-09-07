@@ -11,7 +11,14 @@
 
 <body>
 
-    <div id="root" style='width:500px;height:300px'></div>
+    <div id="root" style='width:500px;height:500px'>
+        <arc cx::number=250 info='111' cy::number=250 radius::number='200' begin::number='0' value::number='1pi'></arc>
+        <group>
+            <arc cx::number=250 cy::number=250 radius::number='200' begin::number='90deg' value::number='1pi'></arc>
+            <arc l-bind:cx::number='x' cy::number=250 radius::number='200' begin::number='180deg' value::number='1pi'>
+            </arc>
+        </group>
+    </div>
 
     <script>
 
@@ -23,8 +30,16 @@
             // 数据
             data: function () {
                 return {
-                    info: "整体测试"
+                    info: "整体测试",
+                    x: 100
                 };
+            },
+
+            // 方法
+            methods: {
+                doit() {
+                    console.log('>>> doit');
+                }
             },
 
             // 生命周期
@@ -35,11 +50,15 @@
             beforeUnmount: function () { console.log('beforeUnmount'); },
             unmounted: function () { console.log('unmounted'); },
             beforeDestroy: function () { console.log('beforeDestroy'); },
-            destroyed: function () { console.log('destroyed'); }
+            destroyed: function () { console.log('destroyed'); },
+            beforeUpdate: function () { console.log('beforeUpdate'); },
+            updated: function () { console.log('updated'); },
+            beforeResize: function () { console.log('beforeResize'); },
+            resized: function () { console.log('resized'); },
 
         });
 
-        lookview.$mount();
+        // lookview.$mount();
 
         console.log(lookview);
 

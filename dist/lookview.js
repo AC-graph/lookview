@@ -15,7 +15,7 @@
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Mon Sep 07 2020 11:29:05 GMT+0800 (GMT+08:00)
+* Date:Mon Sep 07 2020 16:16:38 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2274,7 +2274,9 @@
       if ([// 对象创建完毕
       'created', // 对象和画布关联前、后
       'beforeMount', 'mounted', // 对象和画布解关联前、后
-      'beforeUnmount', 'unmounted', // 销毁组件
+      'beforeUnmount', 'unmounted', // 数据改动导致的重绘前、后
+      'beforeUpdate', 'updated', // 画布大小改变导致的重绘前、后
+      'beforeResize', 'resized', // 销毁组件
       'beforeDestroy', 'destroyed'].indexOf(callbackName) > -1 && isFunction(this.__options[callbackName])) {
         this.__options[callbackName].call(this);
       }
@@ -2321,6 +2323,203 @@
     return value !== null && _typeof(value) === 'object' && (value.nodeType === 1 || value.nodeType === 9 || value.nodeType === 11) && !isPlainObject(value);
   }
 
+  // 圆弧
+  function arc (painter, options) {}
+
+  // 圆
+  function circle (options) {}
+
+  // 连线
+  function line (options) {}
+
+  // 矩形
+  function rect (options) {}
+
+  // 文字
+  function text (options) {}
+
+  // 圆弧组合
+  function arcs (options) {}
+
+  // 圆组合
+  function circles (options) {}
+
+  // 极坐标刻度尺
+  function polarRuler (options) {}
+
+  // 矩形组合
+  function rects (options) {}
+
+  // 刻度尺
+  function ruler (options) {}
+
+  // 基本图形
+  function seriesMixin(LookView) {
+    LookView.prototype.__series = {
+      arc: arc,
+      circle: circle,
+      line: line,
+      rect: rect,
+      text: text,
+      arcs: arcs,
+      circles: circles,
+      "polar-ruler": polarRuler,
+      rects: rects,
+      ruler: ruler
+    };
+  }
+
+  /**
+   * 判断一个值是不是文本结点。
+   *
+   * @since V0.1.2
+   * @public
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是结点元素返回true，否则返回false
+   */
+
+  function isText (value) {
+    return value !== null && _typeof(value) === 'object' && value.nodeType === 3 && !isPlainObject(value);
+  }
+
+  // 这里是基于浏览器的解析能力，因此可能存在浏览器兼容问题
+  // loader版本的独立于浏览器，因此更加稳定
+  // 为了兼容各种情况，我们还是提供了动态模板解析能力
+
+  /**
+   * 
+   * 返回的格式如下（oader返回的格式应该和这里保持一致）：
+   * 
+   * [{
+   *  series:"",
+   *  attr:{
+   *    key1:{
+   *       value:"",
+   *       type:"",// 默认string
+   *    },
+   *    key2:{
+   *    },
+   *    ...
+   * },
+   *  children:[]
+   * },{}]
+   * 
+   */
+
+  function compileTemplate (template) {
+    var node = document.createElement('div');
+    node.innerHTML = template;
+    return function doit(node) {
+      var resultData = [],
+          nodeList = node.childNodes;
+
+      for (var i = 0; i < nodeList.length; i++) {
+        // 如果是文本结点
+        if (isText(nodeList[i])) {
+          // 对于空格，tab等空白文字结点，我们认为可以直接剔除
+          if (!/^[\x20\t\n\r]+$/.test(nodeList[i].textContent)) {
+            resultData.push(nodeList[i].textContent);
+          }
+        } // 如果是结点
+        else if (isElement(nodeList[i])) {
+            var attrs = {};
+
+            for (var j = 0; j < nodeList[i].attributes.length; j++) {
+              var key_type = (nodeList[i].attributes[j].nodeName + "").split('::');
+              attrs[key_type[0]] = {
+                value: nodeList[i].attributes[j].nodeValue,
+                type: key_type[1] || "default"
+              };
+            }
+
+            resultData.push({
+              series: (nodeList[i].nodeName + "").toLowerCase(),
+              attr: attrs,
+              children: doit(nodeList[i])
+            });
+          }
+      }
+
+      return resultData;
+    }(node);
+  }
+
+  function painterMixin(LookView) {
+    // 绘制方法
+    LookView.prototype.$$painter = function () {};
+    /**
+     * --------------------------
+     * 下面是对外暴露的接口
+     */
+    // 画布大小改变调用的重绘方法
+
+
+    LookView.prototype.$updateByResize = function (__notPainter) {
+      // 和别的绘图方法相比，我们唯一需要额外处理的是画布大小相关的内容
+      var size = image2D_min(this.__el).size('content'); // 设置画布大小
+
+      this.__canvas.attr({
+        width: size.width,
+        height: size.height
+      });
+
+      this.__painter = this.__canvas.painter(); // 部分数据的计算依赖尺寸，因此这里需要重新初始化
+
+      this.$$initValue(size);
+      if (!__notPainter) this.$$painter();
+    }; // 数据改变调用的重绘方法
+
+
+    LookView.prototype.$updateByData = function (__notPainter) {
+      // todo
+      if (!__notPainter) this.$$painter();
+    }; // 初始化调用的绘制方法
+
+
+    LookView.prototype.$updateView = function () {
+      // 初始化一些参数
+      this.$updateByResize(true);
+      this.$updateByData(true); // 绘制
+
+      this.$$painter();
+    };
+  }
+
+  function valueMixin(LookView) {
+    var w, h, min, max;
+
+    LookView.prototype.$$initValue = function (size) {
+      w = size.width * 0.01;
+      h = size.height * 0.01;
+      min = w > h ? h : w;
+      max = w > h ? w : h;
+    }; // 针对特殊内心提供前置（交付给具体的绘图方法前）的数据计算方法
+
+
+    LookView.prototype.$$calc = {
+      // 数字类型
+      "number": function number(value) {
+        value = (value + " ").trim();
+
+        if (/w$/.test(value)) {
+          return (0 - -value.replace('w', '')) * w;
+        } else if (/h$/.test(value)) {
+          return (0 - -value.replace('h', '')) * h;
+        } else if (/min$/.test(value)) {
+          return (0 - -value.replace('min', '')) * min;
+        } else if (/max$/.test(value)) {
+          return (0 - -value.replace('max', '')) * max;
+        } else if (/pi$/.test(value)) {
+          return (0 - -value.replace('pi', '')) * Math.PI;
+        } else if (/deg$/.test(value)) {
+          return (0 - -value.replace('deg', '')) / 360 * Math.PI;
+        } else {
+          return 0 - -value;
+        }
+      }
+    };
+  }
+
   function LookView(options) {
     if (!(this instanceof LookView)) {
       console.error('[LookView warn]: LookView is a constructor and should be called with the `new` keyword');
@@ -2329,9 +2528,18 @@
     this.$$lifecycle(options.beforeCreate); // 创建对象
 
     this.$$init(options);
-    this.$$lifecycle('created'); // 如果初始化创建的时候没有传递el
+    this.$$lifecycle('created'); // 这里的登记是为了后续重新挂载的时候判断是否需要重置render
+
+    this.__renderFlag = !!options.render || !!options.template;
+
+    if (!!options.render) {
+      this.__render = options.render;
+    } else if (!!options.template) {
+      this.__render = compileTemplate(options.template);
+    } // 如果初始化创建的时候没有传递el
     // 表示开始的时候不需要挂载
     // 可以后续主动挂载
+
 
     if (isElement(this.__el)) {
       // 挂载
@@ -2341,22 +2549,35 @@
 
   initMixin(LookView);
   lifecycleMixin(LookView);
+  seriesMixin(LookView);
+  painterMixin(LookView);
+  valueMixin(LookView);
 
   // 这样挂载了，才会真的绘制
 
-  LookView.prototype.$mount = function (el, isFocus) {
+  LookView.prototype.$mount = function (el, __isFocus) {
     if (this._isMounted) {
       console.error('[LookView warn]: The object is already mounted!');
       return;
     }
 
-    if (!isFocus && !isElement(el)) {
+    if (!__isFocus && !isElement(el)) {
       console.error('[LookView warn]: Mount node does not exist!');
       return;
     }
 
-    this.$$lifecycle('beforeMount'); // todo
+    this.$$lifecycle('beforeMount'); // 如果我们没有在初始化对象的时候传递render（template也算传递了）
+    // 那么我们在每次挂载的时候都为使用挂载地的内容进行组合
 
+    if (!this.__renderFlag) {
+      this.__render = compileTemplate(el.innerHTML);
+    } // 初始化添加画布
+
+
+    this.__el.innerHTML = '';
+    this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(this.__el); // 绘制
+
+    this.$updateView();
     this._isMounted = true;
     this.$$lifecycle('mounted');
   }; // 解挂的意思是LookView对象和页面中的画布解除关联

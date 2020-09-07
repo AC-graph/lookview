@@ -24,6 +24,12 @@ export function lifecycleMixin(LookView) {
       // 对象和画布解关联前、后
       'beforeUnmount', 'unmounted',
 
+      // 数据改动导致的重绘前、后
+      'beforeUpdate', 'updated',
+
+      // 画布大小改变导致的重绘前、后
+      'beforeResize', 'resized',
+
       // 销毁组件
       'beforeDestroy', 'destroyed'
 
