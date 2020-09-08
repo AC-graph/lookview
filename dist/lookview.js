@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.0-alpha.2
+* version 2.0.0-alpha.3
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Tue Sep 08 2020 16:08:32 GMT+0800 (GMT+08:00)
+* Date:Tue Sep 08 2020 23:25:44 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -674,7 +674,7 @@
         }
       }
 
-      var A = function t(e, r) {
+      var P = function t(e, r) {
         var n = [];
 
         for (var i = 0; i < 4; i++) {
@@ -686,30 +686,30 @@
         return n;
       };
 
-      function L(t) {
+      function A(t) {
         var l = t || [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
         var s = {
           move: function t(e, r, n, i) {
-            l = A(w(e, r, n, i), l);
+            l = P(w(e, r, n, i), l);
             return s;
           },
           rotate: function t(e, r, n, i, o, a, f) {
             var u = S(r, n, i, o, a, f);
-            l = A(A(A(u[1], C(e)), u[0]), l);
+            l = P(P(P(u[1], C(e)), u[0]), l);
             return s;
           },
           scale: function t(e, r, n, i, o, a) {
-            l = A(M(e, r, n, i, o, a), l);
+            l = P(M(e, r, n, i, o, a), l);
             return s;
           },
           multiply: function t(e, r) {
-            l = r ? A(l, e) : A(e, l);
+            l = r ? P(l, e) : P(e, l);
             return s;
           },
           use: function t(e, r, n, i) {
             n = n || 0;
             i = i || 1;
-            var o = A(l, [e, r, n, i]);
+            var o = P(l, [e, r, n, i]);
             o[0] = +o[0].toFixed(7);
             o[1] = +o[1].toFixed(7);
             o[2] = +o[2].toFixed(7);
@@ -723,7 +723,7 @@
         return s;
       }
 
-      var P = [];
+      var L = [];
       var N = 13;
       var j = 400;
       var D = null;
@@ -737,7 +737,7 @@
 
             r = r || j;
             var i = new Date().valueOf() + "_" + (Math.random() * 1e3).toFixed(0);
-            P.push({
+            L.push({
               id: i,
               createTime: new Date(),
               tick: e,
@@ -760,9 +760,9 @@
                 i = void 0,
                 o = void 0,
                 a = void 0,
-                f = P;
-            P = [];
-            P.length = 0;
+                f = L;
+            L = [];
+            L.length = 0;
 
             for (r = 0; r < f.length; r++) {
               i = f[r];
@@ -775,13 +775,13 @@
               t(a);
 
               if (a < 1 && i.id) {
-                P.push(i);
+                L.push(i);
               } else if (n) {
                 n(a);
               }
             }
 
-            if (P.length <= 0) {
+            if (L.length <= 0) {
               u.stop();
             }
           },
@@ -798,9 +798,9 @@
         return function () {
           var t = void 0;
 
-          for (t in P) {
-            if (P[t].id == n) {
-              P[t].id = undefined;
+          for (t in L) {
+            if (L[t].id == n) {
+              L[t].id = undefined;
               return;
             }
           }
@@ -1019,7 +1019,7 @@
         return this;
       };
 
-      var Q = function t(e) {
+      var Z = function t(e) {
         var r = this[0].getBoundingClientRect();
         if (!e || !e.clientX) throw new Error("Event is necessary!");
         return {
@@ -1028,7 +1028,7 @@
         };
       };
 
-      var Z = function t(e) {
+      var Q = function t(e) {
         e = e || window.event;
 
         if (e.stopPropagation) {
@@ -1401,6 +1401,7 @@
           if (d["arc-start-cap"] != "round") c.lineTo(r, n);else c.arc((r + i) * .5, (n + o) * .5, s, t, t - Math.PI, true);
         });
 
+        c.closePath();
         return c;
       };
 
@@ -1445,7 +1446,7 @@
         return a;
       };
 
-      function At(s) {
+      function Pt(s) {
         var c = s.getContext("2d");
         var t = s.__image2D__layer__ == "yes";
         var e = t ? s.getAttribute("width") : s.clientWidth,
@@ -1664,7 +1665,7 @@
         return d;
       }
 
-      function Lt(t, e) {
+      function At(t, e) {
         if (t === "textAlign") {
           return {
             left: "start",
@@ -1676,7 +1677,7 @@
         return e;
       }
 
-      var Pt = function t(e, r, n, i, o) {
+      var Lt = function t(e, r, n, i, o) {
         if (!e || e.length <= 0 || e[0].nodeName.toLowerCase() !== "text") throw new Error("Need a <text> !");
         e.attr("dy", {
           top: r["font-size"] * .5,
@@ -1707,7 +1708,7 @@
           if (v["arc-end-cap"] != "round") d += "L" + u + " " + l;else d += "A" + s + " " + s + " " + " 0 1 0 " + u + " " + l;
           d += "A" + g + " " + g + " 0 " + c + " 0 " + i + " " + o;
           if (v["arc-start-cap"] != "round") d += "L" + r + " " + n;else d += "A" + s + " " + s + " " + " 0 1 0 " + r + " " + n;
-          h.attr("d", d);
+          h.attr("d", d + "Z");
         });
 
         return h;
@@ -1821,9 +1822,9 @@
               if (_typeof$1(arguments[0]) !== "object") return u[arguments[0]];
 
               for (var e in arguments[0]) {
-                u[e] = Lt(e, arguments[0][e]);
+                u[e] = At(e, arguments[0][e]);
               }
-            } else if (arguments.length === 2) u[arguments[0]] = Lt(arguments[0], arguments[1]);
+            } else if (arguments.length === 2) u[arguments[0]] = At(arguments[0], arguments[1]);
 
             return d;
           },
@@ -1920,12 +1921,12 @@
             return d;
           },
           fillText: function t(e, r, n, i) {
-            var o = Pt(f, u, r, n, i || 0);
+            var o = Lt(f, u, r, n, i || 0);
             f.attr("transform", c + o.transform).attr("fill", u.fillStyle)[0].textContent = e;
             return d;
           },
           strokeText: function t(e, r, n, i) {
-            var o = Pt(f, u, r, n, i || 0);
+            var o = Lt(f, u, r, n, i || 0);
             f.attr("transform", c + o.transform).attr({
               stroke: u.strokeStyle,
               fill: "none",
@@ -1934,7 +1935,7 @@
             return d;
           },
           fullText: function t(e, r, n, i) {
-            var o = Pt(f, u, r, n, i || 0);
+            var o = Lt(f, u, r, n, i || 0);
             f.attr("transform", c + o.transform).attr({
               stroke: u.strokeStyle,
               fill: u.fillStyle,
@@ -2035,7 +2036,7 @@
         if (!m(this[0])) throw new Error("Target empty!");
         var t = this[0],
             e = t.nodeName.toLowerCase();
-        if (e === "canvas") return At(t);
+        if (e === "canvas") return Pt(t);
         if (e === "svg") return Ht(t, arguments[0]);
         throw new Error("Painter is not a function!");
       }
@@ -2101,7 +2102,7 @@
       k.extend({
         treeLayout: p,
         pieLayout: y,
-        Matrix4: L,
+        Matrix4: A,
         rotate: E,
         move: d,
         scale: h,
@@ -2110,7 +2111,7 @@
         cardinal: $,
         formatColor: q,
         getRandomColors: U,
-        stopPropagation: Z,
+        stopPropagation: Q,
         preventDefault: J,
         map: it
       });
@@ -2133,7 +2134,7 @@
         loop: xt,
         bind: X,
         unbind: Y,
-        position: Q,
+        position: Z,
         painter: Bt,
         layer: Ot
       });
