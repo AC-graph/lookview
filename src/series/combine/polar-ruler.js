@@ -1,7 +1,7 @@
 
 // 极坐标刻度尺
 
-export default function (painter, source, target) {
+export default function (painter, attr) {
 
 
 

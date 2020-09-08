@@ -1,7 +1,7 @@
 
 // 连线
 
-export default function (painter, source, target) {
+export default function (painter, attr) {
 
 
 

@@ -12,10 +12,11 @@
 <body>
 
     <div id="root" style='width:500px;height:500px'>
-        <arc cx::number=250 info='111' cy::number=250 radius::number='200' begin::number='0' value::number='1pi'></arc>
+        <arc fill-color='red' color='blue' width='30' cx::number=250 info='111' cy::number=250 radius2::bumber='100' radius1::number='200' begin::number='0' value::number='1pi'></arc>
         <group>
-            <arc cx::number=250 cy::number=250 radius::number='200' begin::number='90deg' value::number='1pi'></arc>
-            <arc l-bind:cx::number='x' cy::number=250 radius::number='200' begin::number='180deg' value::number='1pi'>
+            <arc l-if='flag' cx::number=250 cy::number=250 radius1::number='200' begin::number='90deg'
+                value::number='1pi'></arc>
+            <arc l-if='flag' l-bind:cx::number='x' cy::number=250 radius1::number='200' begin::number='180deg' value::number='1pi'>
             </arc>
         </group>
     </div>
@@ -31,7 +32,8 @@
             data: function () {
                 return {
                     info: "整体测试",
-                    x: 100
+                    x: 100,
+                    flag: false
                 };
             },
 
@@ -62,7 +64,7 @@
 
         console.log(lookview);
 
-        window.lookview=lookview;
+        window.lookview = lookview;
 
     </script>
 

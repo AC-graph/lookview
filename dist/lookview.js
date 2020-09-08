@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.0-alpha.1
+* version 2.0.0-alpha.2
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Mon Sep 07 2020 17:54:29 GMT+0800 (GMT+08:00)
+* Date:Tue Sep 08 2020 16:08:32 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2310,34 +2310,61 @@
   }
 
   // 圆弧
-  function arc (painter, source, target) {}
+  function arc (painter, attr) {
+    // 配置画笔
+    painter.config({
+      "fillStyle": attr['fill-color'] || attr.color || '#00',
+      "strokeStyle": attr['stroke-color'] || attr.color || '#00',
+      "lineWidth": attr['width'] || 1,
+      "lineDash": attr['dash'] || []
+    }); // 绘制
+
+    switch (attr.type) {
+      case "stroke":
+        {
+          painter.strokeArc(attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
+          break;
+        }
+
+      case "fill":
+        {
+          painter.fillArc(attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
+          break;
+        }
+
+      default:
+        {
+          painter.fullArc(attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
+        }
+    }
+  }
 
   // 圆
-  function circle (painter, source, target) {}
+  function circle (painter, attr) {}
 
   // 连线
-  function line (painter, source, target) {}
+  function line (painter, attr) {}
 
   // 矩形
-  function rect (painter, source, target) {}
+  function rect (painter, attr) {}
 
   // 文字
-  function text (painter, source, target) {}
+  function text (painter, attr) {}
 
   // 圆弧组合
-  function arcs (painter, source, target) {}
+  function arcs (painter, attr) {}
 
   // 圆组合
-  function circles (painter, source, target) {}
+  function circles (painter, attr) {}
 
   // 极坐标刻度尺
-  function polarRuler (painter, source, target) {}
+  function polarRuler (painter, attr) {}
 
   // 矩形组合
-  function rects (painter, source, target) {}
+  function rects (painter, attr) {}
 
   // 刻度尺
-  function ruler (painter, source, target) {}
+  function ruler (painter, attr) {}
 
   // 基本图形
   function seriesMixin(LookView) {
@@ -2430,10 +2457,161 @@
     }(node);
   }
 
+  /**
+   * 判断一个值是不是symbol。
+   *
+   * @since V0.1.2
+   * @public
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是symbol返回true，否则返回false
+   */
+
+  function isSymbol (value) {
+    var type = _typeof(value);
+
+    return type === 'symbol' || type === 'object' && value !== null && getType(value) === '[object Symbol]';
+  }
+
+  /**
+   * 判断是不是一个对象上的属性
+   *
+   * @private
+   * @param {Array|string} path 属性或路径
+   * @param {Object} object 操作的对象
+   * @returns {boolean} 如果是返回true，否则返回false
+   */
+
+  function isKey (value, object) {
+    if (Array.isArray(value)) {
+      return false;
+    }
+
+    var type = _typeof(value);
+
+    if (type == 'number' || type == 'boolean' || value == null || isSymbol(value)) {
+      return true;
+    }
+
+    return object !== null && value in Object(object) || /^\w*$/.test(value);
+  }
+
+  /**
+   * 把字符串路径变成简单的数组
+   *
+   * @private
+   * @param {string} value 需要解析的路径字符串
+   * @returns {Array} 返回属性数组
+   */
+  function stringToPath (value) {
+    return value.replace(/\[/g, ".").replace(/\]/g, '').replace(/"/g, "").replace(/'/g, "").split('.');
+  }
+
+  /**
+   * 把属性字符串统一变成数组（数组每个值是一个简单的属性）
+   *
+   * @private
+   * @param {Array|string} path 属性或路径
+   * @param {Object} object 操作的对象
+   * @returns {Array} 返回属性数组
+   */
+
+  function castPath (value, object) {
+    if (Array.isArray(value)) {
+      return value;
+    }
+
+    return isKey(value, object) ? [value] : stringToPath(value);
+  }
+
+  var INFINITY = 1 / 0;
+  /**
+   * 如果value不是字符串或者symbol，就变成字符串
+   *
+   * @private
+   * @param {*} value 需要检查的值
+   * @returns {string|symbol} 返回key
+   */
+
+  function toKey (value) {
+    if (typeof value === 'string' || isSymbol(value)) {
+      return value;
+    }
+
+    var result = "".concat(value);
+    return result === '0' && 1 / value === -INFINITY ? "-0" : result;
+  }
+
+  /**
+   * 获取一个对象属性值的基础方法，没有默认值。
+   *
+   * @private
+   * @param {Object} object 操作的对象
+   * @param {Array|string} path 属性或路径
+   * @returns {*} 返回设置的结果
+   */
+
+  function baseGet (object, path) {
+    // 统一把路径变成['a','b','c',...]这种
+    path = castPath(path, object);
+    var index = 0;
+
+    for (; index < path.length && object !== null; index++) {
+      object = object[toKey(path[index])];
+    }
+
+    return index && index === path.length ? object : undefined;
+  }
+
+  /**
+   * 获取object的属性path的值。如果返回的值是undefined，
+   * defaultValue就作为返回值返回。
+   *
+   * @since V0.1.0
+   * @public
+   * @param {Object} object 查询的对象
+   * @param {Array|string} path 对象上查询值的路径
+   * @param {*} defaultValue 值为undefined的时候的返回值
+   * @returns {*} 返回结果
+   * @example
+   *
+   * var object={a:{b:[1,2,3]}};
+   *
+   * get(object,'a.b') or
+   * get(object,['a','b'])
+   * // [1,2,3]
+   *
+   * get(object,'a["b"][1]')
+   * // 2
+   *
+   * get(object,'a.c','default')
+   * // 'default'
+   */
+
+  function get (object, path, defaultValue) {
+    var result = object == null ? undefined : baseGet(object, path);
+    return result === undefined ? defaultValue : result;
+  }
+
   function painterMixin(LookView) {
     // 绘制方法
     LookView.prototype.$$painter = function () {
-      // todo
+      var _this = this;
+
+      // 后期可以通过此添加一些额外的辅助数据，目前没有考虑好，因此预留
+      var nouse = {
+        "info": "预留"
+      };
+
+      this.__renderSeries.forEach(function (item) {
+        var attr = {};
+
+        for (var key in item.attr) {
+          attr[key] = _this.$$calcValue(item.attr[key]);
+        }
+
+        _this.__series[item.series].call(nouse, _this.__painter, attr);
+      });
+
       return this;
     };
     /**
@@ -2463,7 +2641,52 @@
 
 
     LookView.prototype.$updateByData = function (__notPainter) {
-      // todo
+      var renderSeries = [],
+          that = this;
+
+      (function doit(renderArray) {
+        for (var i = 0; i < renderArray.length; i++) {
+          // 【指令】l-if="flag"
+          if ('l-if' in renderArray[i].attr) {
+            if (!get(that, renderArray[i].attr['l-if'].value)) {
+              continue;
+            }
+          }
+
+          var render = {
+            series: renderArray[i].series,
+            attr: {}
+          };
+
+          for (var key in renderArray[i].attr) {
+            // 【指令】l-bind:xxx="xxx"
+            if (/^l\-bind\:/.test(key)) {
+              render.attr[key.replace(/^l\-bind\:/, '')] = {
+                value: get(that, renderArray[i].attr[key].value),
+                type: renderArray[i].attr[key].type
+              };
+            } // 普通属性
+            else {
+                render.attr[key] = {
+                  value: renderArray[i].attr[key].value,
+                  type: renderArray[i].attr[key].type
+                };
+              }
+          } // 说明只是用来包裹的组
+
+
+          if (renderArray[i].series == 'group') {
+            doit(renderArray[i].children);
+          } // 默认认为是普通的图形
+          else {
+              renderSeries.push(render);
+            }
+        }
+      })(this.__render); // 数据的改变应该有过渡动画
+      // 目前没有支持，后期考虑添加
+
+
+      this.__renderSeries = renderSeries;
       if (!__notPainter) this.$$painter();
       return this;
     }; // 初始化调用的绘制方法
@@ -2489,26 +2712,34 @@
     }; // 针对特殊内心提供前置（交付给具体的绘图方法前）的数据计算方法
 
 
-    LookView.prototype.$$calc = {
-      // 数字类型
-      "number": function number(value) {
-        value = (value + " ").trim();
+    LookView.prototype.$$calcValue = function (oralValue) {
+      var doFun = {
+        // 数字类型
+        "number": function number(value) {
+          value = (value + " ").trim();
 
-        if (/w$/.test(value)) {
-          return (0 - -value.replace('w', '')) * w;
-        } else if (/h$/.test(value)) {
-          return (0 - -value.replace('h', '')) * h;
-        } else if (/min$/.test(value)) {
-          return (0 - -value.replace('min', '')) * min;
-        } else if (/max$/.test(value)) {
-          return (0 - -value.replace('max', '')) * max;
-        } else if (/pi$/.test(value)) {
-          return (0 - -value.replace('pi', '')) * Math.PI;
-        } else if (/deg$/.test(value)) {
-          return (0 - -value.replace('deg', '')) / 360 * Math.PI;
-        } else {
-          return 0 - -value;
+          if (/w$/.test(value)) {
+            return (0 - -value.replace('w', '')) * w;
+          } else if (/h$/.test(value)) {
+            return (0 - -value.replace('h', '')) * h;
+          } else if (/min$/.test(value)) {
+            return (0 - -value.replace('min', '')) * min;
+          } else if (/max$/.test(value)) {
+            return (0 - -value.replace('max', '')) * max;
+          } else if (/pi$/.test(value)) {
+            return (0 - -value.replace('pi', '')) * Math.PI;
+          } else if (/deg$/.test(value)) {
+            return (0 - -value.replace('deg', '')) / 360 * Math.PI;
+          } else {
+            return 0 - -value;
+          }
         }
+      }[oralValue.type];
+
+      if (isFunction(doFun)) {
+        return doFun(oralValue.value);
+      } else {
+        return oralValue.value;
       }
     };
   }

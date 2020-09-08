@@ -1,3 +1,5 @@
+import isFunction from "@yelloxing/core.js/isFunction";
+
 export function valueMixin(LookView) {
 
   let w, h, min, max;
@@ -14,28 +16,36 @@ export function valueMixin(LookView) {
 
   // 针对特殊内心提供前置（交付给具体的绘图方法前）的数据计算方法
 
-  LookView.prototype.$$calc = {
+  LookView.prototype.$$calcValue = function (oralValue) {
 
-    // 数字类型
-    "number": function (value) {
-      value = (value + " ").trim();
+    let doFun = {
+      // 数字类型
+      "number": function (value) {
+        value = (value + " ").trim();
 
-      if (/w$/.test(value)) {
-        return (0 - -value.replace('w', '')) * w;
-      } else if (/h$/.test(value)) {
-        return (0 - -value.replace('h', '')) * h;
-      } else if (/min$/.test(value)) {
-        return (0 - -value.replace('min', '')) * min;
-      } else if (/max$/.test(value)) {
-        return (0 - -value.replace('max', '')) * max;
-      } else if (/pi$/.test(value)) {
-        return (0 - -value.replace('pi', '')) * Math.PI;
-      } else if (/deg$/.test(value)) {
-        return (0 - -value.replace('deg', '')) / 360 * Math.PI;
-      } else {
-        return 0 - -value;
+        if (/w$/.test(value)) {
+          return (0 - -value.replace('w', '')) * w;
+        } else if (/h$/.test(value)) {
+          return (0 - -value.replace('h', '')) * h;
+        } else if (/min$/.test(value)) {
+          return (0 - -value.replace('min', '')) * min;
+        } else if (/max$/.test(value)) {
+          return (0 - -value.replace('max', '')) * max;
+        } else if (/pi$/.test(value)) {
+          return (0 - -value.replace('pi', '')) * Math.PI;
+        } else if (/deg$/.test(value)) {
+          return (0 - -value.replace('deg', '')) / 360 * Math.PI;
+        } else {
+          return 0 - -value;
+        }
+
       }
+    }[oralValue.type];
 
+    if (isFunction(doFun)) {
+      return doFun(oralValue.value);
+    } else {
+      return oralValue.value;
     }
 
   };
