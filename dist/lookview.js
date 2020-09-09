@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.0-alpha.3
+* version 2.0.0-beta
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Wed Sep 09 2020 10:26:45 GMT+0800 (GMT+08:00)
+* Date:Wed Sep 09 2020 15:35:53 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -630,20 +630,20 @@
         return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, e * t / i, r * t / i, n * t / i, 1];
       }
 
-      function C(t) {
+      function M(t) {
         var e = Math.sin(t),
             r = Math.cos(t);
         return [r, e, 0, 0, -e, r, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
       }
 
-      function M(t, e, r, n, i, o) {
+      function C(t, e, r, n, i, o) {
         n = n || 0;
         i = i || 0;
         o = o || 0;
         return [t, 0, 0, 0, 0, e, 0, 0, 0, 0, r, 0, n - n * t, i - i * e, o - o * r, 1];
       }
 
-      function S(t, e, r, n, i, o) {
+      function P(t, e, r, n, i, o) {
         if (typeof t === "number" && typeof e === "number") {
           if (typeof r !== "number") {
             r = 0;
@@ -674,7 +674,7 @@
         }
       }
 
-      var P = function t(e, r) {
+      var S = function t(e, r) {
         var n = [];
 
         for (var i = 0; i < 4; i++) {
@@ -690,26 +690,26 @@
         var l = t || [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
         var s = {
           move: function t(e, r, n, i) {
-            l = P(w(e, r, n, i), l);
+            l = S(w(e, r, n, i), l);
             return s;
           },
           rotate: function t(e, r, n, i, o, a, f) {
-            var u = S(r, n, i, o, a, f);
-            l = P(P(P(u[1], C(e)), u[0]), l);
+            var u = P(r, n, i, o, a, f);
+            l = S(S(S(u[1], M(e)), u[0]), l);
             return s;
           },
           scale: function t(e, r, n, i, o, a) {
-            l = P(M(e, r, n, i, o, a), l);
+            l = S(C(e, r, n, i, o, a), l);
             return s;
           },
           multiply: function t(e, r) {
-            l = r ? P(l, e) : P(e, l);
+            l = r ? S(l, e) : S(e, l);
             return s;
           },
           use: function t(e, r, n, i) {
             n = n || 0;
             i = i || 1;
-            var o = P(l, [e, r, n, i]);
+            var o = S(l, [e, r, n, i]);
             o[0] = +o[0].toFixed(7);
             o[1] = +o[1].toFixed(7);
             o[2] = +o[2].toFixed(7);
@@ -1391,6 +1391,10 @@
       };
 
       var kt = function t(c, d, h, v, p, g, e, r) {
+        if (r >= Math.PI * 2 || r <= -Math.PI * 2) {
+          r = Math.PI * 2;
+        }
+
         _t(e, r, h, v, p, g, function (t, e, r, n, i, o, a, f, u, l, s) {
           if (s < 0) s = -s;
           c.beginPath();
@@ -1412,13 +1416,13 @@
         return e;
       };
 
-      var Ct = function t(e, r, n, i, o) {
+      var Mt = function t(e, r, n, i, o) {
         e.beginPath();
         e.rect(r, n, i, o);
         return e;
       };
 
-      var Mt = function t(e, r, n, i, o) {
+      var Ct = function t(e, r, n, i, o) {
         var a = e.createLinearGradient(r, n, i, o);
         var f = {
           value: function t() {
@@ -1432,7 +1436,7 @@
         return f;
       };
 
-      var St = function t(e, r, n, i) {
+      var Pt = function t(e, r, n, i) {
         var o = e.createRadialGradient(r, n, 0, r, n, i);
         var a = {
           value: function t() {
@@ -1446,7 +1450,7 @@
         return a;
       };
 
-      function Pt(s) {
+      function St(s) {
         var c = s.getContext("2d");
         var t = s.__image2D__layer__ == "yes";
         var e = t ? s.getAttribute("width") : s.clientWidth,
@@ -1629,24 +1633,24 @@
             return d;
           },
           fillRect: function t(e, r, n, i) {
-            Ct(c, e, r, n, i).fill();
+            Mt(c, e, r, n, i).fill();
             return d;
           },
           strokeRect: function t(e, r, n, i) {
-            Ct(c, e, r, n, i).stroke();
+            Mt(c, e, r, n, i).stroke();
             return d;
           },
           fullRect: function t(e, r, n, i) {
-            Ct(c, e, r, n, i);
+            Mt(c, e, r, n, i);
             c.fill();
             c.stroke();
             return d;
           },
           createLinearGradient: function t(e, r, n, i) {
-            return Mt(c, e, r, n, i);
+            return Ct(c, e, r, n, i);
           },
           createRadialGradient: function t(e, r, n) {
-            return St(c, e, r, n);
+            return Pt(c, e, r, n);
           },
           translate: function t(e, r) {
             c.translate(e, r);
@@ -1698,6 +1702,10 @@
       };
 
       var Nt = function t(h, v, e, r, p, g, n, i) {
+        if (i >= Math.PI * 1.999999 || i <= -Math.PI * 1.999999) {
+          i = Math.PI * 1.999999;
+        }
+
         if (!h || h.length <= 0 || h[0].nodeName.toLowerCase() !== "path") throw new Error("Need a <path> !");
 
         _t(n, i, e, r, p, g, function (t, e, r, n, i, o, a, f, u, l, s) {
@@ -2036,7 +2044,7 @@
         if (!m(this[0])) throw new Error("Target empty!");
         var t = this[0],
             e = t.nodeName.toLowerCase();
-        if (e === "canvas") return Pt(t);
+        if (e === "canvas") return St(t);
         if (e === "svg") return Ht(t, arguments[0]);
         throw new Error("Painter is not a function!");
       }
@@ -2822,7 +2830,6 @@
       canRun = false;
       setTimeout(function () {
         callback.call(that);
-        console.log(1);
         canRun = true;
       }, time);
     }; // 创建监听对象

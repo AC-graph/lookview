@@ -11,7 +11,6 @@ export default function (that) {
     canRun = false;
     setTimeout(() => {
       callback.call(that);
-      console.log(1);
       canRun = true;
     }, time);
   };

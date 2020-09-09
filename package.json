@@ -1,6 +1,6 @@
 {
   "name": "lookview",
-  "version": "2.0.0-alpha.3",
+  "version": "2.0.0-beta",
   "description": "提供更友好的数据可视化解决方案",
   "main": "dist/lookview.min.js",
   "scripts": {
@@ -34,6 +34,6 @@
   },
   "dependencies": {
     "@yelloxing/core.js": "^0.3.7",
-    "image2d": "^1.8.12"
+    "image2d": "^1.8.13"
   }
 }
