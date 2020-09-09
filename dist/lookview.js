@@ -15,7 +15,7 @@
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Tue Sep 08 2020 23:25:44 GMT+0800 (GMT+08:00)
+* Date:Wed Sep 09 2020 10:26:45 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2730,7 +2730,7 @@
           } else if (/pi$/.test(value)) {
             return (0 - -value.replace('pi', '')) * Math.PI;
           } else if (/deg$/.test(value)) {
-            return (0 - -value.replace('deg', '')) / 360 * Math.PI;
+            return (0 - -value.replace('deg', '')) / 180 * Math.PI;
           } else {
             return 0 - -value;
           }
@@ -2813,9 +2813,39 @@
   painterMixin(LookView);
   valueMixin(LookView);
 
+  // 监听画布大小改变
+  function resize (that) {
+    var canRun = true; // 一个延迟执行函数
+
+    var throttle = function throttle(callback, time) {
+      if (!canRun) return;
+      canRun = false;
+      setTimeout(function () {
+        callback.call(that);
+        console.log(1);
+        canRun = true;
+      }, time);
+    }; // 创建监听对象
+
+
+    if (!that.__resizeObserver) {
+      that.__resizeObserver = new ResizeObserver(function () {
+        throttle(that.$updateByResize, 1000);
+      });
+    } // 监听
+
+
+    that.__resizeObserver.observe(that.__el);
+  }
+
   // 这样挂载了，才会真的绘制
 
   LookView.prototype.$mount = function (el, __isFocus) {
+    if (this._isDestroyed) {
+      console.error('[LookView warn]: The object has been destroyed!');
+      return;
+    }
+
     this.__el = el;
 
     if (this._isMounted) {
@@ -2839,7 +2869,9 @@
     el.innerHTML = '';
     this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(el); // 绘制
 
-    this.$updateView();
+    this.$updateView(); // 挂载后以后，启动画布大小监听
+
+    resize(this);
     this._isMounted = true;
     this.$$lifecycle('mounted');
     return this;
@@ -2849,12 +2881,19 @@
 
 
   LookView.prototype.$unmount = function () {
+    if (this._isDestroyed) {
+      console.error('[LookView warn]: The object has been destroyed!');
+      return;
+    }
+
     if (!this._isMounted) {
       console.error('[LookView warn]: Object not mounted!');
       return;
     }
 
-    this.$$lifecycle('beforeUnmount'); // todo
+    this.$$lifecycle('beforeUnmount'); // 解除对画布大小改变的监听
+
+    this.__resizeObserver.disconnect();
 
     this._isMounted = false;
     this.$$lifecycle('unmounted');
@@ -2867,10 +2906,13 @@
     if (this._isDestroyed) {
       console.error('[LookView warn]: The object has been destroyed!');
       return;
-    }
+    } // 先解除绑定
 
-    this.$$lifecycle('beforeDestroy'); // todo
 
+    if (this._isMounted) this.$unmount();
+    this.$$lifecycle('beforeDestroy'); // 删除监听对象
+
+    if (this.__resizeObserver) delete this.__resizeObserver;
     this._isDestroyed = true;
     this.$$lifecycle('destroyed');
     return this;

@@ -3,6 +3,7 @@ import LookView from './core/instance/index';
 import initGlobalApi from './core/global-api/index';
 import isElement from '@yelloxing/core.js/isElement';
 import compileTemplate from './core/vnode/compile-template';
+import resize from './core/observe/resize';
 
 /**
  * 
@@ -28,6 +29,11 @@ initGlobalApi(LookView);
 // 这样挂载了，才会真的绘制
 LookView.prototype.$mount = function (el, __isFocus) {
 
+    if (this._isDestroyed) {
+        console.error('[LookView warn]: The object has been destroyed!');
+        return;
+    }
+
     this.__el = el;
 
     if (this._isMounted) {
@@ -36,10 +42,8 @@ LookView.prototype.$mount = function (el, __isFocus) {
     }
 
     if (!__isFocus && !isElement(el)) {
-
         console.error('[LookView warn]: Mount node does not exist!');
         return;
-
     }
 
     this.$$lifecycle('beforeMount');
@@ -57,6 +61,9 @@ LookView.prototype.$mount = function (el, __isFocus) {
     // 绘制
     this.$updateView();
 
+    // 挂载后以后，启动画布大小监听
+    resize(this);
+
     this._isMounted = true;
     this.$$lifecycle('mounted');
 
@@ -67,6 +74,12 @@ LookView.prototype.$mount = function (el, __isFocus) {
 // 因此，后续绘制会停止，不过计算不会
 // 因此，后续你可以重新挂载
 LookView.prototype.$unmount = function () {
+
+    if (this._isDestroyed) {
+        console.error('[LookView warn]: The object has been destroyed!');
+        return;
+    }
+
     if (!this._isMounted) {
         console.error('[LookView warn]: Object not mounted!');
         return;
@@ -74,7 +87,8 @@ LookView.prototype.$unmount = function () {
 
     this.$$lifecycle('beforeUnmount');
 
-    // todo
+    // 解除对画布大小改变的监听
+    this.__resizeObserver.disconnect();
 
     this._isMounted = false;
     this.$$lifecycle('unmounted');
@@ -85,14 +99,19 @@ LookView.prototype.$unmount = function () {
 // 彻底销毁资源，无法再重新挂载
 // 主要是为了释放一些内置资源
 LookView.prototype.$destory = function () {
+
     if (this._isDestroyed) {
         console.error('[LookView warn]: The object has been destroyed!');
         return;
     }
 
+    // 先解除绑定
+    if (this._isMounted) this.$unmount();
+
     this.$$lifecycle('beforeDestroy');
 
-    // todo
+    // 删除监听对象
+    if (this.__resizeObserver) delete this.__resizeObserver;
 
     this._isDestroyed = true;
     this.$$lifecycle('destroyed');

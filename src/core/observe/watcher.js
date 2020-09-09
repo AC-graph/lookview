@@ -1,6 +1,7 @@
 import isFunction from '@yelloxing/core.js/isFunction';
-
 import isValidKey from '../../tool/isValidKey';
+
+// 监听数据改变
 
 export default function (that) {
 

@@ -19,6 +19,7 @@ export function valueMixin(LookView) {
   LookView.prototype.$$calcValue = function (oralValue) {
 
     let doFun = {
+
       // 数字类型
       "number": function (value) {
         value = (value + " ").trim();
@@ -34,7 +35,7 @@ export function valueMixin(LookView) {
         } else if (/pi$/.test(value)) {
           return (0 - -value.replace('pi', '')) * Math.PI;
         } else if (/deg$/.test(value)) {
-          return (0 - -value.replace('deg', '')) / 360 * Math.PI;
+          return (0 - -value.replace('deg', '')) / 180 * Math.PI;
         } else {
           return 0 - -value;
         }
