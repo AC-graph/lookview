@@ -9,6 +9,13 @@ module.exports = {
             'lookview': require('path').resolve('../../dist/lookview.js')
         }
     },
+    module: {
+        rules: [{
+            test: /\.lookview$/,
+            loader: ['lookview-loader'],
+            exclude: /node_modules/
+        }]
+    },
     devServer: {
         contentBase: './',
         compress: true,

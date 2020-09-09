@@ -1,4 +1,4 @@
-import image2D from 'image2d';
+import $$ from 'image2d';
 import LookView from './core/instance/index';
 import initGlobalApi from './core/global-api/index';
 import isElement from '@yelloxing/core.js/isElement';
@@ -122,7 +122,7 @@ LookView.prototype.$destory = function () {
 // 对外暴露调用接口
 
 if (typeof module === "object" && typeof module.exports === "object") {
-    module.exports = { LookView, image2D, $$: image2D };
+    module.exports = { LookView, image2D: $$, $$ };
 } else {
-    window.LookView = LookView; window.image2D = image2D; window.$$ = image2D;
+    window.LookView = LookView; window.image2D = $$; window.$$ = $$;
 }  

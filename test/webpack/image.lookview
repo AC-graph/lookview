@@ -1,0 +1,8 @@
+<arc fill-color='red' color='blue' width='30' cx::number='50w' info='111' cy::number=250 radius2::bumber='100'
+  radius1::number='200' begin::number='0' value::number='270deg'></arc>
+<group>
+  <arc l-if='flag' cx::number=250 cy::number=250 radius1::number='200' begin::number='90deg' value::number='1pi'></arc>
+  <arc l-if='flag' l-bind:cx::number='x' cy::number=250 radius1::number='200' begin::number='180deg'
+    value::number='1pi'>
+  </arc>
+</group>

@@ -1,6 +1,6 @@
 {
   "name": "lookview",
-  "version": "2.0.0-beta",
+  "version": "2.0.1-beta",
   "description": "提供更友好的数据可视化解决方案",
   "main": "dist/lookview.min.js",
   "scripts": {

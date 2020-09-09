@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.0-beta
+* version 2.0.1-beta
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Wed Sep 09 2020 15:35:53 GMT+0800 (GMT+08:00)
+* Date:Wed Sep 09 2020 16:29:12 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2874,7 +2874,7 @@
 
 
     el.innerHTML = '';
-    this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(el); // 绘制
+    this.__canvas = image2D_min('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(el); // 绘制
 
     this.$updateView(); // 挂载后以后，启动画布大小监听
 
