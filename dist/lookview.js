@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.2-alpha.0
+* version 2.0.2-alpha.1
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Thu Sep 10 2020 16:55:20 GMT+0800 (GMT+08:00)
+* Date:Thu Sep 10 2020 18:02:21 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2318,59 +2318,74 @@
     return value !== null && _typeof(value) === 'object' && (value.nodeType === 1 || value.nodeType === 9 || value.nodeType === 11) && !isPlainObject(value);
   }
 
-  // 圆弧
   function arc (painter, attr) {
     // 配置画笔
     painter.config({
-      "fillStyle": attr['fill-color'] || attr.color || '#00',
-      "strokeStyle": attr['stroke-color'] || attr.color || '#00',
-      "lineWidth": attr['width'] || 1,
+      "fillStyle": attr['fill-color'] || attr.color || '#000',
+      "strokeStyle": attr['stroke-color'] || attr.color || '#000',
+      "lineWidth": attr['line-width'] || 1,
       "lineDash": attr['dash'] || []
-    }); // 绘制
+    });
+    var type = attr.type || 'full';
 
-    switch (attr.type) {
-      case "stroke":
-        {
-          painter.strokeArc(attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
-          break;
-        }
-
-      case "fill":
-        {
-          painter.fillArc(attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
-          break;
-        }
-
-      default:
-        {
-          painter.fullArc(attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
-        }
+    if (isFunction(painter[type + "Arc"])) {
+      // 绘制
+      painter[type + "Arc"](attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
+    } else {
+      // 错误提示
+      console.error('[LookView warn]: Type error!' + JSON.stringify({
+        series: "arc",
+        type: type
+      }));
     }
   }
 
-  // 圆
-  function circle (painter, attr) {}
+  function circle (painter, attr) {
+    // 配置画笔
+    painter.config({
+      "fillStyle": attr['fill-color'] || attr.color || '#000',
+      "strokeStyle": attr['stroke-color'] || attr.color || '#000',
+      "lineWidth": attr['line-width'] || 1,
+      "lineDash": attr['dash'] || []
+    });
+    var type = attr.type || 'full';
 
-  // 连线
-  function line (painter, attr) {}
+    if (isFunction(painter[type + "Circle"])) {
+      // 绘制
+      painter[type + "Circle"](attr['cx'], attr['cy'], attr['radius']);
+    } else {
+      // 错误提示
+      console.error('[LookView warn]: Type error!' + JSON.stringify({
+        series: "circle",
+        type: type
+      }));
+    }
+  }
 
-  // 矩形
-  function rect (painter, attr) {}
+  function rect (painter, attr) {
+    // 配置画笔
+    painter.config({
+      "fillStyle": attr['fill-color'] || attr.color || '#000',
+      "strokeStyle": attr['stroke-color'] || attr.color || '#000',
+      "lineWidth": attr['line-width'] || 1,
+      "lineDash": attr['dash'] || []
+    });
+    var type = attr.type || 'full';
+
+    if (isFunction(painter[type + "Rect"])) {
+      // 绘制
+      painter[type + "Rect"](attr['x'], attr['y'], attr['width'], attr['height']);
+    } else {
+      // 错误提示
+      console.error('[LookView warn]: Type error!' + JSON.stringify({
+        series: "rect",
+        type: type
+      }));
+    }
+  }
 
   // 文字
   function text (painter, attr) {}
-
-  // 圆弧组合
-  function arcs (painter, attr) {}
-
-  // 圆组合
-  function circles (painter, attr) {}
-
-  // 极坐标刻度尺
-  function polarRuler (painter, attr) {}
-
-  // 矩形组合
-  function rects (painter, attr) {}
 
   // 刻度尺
   function ruler (painter, attr) {}
@@ -2380,13 +2395,8 @@
     LookView.prototype.__series = {
       arc: arc,
       circle: circle,
-      line: line,
       rect: rect,
       text: text,
-      arcs: arcs,
-      circles: circles,
-      "polar-ruler": polarRuler,
-      rects: rects,
       ruler: ruler
     };
   }
@@ -2410,7 +2420,7 @@
 
   /**
    * 
-   * 返回的格式如下（oader返回的格式应该和这里保持一致）：
+   * 返回的格式如下（loader返回的格式应该和这里保持一致）：
    * 
    * [{
    *  series:"",
@@ -2754,6 +2764,26 @@
           } else {
             return 0 - -value;
           }
+        },
+        // 字符串类型
+        "string": function string(value) {
+          return (value + " ").trim();
+        },
+        // 默认类型
+        "default": function _default(value) {
+          value = (value + " ").trim(); // 数字类型
+
+          if (/^\d+$/.test(value)) {
+            return 0 - -value;
+          } // 布尔类型
+          else if (value == 'true') {
+              return true;
+            } else if (value == 'false') {
+              return false;
+            } // 字符串类型
+            else {
+                return value;
+              }
         }
       }[oralValue.type];
 
@@ -2799,7 +2829,7 @@
         set: function set(newValue) {
           value = newValue; // 数据改变，触发更新
 
-          if (that._isMounted && !this._isDestroyed) throttle(that.$updateByData, 2000, function () {
+          if (that._isMounted && !this._isDestroyed) throttle(that.$updateByData, 10, function () {
             that.$$lifecycle('beforeUpdate');
           }, function () {
             that.$$lifecycle('updated');
@@ -2848,6 +2878,17 @@
   painterMixin(LookView);
   valueMixin(LookView);
 
+  function initGlobalApi (LookView) {
+    // 挂载小组件
+    LookView.series = function (name, seriesFunction) {
+      if (isFunction(LookView.prototype.__series[name])) {
+        console.error('[LookView warn]: The series[' + name + '] has been registered!');
+      }
+
+      LookView.prototype.__series[name] = seriesFunction;
+    };
+  }
+
   // 监听画布大小改变
   function resize (that) {
     var canRun = true; // 一个延迟执行函数
@@ -2872,6 +2913,25 @@
     that.__resizeObserver.observe(that.__el);
   }
 
+  /**
+   * 
+   * >>> 总入口 <<<
+   * 
+   * -------------------------------
+   * 
+   * 【特别说明】
+   * 
+   * 对于this.XXX的属性或方法，有如下规定：
+   *  _ 和 __ 开头的表示资源，前者表示外界可以查看作为判断依据的（但不可以修改），后者为完全内部使用
+   *  $ 和 $$ 开头的表示函数，前者表示外界可以调用的，后者表示内部使用
+   * 
+   * 此外，对外暴露的方法的参数，如果是 __ 开头的，表示外部调用的时候应该忽略此参数
+   * 
+   * -------------------------------
+   * 
+   */
+
+  initGlobalApi(LookView); // 挂载的意思是LookView对象和页面关联起来
   // 这样挂载了，才会真的绘制
 
   LookView.prototype.$mount = function (el, __isFocus) {

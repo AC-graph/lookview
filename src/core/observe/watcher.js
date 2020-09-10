@@ -43,7 +43,7 @@ export default function (that) {
         value = newValue;
 
         // 数据改变，触发更新
-        if (that._isMounted && !this._isDestroyed) throttle(that.$updateByData, 2000, () => {
+        if (that._isMounted && !this._isDestroyed) throttle(that.$updateByData, 10, () => {
 
           that.$$lifecycle('beforeUpdate');
 

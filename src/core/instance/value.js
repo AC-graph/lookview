@@ -40,7 +40,37 @@ export function valueMixin(LookView) {
           return 0 - -value;
         }
 
+      },
+
+      // 字符串类型
+      "string": function (value) {
+        return (value + " ").trim();
+      },
+
+      // 默认类型
+      "default": function (value) {
+        value = (value + " ").trim();
+
+        // 数字类型
+        if (/^\d+$/.test(value)) {
+          return 0 - -value;
+        }
+
+        // 布尔类型
+        else if (value == 'true') {
+          return true;
+        }
+        else if (value == 'false') {
+          return false;
+        }
+
+        // 字符串类型
+        else {
+          return value;
+        }
+
       }
+
     }[oralValue.type];
 
     if (isFunction(doFun)) {

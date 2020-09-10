@@ -9,7 +9,7 @@ import isElement from '@yelloxing/core.js/isElement';
 
 /**
  * 
- * 返回的格式如下（oader返回的格式应该和这里保持一致）：
+ * 返回的格式如下（loader返回的格式应该和这里保持一致）：
  * 
  * [{
  *  series:"",
