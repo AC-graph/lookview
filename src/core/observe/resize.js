@@ -10,7 +10,7 @@ export default function (that) {
     if (!canRun) return;
     canRun = false;
     setTimeout(() => {
-      callback.call(that);
+      callback.call(that, false, true);
       canRun = true;
     }, time);
   };

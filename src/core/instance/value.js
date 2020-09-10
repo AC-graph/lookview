@@ -4,10 +4,10 @@ export function valueMixin(LookView) {
 
   let w, h, min, max;
 
-  LookView.prototype.$$initValue = function (size) {
+  LookView.prototype.$$initValue = function (width, height) {
 
-    w = size.width * 0.01;
-    h = size.height * 0.01;
+    w = width * 0.01;
+    h = height * 0.01;
     min = w > h ? h : w;
     max = w > h ? w : h;
 

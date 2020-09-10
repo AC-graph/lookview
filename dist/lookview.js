@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.1-beta
+* version 2.0.2-alpha.0
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Wed Sep 09 2020 16:29:12 GMT+0800 (GMT+08:00)
+* Date:Thu Sep 10 2020 16:55:20 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2606,7 +2606,10 @@
     LookView.prototype.$$painter = function () {
       var _this = this;
 
-      // 后期可以通过此添加一些额外的辅助数据，目前没有考虑好，因此预留
+      // 重新绘制前，清空画布
+      this.__painter.clearRect(); // 后期可以通过此添加一些额外的辅助数据，目前没有考虑好，因此预留
+
+
       var nouse = {
         "info": "预留"
       };
@@ -2630,21 +2633,30 @@
     // 画布大小改变调用的重绘方法
 
 
-    LookView.prototype.$updateByResize = function (__notPainter) {
-      this.$$lifecycle('beforeResize'); // 和别的绘图方法相比，我们唯一需要额外处理的是画布大小相关的内容
+    LookView.prototype.$updateByResize = function (__notPainter, __needAnimation) {
+      var _this2 = this;
 
-      var size = image2D_min(this.__el).size('content'); // 设置画布大小
+      this.$$lifecycle('beforeResize');
+      var oldSize = this._size; // 和别的绘图方法相比，我们唯一需要额外处理的是画布大小相关的内容
+
+      this._size = image2D_min(this.__el).size('content'); // 设置画布大小
 
       this.__canvas.attr({
-        width: size.width,
-        height: size.height
+        width: this._size.width,
+        height: this._size.height
       });
 
-      this.__painter = this.__canvas.painter(); // 部分数据的计算依赖尺寸，因此这里需要重新初始化
+      this.__painter = this.__canvas.painter();
+      image2D_min.animation(function (deep) {
+        var width = oldSize ? (_this2._size.width - oldSize.width) * deep + oldSize.width : _this2._size.width;
+        var height = oldSize ? (_this2._size.height - oldSize.height) * deep + oldSize.height : _this2._size.height; // 部分数据的计算依赖尺寸，因此这里需要重新初始化
 
-      this.$$initValue(size);
-      if (!__notPainter) this.$$painter();
-      this.$$lifecycle('resized');
+        _this2.$$initValue(width, height);
+
+        if (!__notPainter) _this2.$$painter();
+      }, !__notPainter && __needAnimation && oldSize ? 1000 : 0, function () {
+        _this2.$$lifecycle('resized');
+      });
       return this;
     }; // 数据改变调用的重绘方法
 
@@ -2712,9 +2724,9 @@
   function valueMixin(LookView) {
     var w, h, min, max;
 
-    LookView.prototype.$$initValue = function (size) {
-      w = size.width * 0.01;
-      h = size.height * 0.01;
+    LookView.prototype.$$initValue = function (width, height) {
+      w = width * 0.01;
+      h = height * 0.01;
       min = w > h ? h : w;
       max = w > h ? w : h;
       return this;
@@ -2754,6 +2766,19 @@
   }
 
   function watcher (that) {
+    var canRun = true; // 一个延迟执行函数
+
+    var throttle = function throttle(callback, time, beforeUpdate, updated) {
+      if (!canRun) return;
+      canRun = false;
+      setTimeout(function () {
+        beforeUpdate();
+        callback.call(that, false, true);
+        updated();
+        canRun = true;
+      }, time);
+    };
+
     var _loop = function _loop(key) {
       // 由于key的特殊性，注册前需要进行校验
       isValidKey(key);
@@ -2772,11 +2797,13 @@
           return value;
         },
         set: function set(newValue) {
-          value = newValue;
-          that.$$lifecycle('beforeUpdate'); // 数据改变，触发更新
+          value = newValue; // 数据改变，触发更新
 
-          if (that._isMounted && !this._isDestroyed) that.$updateByData();
-          that.$$lifecycle('updated');
+          if (that._isMounted && !this._isDestroyed) throttle(that.$updateByData, 2000, function () {
+            that.$$lifecycle('beforeUpdate');
+          }, function () {
+            that.$$lifecycle('updated');
+          });
         }
       });
     };
@@ -2829,7 +2856,7 @@
       if (!canRun) return;
       canRun = false;
       setTimeout(function () {
-        callback.call(that);
+        callback.call(that, false, true);
         canRun = true;
       }, time);
     }; // 创建监听对象

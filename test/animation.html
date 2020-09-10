@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>基础对象设计 | 测试</title>
+    <title>过渡动画 | 测试</title>
     <script src="../dist/lookview.js"></script>
 
     <style>
@@ -19,15 +19,8 @@
 <body>
 
     <div id="root" style='height:500px'>
-        <arc fill-color='red' color='blue' width='30' cx::number='50w' info='111' cy::number=250 radius2::bumber='100'
+        <arc fill-color='red' color='blue' width='30' cx::number='50w' l-bind:cy::number='y' radius2::bumber='100'
             radius1::number='200' begin::number='0' value::number='270deg'></arc>
-        <group>
-            <arc l-if='flag' cx::number=250 cy::number=250 radius1::number='200' begin::number='90deg'
-                value::number='1pi'></arc>
-            <arc l-if='flag' l-bind:cx::number='x' cy::number=250 radius1::number='200' begin::number='180deg'
-                value::number='1pi'>
-            </arc>
-        </group>
     </div>
 
     <script>
@@ -40,17 +33,8 @@
             // 数据
             data: function () {
                 return {
-                    info: "整体测试",
-                    x: 100,
-                    flag: false
+                    y: 100
                 };
-            },
-
-            // 方法
-            methods: {
-                doit() {
-                    console.log('>>> doit');
-                }
             },
 
             // 生命周期
@@ -70,6 +54,10 @@
         });
 
         console.log(lookview);
+
+        $$.animation(function (deep) {
+            lookview.y = deep * 400;
+        }, 50000);
 
         window.lookview = lookview;
 

@@ -5,6 +5,20 @@ import isValidKey from '../../tool/isValidKey';
 
 export default function (that) {
 
+  let canRun = true;
+
+  // 一个延迟执行函数
+  let throttle = function (callback, time, beforeUpdate, updated) {
+    if (!canRun) return;
+    canRun = false;
+    setTimeout(() => {
+      beforeUpdate();
+      callback.call(that, false, true);
+      updated();
+      canRun = true;
+    }, time);
+  };
+
   for (let key in that.__data) {
 
     // 由于key的特殊性，注册前需要进行校验
@@ -28,12 +42,16 @@ export default function (that) {
       set(newValue) {
         value = newValue;
 
-        that.$$lifecycle('beforeUpdate');
-
         // 数据改变，触发更新
-        if (that._isMounted && !this._isDestroyed) that.$updateByData();
+        if (that._isMounted && !this._isDestroyed) throttle(that.$updateByData, 2000, () => {
 
-        that.$$lifecycle('updated');
+          that.$$lifecycle('beforeUpdate');
+
+        }, () => {
+
+          that.$$lifecycle('updated');
+
+        });
 
       }
     });
