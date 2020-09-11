@@ -1,8 +1,9 @@
 import isFunction from "@yelloxing/core.js/isFunction";
+import evalExp from '../../tool/evalExp';
 
 export function valueMixin(LookView) {
 
-  let w, h, min, max;
+  let w = 0, h = 0, min = 0, max = 0;
 
   LookView.prototype.$$initValue = function (width, height) {
 
@@ -18,12 +19,13 @@ export function valueMixin(LookView) {
 
   LookView.prototype.$$calcValue = function (oralValue) {
 
-    let doFun = {
+    let doFuns = {
 
       // 数字类型
-      "number": function (value) {
+      "number": value => {
         value = (value + " ").trim();
 
+        // 常规的辅助计算
         if (/w$/.test(value)) {
           return (0 - -value.replace('w', '')) * w;
         } else if (/h$/.test(value)) {
@@ -36,7 +38,28 @@ export function valueMixin(LookView) {
           return (0 - -value.replace('pi', '')) * Math.PI;
         } else if (/deg$/.test(value)) {
           return (0 - -value.replace('deg', '')) / 180 * Math.PI;
-        } else {
+        }
+
+        // 一些比较特殊的，无法公共处理的，进行保留
+        else if (/em$/.test(value)) {
+          return value;
+        }
+
+        // 特殊的计算calc
+        else if (/^calc\(/.test(value)) {
+
+          let valueExp = value.replace(/^calc\(/, '').replace(/\)$/, '').replace(/ +/g, ' ').split(' ');
+
+          for (let i = 0; i < valueExp.length; i += 2) {
+            valueExp[i] = doFuns.number(valueExp[i]);
+          }
+
+          return evalExp(valueExp.join(' '));
+
+        }
+
+        // 默认只进行类型强转
+        else {
           return 0 - -value;
         }
 
@@ -71,7 +94,9 @@ export function valueMixin(LookView) {
 
       }
 
-    }[oralValue.type];
+    };
+
+    let doFun = doFuns[oralValue.type];
 
     if (isFunction(doFun)) {
       return doFun(oralValue.value);

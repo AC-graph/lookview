@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.2-alpha.1
+* version 2.0.2-alpha.2
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Thu Sep 10 2020 18:02:21 GMT+0800 (GMT+08:00)
+* Date:Fri Sep 11 2020 10:47:38 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2384,8 +2384,42 @@
     }
   }
 
-  // 文字
-  function text (painter, attr) {}
+  function text (painter, attr) {
+    var fontSize = 0 - -attr['font-size'] || 16;
+    var lineHeight = attr['line-height'] || fontSize * 1.5; // 行高比较特殊，重新计算
+
+    if (/em$/.test(lineHeight)) {
+      lineHeight = (0 - -lineHeight.replace('em', '')) * fontSize;
+    } // 配置画笔
+
+
+    painter.config({
+      "fillStyle": attr['fill-color'] || attr.color || '#000',
+      "strokeStyle": attr['stroke-color'] || attr.color || '#000',
+      "lineWidth": attr['line-width'] || 1,
+      "lineDash": attr['dash'] || [],
+      "font-size": fontSize,
+      "textAlign": attr['align'] || "left",
+      "textBaseline": attr['baseline'] || "middle",
+      "font-family": attr['family'] || "sans-serif"
+    });
+    var type = attr.type || 'full';
+
+    if (isFunction(painter[type + "Text"])) {
+      var values = (attr['value'] + "").replace(/\n/g, '↵').replace(/\r/g, '').replace(/\\n/g, '↵').split('↵'); // 由于文字可能多行，绘制的时候稍微特殊一点
+
+      for (var i = 0; i < values.length; i++) {
+        // 绘制
+        painter[type + "Text"](values[i], attr['x'], attr['y'] + (i + 0.5) * lineHeight, attr['deg'] || 0);
+      }
+    } else {
+      // 错误提示
+      console.error('[LookView warn]: Type error!' + JSON.stringify({
+        series: "text",
+        type: type
+      }));
+    }
+  }
 
   // 刻度尺
   function ruler (painter, attr) {}
@@ -2731,8 +2765,15 @@
     };
   }
 
+  function evalExp (evalExp) {
+    return new Function("return " + evalExp)();
+  }
+
   function valueMixin(LookView) {
-    var w, h, min, max;
+    var w = 0,
+        h = 0,
+        min = 0,
+        max = 0;
 
     LookView.prototype.$$initValue = function (width, height) {
       w = width * 0.01;
@@ -2744,10 +2785,10 @@
 
 
     LookView.prototype.$$calcValue = function (oralValue) {
-      var doFun = {
+      var doFuns = {
         // 数字类型
         "number": function number(value) {
-          value = (value + " ").trim();
+          value = (value + " ").trim(); // 常规的辅助计算
 
           if (/w$/.test(value)) {
             return (0 - -value.replace('w', '')) * w;
@@ -2761,9 +2802,22 @@
             return (0 - -value.replace('pi', '')) * Math.PI;
           } else if (/deg$/.test(value)) {
             return (0 - -value.replace('deg', '')) / 180 * Math.PI;
-          } else {
-            return 0 - -value;
-          }
+          } // 一些比较特殊的，无法公共处理的，进行保留
+          else if (/em$/.test(value)) {
+              return value;
+            } // 特殊的计算calc
+            else if (/^calc\(/.test(value)) {
+                var valueExp = value.replace(/^calc\(/, '').replace(/\)$/, '').replace(/ +/g, ' ').split(' ');
+
+                for (var i = 0; i < valueExp.length; i += 2) {
+                  valueExp[i] = doFuns.number(valueExp[i]);
+                }
+
+                return evalExp(valueExp.join(' '));
+              } // 默认只进行类型强转
+              else {
+                  return 0 - -value;
+                }
         },
         // 字符串类型
         "string": function string(value) {
@@ -2785,7 +2839,8 @@
                 return value;
               }
         }
-      }[oralValue.type];
+      };
+      var doFun = doFuns[oralValue.type];
 
       if (isFunction(doFun)) {
         return doFun(oralValue.value);

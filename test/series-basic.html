@@ -10,7 +10,7 @@
 
   <style>
     body>div {
-      background-color: rgb(140, 140, 155);
+      background-color: rgb(105, 104, 13);
     }
   </style>
 
@@ -29,8 +29,14 @@
     </circle>
 
     <!-- rect矩形 -->
-    <rect stroke-color='pink' line-width='10' x::number='10w' y::number='250' width::number='400' height='300'>
+    <rect stroke-color='pink' line-width='10' y::number='400' x::number='calc(50w - 200)' width::number='400'
+      height='300'>
     </rect>
+
+    <!-- 文字 -->
+    <text x::number='calc(50w - 180)' y::number='420' color='white' type='fill' value='绘制的文字\n第二行'></text>
+    <text line-height::number='3.6em' x::number='calc(50w - 180)' y::number='470' color='red' type='fill'
+      l-bind:value='text'></text>
 
   </div>
 
@@ -44,7 +50,11 @@
       // 数据
       data: function () {
         return {
-          deg: '0deg'
+          deg: '0deg',
+          text: `第一行
+第二行：xxxx
+...
+更多`
         };
       },
 
