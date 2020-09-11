@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.2-alpha.2
+* version 2.0.2-alpha.3
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Fri Sep 11 2020 10:47:38 GMT+0800 (GMT+08:00)
+* Date:Fri Sep 11 2020 14:30:10 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2765,7 +2765,10 @@
     };
   }
 
+  // 执行一段表达式，返回值
   function evalExp (evalExp) {
+    // eval中的代码执行时的作用域为当前作用域
+    // new Function中的代码执行时的作用域为全局作用域
     return new Function("return " + evalExp)();
   }
 
