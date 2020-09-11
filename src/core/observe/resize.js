@@ -18,6 +18,7 @@ export default function (that) {
   // 创建监听对象
   if (!that.__resizeObserver) {
     that.__resizeObserver = new ResizeObserver(() => {
+      
       throttle(that.$updateByResize, 1000);
     });
   }

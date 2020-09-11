@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.2-alpha.3
+* version 2.0.2-alpha.4
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Fri Sep 11 2020 14:30:10 GMT+0800 (GMT+08:00)
+* Date:Fri Sep 11 2020 16:06:49 GMT+0800 (GMT+08:00)
 */
         
 (function () {
@@ -2680,27 +2680,47 @@
     LookView.prototype.$updateByResize = function (__notPainter, __needAnimation) {
       var _this2 = this;
 
-      this.$$lifecycle('beforeResize');
-      var oldSize = this._size; // 和别的绘图方法相比，我们唯一需要额外处理的是画布大小相关的内容
+      var oldSize = this._size,
+          newSize = image2D_min(this.__el).size('content');
 
-      this._size = image2D_min(this.__el).size('content'); // 设置画布大小
+      if (oldSize) {
+        var dw = oldSize.width - newSize.width;
+        var dh = oldSize.height - newSize.height; // 如果屏幕改变的特别小，忽略这次缩放
+
+        if (dw < 0.0001 && dw > -0.0001 && dh < 0.0001 && dh > -0.0001) {
+          return this;
+        }
+      }
+
+      this.$$lifecycle('beforeResize'); // 和别的绘图方法相比，我们唯一需要额外处理的是画布大小相关的内容
+
+      this._size = newSize; // 设置画布大小
 
       this.__canvas.attr({
-        width: this._size.width,
-        height: this._size.height
+        width: newSize.width,
+        height: newSize.height
       });
 
-      this.__painter = this.__canvas.painter();
-      image2D_min.animation(function (deep) {
-        var width = oldSize ? (_this2._size.width - oldSize.width) * deep + oldSize.width : _this2._size.width;
-        var height = oldSize ? (_this2._size.height - oldSize.height) * deep + oldSize.height : _this2._size.height; // 部分数据的计算依赖尺寸，因此这里需要重新初始化
+      this.__painter = this.__canvas.painter(); // 屏幕缩放，启动动画
 
-        _this2.$$initValue(width, height);
+      if (!__notPainter && __needAnimation && oldSize) {
+        image2D_min.animation(function (deep) {
+          var width = oldSize ? (newSize.width - oldSize.width) * deep + oldSize.width : newSize.width;
+          var height = oldSize ? (newSize.height - oldSize.height) * deep + oldSize.height : newSize.height; // 部分数据的计算依赖尺寸，因此这里需要重新初始化
 
-        if (!__notPainter) _this2.$$painter();
-      }, !__notPainter && __needAnimation && oldSize ? 1000 : 0, function () {
-        _this2.$$lifecycle('resized');
-      });
+          _this2.$$initValue(width, height);
+
+          if (!__notPainter) _this2.$$painter();
+        }, 1000, function () {
+          _this2.$$lifecycle('resized');
+        });
+      } // 不然是第一次绘制，不需要动画
+      else {
+          this.$$initValue(newSize.width, newSize.height);
+          if (!__notPainter) this.$$painter();
+          this.$$lifecycle('resized');
+        }
+
       return this;
     }; // 数据改变调用的重绘方法
 
@@ -3019,9 +3039,9 @@
 
 
     el.innerHTML = '';
-    this.__canvas = image2D_min('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(el); // 绘制
+    this.__canvas = image2D_min('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(el); // // 绘制
 
-    this.$updateView(); // 挂载后以后，启动画布大小监听
+    this.$updateView(true); // 挂载后以后，启动画布大小监听
 
     resize(this);
     this._isMounted = true;

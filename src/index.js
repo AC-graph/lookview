@@ -58,8 +58,8 @@ LookView.prototype.$mount = function (el, __isFocus) {
     el.innerHTML = '';
     this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(el);
 
-    // 绘制
-    this.$updateView();
+    // // 绘制
+    this.$updateView(true);
 
     // 挂载后以后，启动画布大小监听
     resize(this);

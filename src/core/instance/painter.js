@@ -35,36 +35,60 @@ export function painterMixin(LookView) {
 
   // 画布大小改变调用的重绘方法
   LookView.prototype.$updateByResize = function (__notPainter, __needAnimation) {
+
+    let oldSize = this._size, newSize = $$(this.__el).size('content');
+
+    if (oldSize) {
+      let dw = oldSize.width - newSize.width;
+      let dh = oldSize.height - newSize.height;
+
+      // 如果屏幕改变的特别小，忽略这次缩放
+      if (dw < 0.0001 && dw > -0.0001 && dh < 0.0001 && dh > -0.0001) {
+        return this;
+      }
+    }
+
     this.$$lifecycle('beforeResize');
 
-    let oldSize = this._size;
-
     // 和别的绘图方法相比，我们唯一需要额外处理的是画布大小相关的内容
-    this._size = $$(this.__el).size('content');
+    this._size = newSize;
 
     // 设置画布大小
     this.__canvas.attr({
-      width: this._size.width,
-      height: this._size.height
+      width: newSize.width,
+      height: newSize.height
     });
 
     this.__painter = this.__canvas.painter();
 
-    $$.animation((deep) => {
+    // 屏幕缩放，启动动画
+    if (!__notPainter && __needAnimation && oldSize) {
 
-      let width = oldSize ? (this._size.width - oldSize.width) * deep + oldSize.width : this._size.width;
-      let height = oldSize ? (this._size.height - oldSize.height) * deep + oldSize.height : this._size.height;
+      $$.animation((deep) => {
 
-      // 部分数据的计算依赖尺寸，因此这里需要重新初始化
-      this.$$initValue(width, height);
+        let width = oldSize ? (newSize.width - oldSize.width) * deep + oldSize.width : newSize.width;
+        let height = oldSize ? (newSize.height - oldSize.height) * deep + oldSize.height : newSize.height;
 
+        // 部分数据的计算依赖尺寸，因此这里需要重新初始化
+        this.$$initValue(width, height);
+
+        if (!__notPainter) this.$$painter();
+
+      }, 1000, () => {
+
+        this.$$lifecycle('resized');
+
+      });
+    }
+
+    // 不然是第一次绘制，不需要动画
+    else {
+
+      this.$$initValue(newSize.width, newSize.height);
       if (!__notPainter) this.$$painter();
-
-    }, (!__notPainter && __needAnimation && oldSize) ? 1000 : 0, () => {
-
       this.$$lifecycle('resized');
 
-    });
+    }
 
     return this;
   };
