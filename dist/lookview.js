@@ -15,7 +15,7 @@
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Mon Sep 14 2020 16:51:24 GMT+0800 (GMT+08:00)
+* Date:Mon Sep 14 2020 22:32:30 GMT+0800 (GMT+08:00)
 */
             
 (function () {
@@ -981,14 +981,15 @@
         return [+i[0], +i[1], +i[2], i[3] == undefined ? 1 : +i[3]];
       };
 
-      var U = function t(e) {
-        var r = [];
+      var U = function t(e, r) {
+        if (!(r && r >= 0 && r <= 1)) r = 1;
+        var n = [];
 
-        for (var n = 1; n <= e; n++) {
-          r.push("rgb(" + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + ")");
+        for (var i = 1; i <= e; i++) {
+          n.push("rgba(" + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + r + ")");
         }
 
-        return r;
+        return n;
       };
 
       var X = function t(e, r) {
