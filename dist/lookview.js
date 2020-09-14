@@ -1,3 +1,23 @@
+
+/*!
+* lookview - 提供更友好的数据可视化解决方案
+* https://github.com/AC-graph/lookview
+*
+* Includes image2D.js
+* https://yelloxing.gitee.io/image2d
+* 
+* author 心叶
+*
+* version 2.0.2-alpha.5
+* 
+* build Fri Sep 04 2020
+*
+* Copyright 心叶
+* Released under the MIT license
+* 
+* Date:Mon Sep 14 2020 11:06:05 GMT+0800 (GMT+08:00)
+*/
+            
 (function () {
   'use strict';
 
@@ -2309,7 +2329,8 @@
     var type = attr.type || 'full';
 
     if (isFunction(painter[type + "Arc"])) {
-      // 绘制
+      console.log(attr.begin); // 绘制
+
       painter[type + "Arc"](attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
     } else {
       // 错误提示
@@ -2802,9 +2823,9 @@
           } else if (/max$/.test(value)) {
             return (0 - -value.replace('max', '')) * max;
           } else if (/pi$/.test(value)) {
-            return (0 - -value.replace('pi', '')) * Math.PI;
+            return (0 - -value.replace('pi', '')) * Math.PI % (Math.PI * 2);
           } else if (/deg$/.test(value)) {
-            return (0 - -value.replace('deg', '')) / 180 * Math.PI;
+            return (0 - -value.replace('deg', '')) % 360 / 180 * Math.PI;
           } // 一些比较特殊的，无法公共处理的，进行保留
           else if (/em$/.test(value)) {
               return value;

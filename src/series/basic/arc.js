@@ -16,6 +16,8 @@ export default function (painter, attr) {
 
   if (isFunction(painter[type + "Arc"])) {
 
+    console.log(attr.begin );
+
     // 绘制
     painter[type + "Arc"](attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
   } else {

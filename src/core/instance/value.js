@@ -35,9 +35,9 @@ export function valueMixin(LookView) {
         } else if (/max$/.test(value)) {
           return (0 - -value.replace('max', '')) * max;
         } else if (/pi$/.test(value)) {
-          return (0 - -value.replace('pi', '')) * Math.PI;
+          return ((0 - -value.replace('pi', '')) * Math.PI) % (Math.PI * 2);
         } else if (/deg$/.test(value)) {
-          return (0 - -value.replace('deg', '')) / 180 * Math.PI;
+          return ((0 - -value.replace('deg', '')) % 360 / 180 * Math.PI);
         }
 
         // 一些比较特殊的，无法公共处理的，进行保留
