@@ -10,15 +10,20 @@ export function painterMixin(LookView) {
     this.__painter.clearRect();
 
     // 后期可以通过此添加一些额外的辅助数据，目前没有考虑好，因此预留
-    let nouse = {
-      "info": "预留"
-    };
+    let nouse = {};
 
     this.__renderSeries.forEach(item => {
 
-      let attr = {};
+      let fontSize = 16, attr = {};
+
+      // 由于em单位导致font-size比较特殊，我们先计算出来留着使用
+      if (item.attr['font-size']) fontSize = this.$$calcValue('font-size', fontSize);
+      attr['font-size'] = fontSize;
+
       for (let key in item.attr) {
-        attr[key] = this.$$calcValue(item.attr[key]);
+        if (key != 'font-size') {
+          attr[key] = this.$$calcValue(item.attr[key], fontSize);
+        }
       }
 
       this.__series[item.series].call(nouse, this.__painter, attr);

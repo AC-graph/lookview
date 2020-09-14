@@ -4,13 +4,7 @@ import isFunction from '@yelloxing/core.js/isFunction';
 
 export default function (painter, attr) {
 
-  let fontSize = (0 - -attr['font-size']) || 16;
-  let lineHeight = attr['line-height'] || fontSize * 1.5;
-
-  // 行高比较特殊，重新计算
-  if (/em$/.test(lineHeight)) {
-    lineHeight = (0 - -lineHeight.replace('em', '')) * fontSize;
-  }
+  let lineHeight = attr['line-height'] || attr['font-size'] * 1.5;
 
   // 配置画笔
   painter.config({
@@ -18,7 +12,7 @@ export default function (painter, attr) {
     "strokeStyle": attr['stroke-color'] || attr.color || '#000',
     "lineWidth": attr['line-width'] || 1,
     "lineDash": attr['dash'] || [],
-    "font-size": fontSize,
+    "font-size": attr['font-size'],
     "textAlign": attr['align'] || "left",
     "textBaseline": attr['baseline'] || "middle",
     "font-family": attr['family'] || "sans-serif"

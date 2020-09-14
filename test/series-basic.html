@@ -7,13 +7,12 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>基础对象设计 | 测试</title>
   <script src="../dist/lookview.js"></script>
-
+  <link rel="shortcut icon" href="../logo-100.png">
   <style>
     body>div {
       background-color: rgb(105, 104, 13);
     }
   </style>
-
 </head>
 
 <body>
@@ -21,8 +20,8 @@
   <div id="root" style='height:1000px'>
 
     <!-- arc弧形 -->
-    <arc type='full' fill-color='green' color='red' line-width='30' cx::number='50w' cy::number=250 radius2::number='100'
-      radius1::number='200' l-bind:begin::number='deg' value::number='0.7pi'></arc>
+    <arc type='full' fill-color='green' color='red' line-width='30' cx::number='50w' cy::number=250
+      radius2::number='100' radius1::number='200' l-bind:begin::number='deg' value::number='0.7pi'></arc>
 
     <!-- circle圆 -->
     <circle fill-color='blue' line-width='20' cx::number='50w' cy='250' radius='75' type='full'>
@@ -35,7 +34,7 @@
 
     <!-- 文字 -->
     <text x::number='calc(50w - 180)' y::number='420' color='white' type='fill' value='绘制的文字\n第二行'></text>
-    <text line-height::number='3.6em' x::number='calc(50w - 180)' y::number='470' color='red' type='fill'
+    <text line-height::number='calc(3.6em - 1.6em)' x::number='calc(50w - 180)' y::number='470' color='red' type='fill'
       l-bind:value='text'></text>
 
   </div>

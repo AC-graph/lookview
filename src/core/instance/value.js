@@ -17,7 +17,7 @@ export function valueMixin(LookView) {
 
   // 针对特殊内心提供前置（交付给具体的绘图方法前）的数据计算方法
 
-  LookView.prototype.$$calcValue = function (oralValue) {
+  LookView.prototype.$$calcValue = function (oralValue, fontSize) {
 
     let doFuns = {
 
@@ -40,9 +40,9 @@ export function valueMixin(LookView) {
           return (0 - -value.replace('deg', '')) / 180 * Math.PI;
         }
 
-        // 一些比较特殊的，无法公共处理的，进行保留
+        // 文字
         else if (/em$/.test(value)) {
-          return value;
+          return (0 - -value.replace('em', '')) * fontSize;
         }
 
         // 特殊的计算calc

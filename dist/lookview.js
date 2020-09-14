@@ -15,7 +15,7 @@
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Mon Sep 14 2020 11:41:58 GMT+0800 (GMT+08:00)
+* Date:Mon Sep 14 2020 14:45:22 GMT+0800 (GMT+08:00)
 */
             
 (function () {
@@ -1380,7 +1380,6 @@
       }
 
       var Tt = function t(e, r, n, i, o) {
-        o = o % (Math.PI * 2);
         e.beginPath();
         e.translate(n, i);
         e.rotate(o);
@@ -1397,7 +1396,7 @@
 
         e = e % (Math.PI * 2);
 
-        if (r >= Math.PI * 2 || r <= -Math.PI * 2) {
+        if (r >= Math.PI * 1.999999 || r <= -Math.PI * 1.999999) {
           r = Math.PI * 2;
         } else {
           r = r % (Math.PI * 2);
@@ -2046,6 +2045,7 @@
             return d;
           },
           rotate: function t(e) {
+            e = e % (Math.PI * 2);
             c += " rotate(" + e / Math.PI * 180 + ")";
             return d;
           },
@@ -2347,8 +2347,7 @@
     var type = attr.type || 'full';
 
     if (isFunction(painter[type + "Arc"])) {
-      console.log(attr.begin); // 绘制
-
+      // 绘制
       painter[type + "Arc"](attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
     } else {
       // 错误提示
@@ -2404,20 +2403,14 @@
   }
 
   function text (painter, attr) {
-    var fontSize = 0 - -attr['font-size'] || 16;
-    var lineHeight = attr['line-height'] || fontSize * 1.5; // 行高比较特殊，重新计算
-
-    if (/em$/.test(lineHeight)) {
-      lineHeight = (0 - -lineHeight.replace('em', '')) * fontSize;
-    } // 配置画笔
-
+    var lineHeight = attr['line-height'] || attr['font-size'] * 1.5; // 配置画笔
 
     painter.config({
       "fillStyle": attr['fill-color'] || attr.color || '#000',
       "strokeStyle": attr['stroke-color'] || attr.color || '#000',
       "lineWidth": attr['line-width'] || 1,
       "lineDash": attr['dash'] || [],
-      "font-size": fontSize,
+      "font-size": attr['font-size'],
       "textAlign": attr['align'] || "left",
       "textBaseline": attr['baseline'] || "middle",
       "font-family": attr['family'] || "sans-serif"
@@ -2673,15 +2666,19 @@
       this.__painter.clearRect(); // 后期可以通过此添加一些额外的辅助数据，目前没有考虑好，因此预留
 
 
-      var nouse = {
-        "info": "预留"
-      };
+      var nouse = {};
 
       this.__renderSeries.forEach(function (item) {
-        var attr = {};
+        var fontSize = 16,
+            attr = {}; // 由于em单位导致font-size比较特殊，我们先计算出来留着使用
+
+        if (item.attr['font-size']) fontSize = _this.$$calcValue('font-size', fontSize);
+        attr['font-size'] = fontSize;
 
         for (var key in item.attr) {
-          attr[key] = _this.$$calcValue(item.attr[key]);
+          if (key != 'font-size') {
+            attr[key] = _this.$$calcValue(item.attr[key], fontSize);
+          }
         }
 
         _this.__series[item.series].call(nouse, _this.__painter, attr);
@@ -2826,7 +2823,7 @@
     }; // 针对特殊内心提供前置（交付给具体的绘图方法前）的数据计算方法
 
 
-    LookView.prototype.$$calcValue = function (oralValue) {
+    LookView.prototype.$$calcValue = function (oralValue, fontSize) {
       var doFuns = {
         // 数字类型
         "number": function number(value) {
@@ -2844,9 +2841,9 @@
             return (0 - -value.replace('pi', '')) * Math.PI;
           } else if (/deg$/.test(value)) {
             return (0 - -value.replace('deg', '')) / 180 * Math.PI;
-          } // 一些比较特殊的，无法公共处理的，进行保留
+          } // 文字
           else if (/em$/.test(value)) {
-              return value;
+              return (0 - -value.replace('em', '')) * fontSize;
             } // 特殊的计算calc
             else if (/^calc\(/.test(value)) {
                 var valueExp = value.replace(/^calc\(/, '').replace(/\)$/, '').replace(/ +/g, ' ').split(' ');
