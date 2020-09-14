@@ -13,6 +13,8 @@ export default function (LookView) {
 
     LookView.prototype.__series[name] = seriesFunction;
 
+    return LookView;
+
   };
 
 };

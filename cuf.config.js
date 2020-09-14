@@ -11,9 +11,12 @@ module.exports = {
     pkg: '.',
 
     // 注册任务
-    task(cuf, pkg, rootPath) {
+    task: {
 
-        let banner = `
+        // 添加打包后的banner
+        banner: function (cuf, pkg, rootPath) {
+
+            let banner = `
 /*!
 * lookview - ${pkg.description}
 * https://github.com/AC-graph/lookview
@@ -32,16 +35,30 @@ module.exports = {
 * 
 * Date:${new Date()}
 */
-        `;
+            `;
 
-        [
-            path.join(rootPath, './dist/lookview.js'),
-            path.join(rootPath, './dist/lookview.min.js')
-        ].forEach(targetPath => {
+            [
+                path.join(rootPath, './dist/lookview.js'),
+                path.join(rootPath, './dist/lookview.min.js')
+            ].forEach(targetPath => {
 
-            fs.writeFileSync(targetPath, banner + "\n" + fs.readFileSync(targetPath));
+                fs.writeFileSync(targetPath, banner + "\n" + fs.readFileSync(targetPath));
 
-        });
+            });
+
+        },
+
+        // 复制依赖库的types
+        types: function (cuf, pkg, rootPath) {
+
+                cuf.copySync(
+                    path.join(rootPath, './node_modules/image2d/types'),
+                    path.join(rootPath, './types/image2d'),
+                    true
+                );
+
+        }
 
     }
+
 };

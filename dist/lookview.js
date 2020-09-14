@@ -1,23 +1,3 @@
-
-/*!
-* lookview - 提供更友好的数据可视化解决方案
-* https://github.com/AC-graph/lookview
-*
-* Includes image2D.js
-* https://yelloxing.gitee.io/image2d
-* 
-* author 心叶
-*
-* version 2.0.2-alpha.4
-* 
-* build Fri Sep 04 2020
-*
-* Copyright 心叶
-* Released under the MIT license
-* 
-* Date:Fri Sep 11 2020 16:06:49 GMT+0800 (GMT+08:00)
-*/
-        
 (function () {
   'use strict';
 
@@ -2964,6 +2944,7 @@
       }
 
       LookView.prototype.__series[name] = seriesFunction;
+      return LookView;
     };
   }
 
