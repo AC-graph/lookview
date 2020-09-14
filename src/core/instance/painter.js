@@ -62,6 +62,9 @@ export function painterMixin(LookView) {
     this.__canvas.attr({
       width: newSize.width,
       height: newSize.height
+    }).css({
+      width: this._size.width+"px",
+      height: this._size.height+"px"
     });
 
     this.__painter = this.__canvas.painter();
