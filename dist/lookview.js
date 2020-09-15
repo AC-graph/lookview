@@ -15,7 +15,7 @@
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Mon Sep 14 2020 15:04:54 GMT+0800 (GMT+08:00)
+* Date:Mon Sep 14 2020 22:32:30 GMT+0800 (GMT+08:00)
 */
             
 (function () {
@@ -447,7 +447,7 @@
         return e;
       }
 
-      var E = function t(e, r, n, i, o) {
+      var M = function t(e, r, n, i, o) {
         var a = Math.cos(n),
             f = Math.sin(n);
         return [+((i - e) * a - (o - r) * f + e).toFixed(7), +((i - e) * f + (o - r) * a + r).toFixed(7)];
@@ -472,7 +472,7 @@
           rotate: function t(e) {
             var r = o.d[0] + o.p[0],
                 n = o.d[1] + o.p[1];
-            var i = E(o.p[0], o.p[1], e, r, n);
+            var i = M(o.p[0], o.p[1], e, r, n);
             o.d = [i[0] - o.p[0], i[1] - o.p[1]];
             return a;
           },
@@ -536,7 +536,7 @@
             for (var g in r.node) {
               var y = r.node[g];
               r.node[g].deg = (m["begin-deg"] - -p * y.top) % (Math.PI * 2);
-              var w = E(m.cx, m.cy, r.node[g].deg, m.cx - -v * (y.left - .5), m.cy);
+              var w = M(m.cx, m.cy, r.node[g].deg, m.cx - -v * (y.left - .5), m.cy);
               r.node[g].left = +w[0];
               r.node[g].top = +w[1];
             }
@@ -601,7 +601,7 @@
           if (g(u.cx) && g(u.cy)) {
             for (r = 0; r < u.radius.length; r++) {
               for (var f = 0; f < n.length; f++) {
-                n[f].dots.push(E(u.cx, u.cy, n[f].beginDeg + n[f].deg * .5, u.cx + u.radius[r], u.cy));
+                n[f].dots.push(M(u.cx, u.cy, n[f].beginDeg + n[f].deg * .5, u.cx + u.radius[r], u.cy));
               }
             }
           }
@@ -630,7 +630,7 @@
         return [1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, e * t / i, r * t / i, n * t / i, 1];
       }
 
-      function M(t) {
+      function E(t) {
         var e = Math.sin(t),
             r = Math.cos(t);
         return [r, e, 0, 0, -e, r, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
@@ -695,7 +695,7 @@
           },
           rotate: function t(e, r, n, i, o, a, f) {
             var u = P(r, n, i, o, a, f);
-            l = S(S(S(u[1], M(e)), u[0]), l);
+            l = S(S(S(u[1], E(e)), u[0]), l);
             return s;
           },
           scale: function t(e, r, n, i, o, a) {
@@ -726,9 +726,9 @@
       var L = [];
       var N = 13;
       var j = 400;
-      var D = null;
+      var I = null;
 
-      function I(e, t, r) {
+      function D(e, t, r) {
         var u = {
           timer: function t(e, r, n) {
             if (!e) {
@@ -748,8 +748,8 @@
             return i;
           },
           start: function t() {
-            if (!D) {
-              D = setInterval(u.tick, N);
+            if (!I) {
+              I = setInterval(u.tick, N);
             }
           },
           tick: function t() {
@@ -786,9 +786,9 @@
             }
           },
           stop: function t() {
-            if (D) {
-              clearInterval(D);
-              D = null;
+            if (I) {
+              clearInterval(I);
+              I = null;
             }
           }
         };
@@ -900,7 +900,7 @@
           }).setP(0, 0, 1, 1, i[1] / i[0], (1 - i[3]) / (1 - i[2]));
         }
 
-        return I(function (t) {
+        return D(function (t) {
           e(o(t));
         }, t, function (t) {
           if (b(r)) {
@@ -981,14 +981,15 @@
         return [+i[0], +i[1], +i[2], i[3] == undefined ? 1 : +i[3]];
       };
 
-      var U = function t(e) {
-        var r = [];
+      var U = function t(e, r) {
+        if (!(r && r >= 0 && r <= 1)) r = 1;
+        var n = [];
 
-        for (var n = 1; n <= e; n++) {
-          r.push("rgb(" + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + ")");
+        for (var i = 1; i <= e; i++) {
+          n.push("rgba(" + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + r + ")");
         }
 
-        return r;
+        return n;
       };
 
       var X = function t(e, r) {
@@ -1357,9 +1358,6 @@
       };
 
       function _t(t, e, r, n, i, o, a) {
-        if (e > Math.PI * 2) e = Math.PI * 2;
-        if (e < -Math.PI * 2) e = -Math.PI * 2;
-
         if (e < 0) {
           t += e;
           e *= -1;
@@ -1367,16 +1365,16 @@
 
         var f = [],
             u = void 0;
-        u = E(0, 0, t, i, 0);
+        u = M(0, 0, t, i, 0);
         f[0] = u[0];
         f[1] = u[1];
-        u = E(0, 0, e, u[0], u[1]);
+        u = M(0, 0, e, u[0], u[1]);
         f[2] = u[0];
         f[3] = u[1];
-        u = E(0, 0, t, o, 0);
+        u = M(0, 0, t, o, 0);
         f[4] = u[0];
         f[5] = u[1];
-        u = E(0, 0, e, u[0], u[1]);
+        u = M(0, 0, e, u[0], u[1]);
         f[6] = u[0];
         f[7] = u[1];
         a(t, t + e, f[0] + r, f[1] + n, f[4] + r, f[5] + n, f[2] + r, f[3] + n, f[6] + r, f[7] + n, (o - i) * .5);
@@ -1391,8 +1389,18 @@
       };
 
       var kt = function t(c, d, h, v, p, g, e, r) {
-        if (r >= Math.PI * 2 || r <= -Math.PI * 2) {
+        if (p > g) {
+          var n = p;
+          p = g;
+          g = n;
+        }
+
+        e = e % (Math.PI * 2);
+
+        if (r >= Math.PI * 1.999999 || r <= -Math.PI * 1.999999) {
           r = Math.PI * 2;
+        } else {
+          r = r % (Math.PI * 2);
         }
 
         _t(e, r, h, v, p, g, function (t, e, r, n, i, o, a, f, u, l, s) {
@@ -1405,18 +1413,18 @@
           if (d["arc-start-cap"] != "round") c.lineTo(r, n);else c.arc((r + i) * .5, (n + o) * .5, s, t, t - Math.PI, true);
         });
 
-        c.closePath();
+        if (d["arc-start-cap"] == "butt") c.closePath();
         return c;
       };
 
-      var Et = function t(e, r, n, i) {
+      var Mt = function t(e, r, n, i) {
         e.beginPath();
         e.moveTo(r + i, n);
         e.arc(r, n, i, 0, Math.PI * 2);
         return e;
       };
 
-      var Mt = function t(e, r, n, i, o) {
+      var Et = function t(e, r, n, i, o) {
         e.beginPath();
         e.rect(r, n, i, o);
         return e;
@@ -1619,29 +1627,29 @@
             return d;
           },
           fillCircle: function t(e, r, n) {
-            Et(c, e, r, n).fill();
+            Mt(c, e, r, n).fill();
             return d;
           },
           strokeCircle: function t(e, r, n) {
-            Et(c, e, r, n).stroke();
+            Mt(c, e, r, n).stroke();
             return d;
           },
           fullCircle: function t(e, r, n) {
-            Et(c, e, r, n);
+            Mt(c, e, r, n);
             c.fill();
             c.stroke();
             return d;
           },
           fillRect: function t(e, r, n, i) {
-            Mt(c, e, r, n, i).fill();
+            Et(c, e, r, n, i).fill();
             return d;
           },
           strokeRect: function t(e, r, n, i) {
-            Mt(c, e, r, n, i).stroke();
+            Et(c, e, r, n, i).stroke();
             return d;
           },
           fullRect: function t(e, r, n, i) {
-            Mt(c, e, r, n, i);
+            Et(c, e, r, n, i);
             c.fill();
             c.stroke();
             return d;
@@ -1683,6 +1691,7 @@
 
       var Lt = function t(e, r, n, i, o) {
         if (!e || e.length <= 0 || e[0].nodeName.toLowerCase() !== "text") throw new Error("Need a <text> !");
+        o = o % (Math.PI * 2);
         e.attr("dy", {
           top: r["font-size"] * .5,
           middle: 0,
@@ -1702,11 +1711,20 @@
       };
 
       var Nt = function t(h, v, e, r, p, g, n, i) {
-        if (i >= Math.PI * 1.999999 || i <= -Math.PI * 1.999999) {
-          i = Math.PI * 1.999999;
+        if (!h || h.length <= 0 || h[0].nodeName.toLowerCase() !== "path") throw new Error("Need a <path> !");
+        n = n % (Math.PI * 2);
+
+        if (p > g) {
+          var o = p;
+          p = g;
+          g = o;
         }
 
-        if (!h || h.length <= 0 || h[0].nodeName.toLowerCase() !== "path") throw new Error("Need a <path> !");
+        if (i >= Math.PI * 1.999999 || i <= -Math.PI * 1.999999) {
+          i = Math.PI * 1.999999;
+        } else {
+          i = i % (Math.PI * 2);
+        }
 
         _t(n, i, e, r, p, g, function (t, e, r, n, i, o, a, f, u, l, s) {
           var c = e - t > Math.PI ? 1 : 0,
@@ -1716,7 +1734,8 @@
           if (v["arc-end-cap"] != "round") d += "L" + u + " " + l;else d += "A" + s + " " + s + " " + " 0 1 0 " + u + " " + l;
           d += "A" + g + " " + g + " 0 " + c + " 0 " + i + " " + o;
           if (v["arc-start-cap"] != "round") d += "L" + r + " " + n;else d += "A" + s + " " + s + " " + " 0 1 0 " + r + " " + n;
-          h.attr("d", d + "Z");
+          if (v["arc-start-cap"] == "butt") d += "Z";
+          h.attr("d", d);
         });
 
         return h;
@@ -1732,13 +1751,13 @@
         return e;
       };
 
-      var Dt = function t(e, r) {
+      var It = function t(e, r) {
         if (!e || e.length <= 0 || e[0].nodeName.toLowerCase() !== "path") throw new Error("Need a <path> !");
         e.attr("d", r);
         return e;
       };
 
-      var It = function t(e, r, n, i, o) {
+      var Dt = function t(e, r, n, i, o) {
         if (!e || e.length <= 0 || e[0].nodeName.toLowerCase() !== "rect") throw new Error("Need a <rect> !");
 
         if (o < 0) {
@@ -1876,8 +1895,8 @@
             return d;
           },
           arc: function t(e, r, n, i, o) {
-            var a = E(e, r, i, e + n, r);
-            var f = E(e, r, i + o, e + n, r);
+            var a = M(e, r, i, e + n, r);
+            var f = M(e, r, i + o, e + n, r);
             i = i / Math.PI * 180;
             o = o / Math.PI * 180;
 
@@ -1891,11 +1910,11 @@
             return d;
           },
           fill: function t() {
-            Dt(f, l).attr("transform", c).attr("fill", u.fillStyle);
+            It(f, l).attr("transform", c).attr("fill", u.fillStyle);
             return d;
           },
           stroke: function t() {
-            Dt(f, l).attr("transform", c).attr({
+            It(f, l).attr("transform", c).attr({
               "stroke-width": u.lineWidth,
               stroke: u.strokeStyle,
               fill: "none",
@@ -1904,7 +1923,7 @@
             return d;
           },
           full: function t() {
-            Dt(f, l).attr("transform", c).attr({
+            It(f, l).attr("transform", c).attr({
               "stroke-width": u.lineWidth,
               stroke: u.strokeStyle,
               fill: u.fillStyle,
@@ -1996,11 +2015,11 @@
             return d;
           },
           fillRect: function t(e, r, n, i) {
-            It(f, e, r, n, i).attr("transform", c).attr("fill", u.fillStyle);
+            Dt(f, e, r, n, i).attr("transform", c).attr("fill", u.fillStyle);
             return d;
           },
           strokeRect: function t(e, r, n, i) {
-            It(f, e, r, n, i).attr("transform", c).attr({
+            Dt(f, e, r, n, i).attr("transform", c).attr({
               "stroke-width": u.lineWidth,
               stroke: u.strokeStyle,
               fill: "none",
@@ -2009,7 +2028,7 @@
             return d;
           },
           fullRect: function t(e, r, n, i) {
-            It(f, e, r, n, i).attr("transform", c).attr({
+            Dt(f, e, r, n, i).attr("transform", c).attr({
               "stroke-width": u.lineWidth,
               stroke: u.strokeStyle,
               fill: u.fillStyle,
@@ -2028,6 +2047,7 @@
             return d;
           },
           rotate: function t(e) {
+            e = e % (Math.PI * 2);
             c += " rotate(" + e / Math.PI * 180 + ")";
             return d;
           },
@@ -2111,7 +2131,7 @@
         treeLayout: p,
         pieLayout: y,
         Matrix4: A,
-        rotate: E,
+        rotate: M,
         move: d,
         scale: h,
         dot: v,
@@ -2324,7 +2344,9 @@
       "fillStyle": attr['fill-color'] || attr.color || '#000',
       "strokeStyle": attr['stroke-color'] || attr.color || '#000',
       "lineWidth": attr['line-width'] || 1,
-      "lineDash": attr['dash'] || []
+      "lineDash": attr['dash'] || [],
+      "arc-start-cap": "round",
+      "arc-end-cap": "round"
     });
     var type = attr.type || 'full';
 

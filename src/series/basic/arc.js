@@ -9,7 +9,9 @@ export default function (painter, attr) {
     "fillStyle": attr['fill-color'] || attr.color || '#000',
     "strokeStyle": attr['stroke-color'] || attr.color || '#000',
     "lineWidth": attr['line-width'] || 1,
-    "lineDash": attr['dash'] || []
+    "lineDash": attr['dash'] || [],
+    "arc-start-cap":"round",
+    "arc-end-cap":"round"
   });
 
   let type = attr.type || 'full';
