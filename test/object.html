@@ -8,25 +8,13 @@
     <title>基础对象设计 | 测试</title>
     <script src="../dist/lookview.js"></script>
     <link rel="shortcut icon" href="../logo-100.png">
-    <style>
-        body>div {
-            background-color: rgb(140, 140, 155);
-        }
-    </style>
 </head>
 
 <body>
 
     <div id="root" style='height:500px'>
-        <arc type='fill' fill-color='red' color='blue' line-width='30' cx::number='50w' info='111' cy::number=250
-            radius2::bumber='100' radius1::number='200' begin::number='0' value::number='270deg'></arc>
-        <group>
-            <arc l-if='flag' cx::number=250 cy::number=250 radius1::number='200' begin::number='90deg'
-                value::number='1pi'></arc>
-            <arc l-if='flag' l-bind:cx::number='x' cy::number=250 radius1::number='200' begin::number='180deg'
-                value::number='1pi'>
-            </arc>
-        </group>
+        <arc type='stroke' fill-color='red' line-width='30' cx::rulerName='50w' cy::rulerName=250
+            radius2::rulerName='100' radius1::rulerName='200' begin::rulerName='0' deg::rulerName='270deg'></arc>
     </div>
 
     <script>
@@ -39,7 +27,6 @@
             // 数据
             data: function () {
                 return {
-                    info: "整体测试",
                     x: 100,
                     flag: false
                 };
@@ -54,7 +41,10 @@
 
             // 生命周期
             beforeCreate: function () { console.log('beforeCreate'); },
-            created: function () { console.log('created'); },
+            created: function () {
+                console.log(this);
+                console.log('created');
+            },
             beforeMount: function () { console.log('beforeMount'); },
             mounted: function () { console.log('mounted'); },
             beforeUnmount: function () { console.log('beforeUnmount'); },

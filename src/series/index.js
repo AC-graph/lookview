@@ -1,23 +1,33 @@
-
-// 基本图形
+import compiler from './compiler';
 
 import arc from './basic/arc';
-import circle from './basic/circle';
-import rect from './basic/rect';
-import text from './basic/text';
 
-// 组合图形
-
-import ruler from './combine/ruler';
+// todo
 
 export function seriesMixin(LookView) {
 
   LookView.prototype.__series = {
 
-    arc, circle, rect, text,
+    // 基本图形
 
-    ruler
+    arc: compiler(arc)
+
+    // 组合图形
+
+    // todo
 
   };
+
+  LookView.prototype.__getAttrOptionBySeries = function (seriesName, key) {
+
+    let options = this.__series[seriesName].attrs[key] || {
+      required: false,
+      type: "default",
+      ruler: "default"
+    };
+    options.required = options.required || false;
+
+    return options;
+  }
 
 };
