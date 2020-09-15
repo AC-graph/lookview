@@ -26,7 +26,7 @@ export function painterMixin(LookView) {
         }
       }
 
-      this.__series[item.series].call(nouse, this.__painter, attr);
+      this.__series[item.series].link.call(nouse, this.__painter, attr);
 
     });
 
@@ -63,8 +63,8 @@ export function painterMixin(LookView) {
       width: newSize.width,
       height: newSize.height
     }).css({
-      width: this._size.width+"px",
-      height: this._size.height+"px"
+      width: this._size.width + "px",
+      height: this._size.height + "px"
     });
 
     this.__painter = this.__canvas.painter();
@@ -124,11 +124,13 @@ export function painterMixin(LookView) {
 
         for (let key in renderArray[i].attr) {
 
+          let attrOption = that.__getAttrOptionBySeries(renderArray[i].series, key);
+
           // 【指令】l-bind:xxx="xxx"
           if (/^l\-bind\:/.test(key)) {
             render.attr[key.replace(/^l\-bind\:/, '')] = {
               value: get(that, renderArray[i].attr[key].value),
-              type: renderArray[i].attr[key].type
+              ruler: renderArray[i].attr[key].ruler
             };
           }
 
@@ -136,9 +138,15 @@ export function painterMixin(LookView) {
           else {
             render.attr[key] = {
               value: renderArray[i].attr[key].value,
-              type: renderArray[i].attr[key].type
+              ruler: renderArray[i].attr[key].ruler,
             };
           }
+
+          // 共有的属性
+          render.attr[key].type = attrOption.type;
+          render.attr[key].required = attrOption.required;
+          render.attr[key].default = attrOption.default;
+
         }
 
 //    l-for

@@ -15,7 +15,7 @@
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Mon Sep 14 2020 15:47:15 GMT+0800 (GMT+08:00)
+* Date:Tue Sep 15 2020 11:20:41 GMT+0800 (GMT+08:00)
 */
             
 (function () {
@@ -981,14 +981,15 @@
         return [+i[0], +i[1], +i[2], i[3] == undefined ? 1 : +i[3]];
       };
 
-      var U = function t(e) {
-        var r = [];
+      var U = function t(e, r) {
+        if (!(r && r >= 0 && r <= 1)) r = 1;
+        var n = [];
 
-        for (var n = 1; n <= e; n++) {
-          r.push("rgb(" + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + ")");
+        for (var i = 1; i <= e; i++) {
+          n.push("rgba(" + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + r + ")");
         }
 
-        return r;
+        return n;
       };
 
       var X = function t(e, r) {
@@ -1412,7 +1413,7 @@
           if (d["arc-start-cap"] != "round") c.lineTo(r, n);else c.arc((r + i) * .5, (n + o) * .5, s, t, t - Math.PI, true);
         });
 
-        c.closePath();
+        if (d["arc-start-cap"] == "butt") c.closePath();
         return c;
       };
 
@@ -1733,7 +1734,8 @@
           if (v["arc-end-cap"] != "round") d += "L" + u + " " + l;else d += "A" + s + " " + s + " " + " 0 1 0 " + u + " " + l;
           d += "A" + g + " " + g + " 0 " + c + " 0 " + i + " " + o;
           if (v["arc-start-cap"] != "round") d += "L" + r + " " + n;else d += "A" + s + " " + s + " " + " 0 1 0 " + r + " " + n;
-          h.attr("d", d + "Z");
+          if (v["arc-start-cap"] == "butt") d += "Z";
+          h.attr("d", d);
         });
 
         return h;
@@ -2336,192 +2338,6 @@
     return value !== null && _typeof(value) === 'object' && (value.nodeType === 1 || value.nodeType === 9 || value.nodeType === 11) && !isPlainObject(value);
   }
 
-  function arc (painter, attr) {
-    // 配置画笔
-    painter.config({
-      "fillStyle": attr['fill-color'] || attr.color || '#000',
-      "strokeStyle": attr['stroke-color'] || attr.color || '#000',
-      "lineWidth": attr['line-width'] || 1,
-      "lineDash": attr['dash'] || []
-    });
-    var type = attr.type || 'full';
-
-    if (isFunction(painter[type + "Arc"])) {
-      // 绘制
-      painter[type + "Arc"](attr.cx, attr.cy, attr.radius1 || 0, attr.radius2 || 0, attr.begin || 0, attr.value);
-    } else {
-      // 错误提示
-      console.error('[LookView warn]: Type error!' + JSON.stringify({
-        series: "arc",
-        type: type
-      }));
-    }
-  }
-
-  function circle (painter, attr) {
-    // 配置画笔
-    painter.config({
-      "fillStyle": attr['fill-color'] || attr.color || '#000',
-      "strokeStyle": attr['stroke-color'] || attr.color || '#000',
-      "lineWidth": attr['line-width'] || 1,
-      "lineDash": attr['dash'] || []
-    });
-    var type = attr.type || 'full';
-
-    if (isFunction(painter[type + "Circle"])) {
-      // 绘制
-      painter[type + "Circle"](attr['cx'], attr['cy'], attr['radius']);
-    } else {
-      // 错误提示
-      console.error('[LookView warn]: Type error!' + JSON.stringify({
-        series: "circle",
-        type: type
-      }));
-    }
-  }
-
-  function rect (painter, attr) {
-    // 配置画笔
-    painter.config({
-      "fillStyle": attr['fill-color'] || attr.color || '#000',
-      "strokeStyle": attr['stroke-color'] || attr.color || '#000',
-      "lineWidth": attr['line-width'] || 1,
-      "lineDash": attr['dash'] || []
-    });
-    var type = attr.type || 'full';
-
-    if (isFunction(painter[type + "Rect"])) {
-      // 绘制
-      painter[type + "Rect"](attr['x'], attr['y'], attr['width'], attr['height']);
-    } else {
-      // 错误提示
-      console.error('[LookView warn]: Type error!' + JSON.stringify({
-        series: "rect",
-        type: type
-      }));
-    }
-  }
-
-  function text (painter, attr) {
-    var lineHeight = attr['line-height'] || attr['font-size'] * 1.5; // 配置画笔
-
-    painter.config({
-      "fillStyle": attr['fill-color'] || attr.color || '#000',
-      "strokeStyle": attr['stroke-color'] || attr.color || '#000',
-      "lineWidth": attr['line-width'] || 1,
-      "lineDash": attr['dash'] || [],
-      "font-size": attr['font-size'],
-      "textAlign": attr['align'] || "left",
-      "textBaseline": attr['baseline'] || "middle",
-      "font-family": attr['family'] || "sans-serif"
-    });
-    var type = attr.type || 'full';
-
-    if (isFunction(painter[type + "Text"])) {
-      var values = (attr['value'] + "").replace(/\n/g, '↵').replace(/\r/g, '').replace(/\\n/g, '↵').split('↵'); // 由于文字可能多行，绘制的时候稍微特殊一点
-
-      for (var i = 0; i < values.length; i++) {
-        // 绘制
-        painter[type + "Text"](values[i], attr['x'], attr['y'] + (i + 0.5) * lineHeight, attr['deg'] || 0);
-      }
-    } else {
-      // 错误提示
-      console.error('[LookView warn]: Type error!' + JSON.stringify({
-        series: "text",
-        type: type
-      }));
-    }
-  }
-
-  // 刻度尺
-  function ruler (painter, attr) {}
-
-  // 基本图形
-  function seriesMixin(LookView) {
-    LookView.prototype.__series = {
-      arc: arc,
-      circle: circle,
-      rect: rect,
-      text: text,
-      ruler: ruler
-    };
-  }
-
-  /**
-   * 判断一个值是不是文本结点。
-   *
-   * @since V0.1.2
-   * @public
-   * @param {*} value 需要判断类型的值
-   * @returns {boolean} 如果是结点元素返回true，否则返回false
-   */
-
-  function isText (value) {
-    return value !== null && _typeof(value) === 'object' && value.nodeType === 3 && !isPlainObject(value);
-  }
-
-  // 这里是基于浏览器的解析能力，因此可能存在浏览器兼容问题
-  // loader版本的独立于浏览器，因此更加稳定
-  // 为了兼容各种情况，我们还是提供了动态模板解析能力
-
-  /**
-   * 
-   * 返回的格式如下（loader返回的格式应该和这里保持一致）：
-   * 
-   * [{
-   *  series:"",
-   *  attr:{
-   *    key1:{
-   *       value:"",
-   *       type:"",// 默认string
-   *    },
-   *    key2:{
-   *    },
-   *    ...
-   * },
-   *  children:[]
-   * },{}]
-   * 
-   */
-
-  function compileTemplate (template) {
-    var node = document.createElement('div');
-    node.innerHTML = template;
-    return function doit(node) {
-      var resultData = [],
-          nodeList = node.childNodes;
-
-      for (var i = 0; i < nodeList.length; i++) {
-        // 如果是文本结点
-        if (isText(nodeList[i])) {
-          // 对于空格，tab等空白文字结点，我们认为可以直接剔除
-          if (!/^[\x20\t\n\r]+$/.test(nodeList[i].textContent)) {
-            resultData.push(nodeList[i].textContent);
-          }
-        } // 如果是结点
-        else if (isElement(nodeList[i])) {
-            var attrs = {};
-
-            for (var j = 0; j < nodeList[i].attributes.length; j++) {
-              var key_type = (nodeList[i].attributes[j].nodeName + "").split('::');
-              attrs[key_type[0]] = {
-                value: nodeList[i].attributes[j].nodeValue,
-                type: key_type[1] || "default"
-              };
-            }
-
-            resultData.push({
-              series: (nodeList[i].nodeName + "").toLowerCase(),
-              attr: attrs,
-              children: doit(nodeList[i])
-            });
-          }
-      }
-
-      return resultData;
-    }(node);
-  }
-
   /**
    * 判断一个值是不是symbol。
    *
@@ -2657,6 +2473,182 @@
     return result === undefined ? defaultValue : result;
   }
 
+  var attr = {
+    // 颜色值
+    color: {
+      // 默认为黑色的颜色值
+      black: {
+        // 字段类型
+        type: "string",
+        // 是否必输，缺省值就是false
+        required: false,
+        // 对于非必输的，都应该设置缺省值
+        "default": "#000"
+      }
+    },
+    // 数字
+    num: {
+      // 必输
+      required: {
+        type: "number",
+        required: true
+      }
+    }
+  };
+
+  function compiler (serie) {
+    var attrServers = [];
+
+    for (var i = serie.length - 2; i >= 0; i--) {
+      attrServers.unshift(get(attr, serie[i]));
+    }
+
+    return serie[serie.length - 1].apply(null, attrServers);
+  }
+
+  var arc = ["color.black", "num.required", function ($colorBlack, $numRequired) {
+    return {
+      attrs: {
+        'fill-color': $colorBlack,
+        'stroke-color': $colorBlack,
+        'line-width': {
+          type: "number",
+          "default": 1
+        },
+        dash: {
+          type: "string",
+          "default": "[]"
+        },
+        type: {
+          type: "string",
+          "default": "full"
+        },
+        cx: $numRequired,
+        cy: $numRequired,
+        radius1: $numRequired,
+        radius2: $numRequired,
+        begin: $numRequired,
+        deg: $numRequired
+      },
+      link: function link(painter, attr) {
+        // 配置画笔
+        painter.config({
+          "fillStyle": attr['fill-color'],
+          "strokeStyle": attr['stroke-color'],
+          "lineWidth": attr['line-width'] // 对于可以缺省的值和必输的值的校对，还没有实现，先注释
+          // "lineDash": JSON.parse(attr.dash)
+
+        });
+        var type = attr.type;
+
+        if (isFunction(painter[type + "Arc"])) {
+          // 绘制
+          painter[type + "Arc"](attr.cx, attr.cy, attr.radius1, attr.radius2, attr.begin, attr.deg);
+        } else {
+          // 错误提示
+          console.error('[LookView warn]: Type error!' + JSON.stringify({
+            series: "arc",
+            type: type
+          }));
+        }
+      }
+    };
+  }];
+
+  function seriesMixin(LookView) {
+    LookView.prototype.__series = {
+      // 基本图形
+      arc: compiler(arc) // 组合图形
+      // todo
+
+    };
+
+    LookView.prototype.__getAttrOptionBySeries = function (seriesName, key) {
+      var options = this.__series[seriesName].attrs[key] || {
+        required: false,
+        type: "default",
+        ruler: "default"
+      };
+      options.required = options.required || false;
+      return options;
+    };
+  }
+
+  /**
+   * 判断一个值是不是文本结点。
+   *
+   * @since V0.1.2
+   * @public
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是结点元素返回true，否则返回false
+   */
+
+  function isText (value) {
+    return value !== null && _typeof(value) === 'object' && value.nodeType === 3 && !isPlainObject(value);
+  }
+
+  // 这里是基于浏览器的解析能力，因此可能存在浏览器兼容问题
+  // loader版本的独立于浏览器，因此更加稳定
+  // 为了兼容各种情况，我们还是提供了动态模板解析能力
+
+  /**
+   * 
+   * 返回的格式如下（loader返回的格式应该和这里保持一致）：
+   * 
+   * [{
+   *  series:"",
+   *  attr:{
+   *    key1:{
+   *       value:"",
+   *       ruler:"",// 默认无特殊刻度尺
+   *    },
+   *    key2:{
+   *    },
+   *    ...
+   * },
+   *  children:[]
+   * },{}]
+   * 
+   */
+
+  function compileTemplate (template) {
+    var node = document.createElement('div');
+    node.innerHTML = template;
+    return function doit(node) {
+      var resultData = [],
+          nodeList = node.childNodes;
+
+      for (var i = 0; i < nodeList.length; i++) {
+        // 如果是文本结点
+        if (isText(nodeList[i])) {
+          // 对于空格，tab等空白文字结点，我们认为可以直接剔除
+          if (!/^[\x20\t\n\r]+$/.test(nodeList[i].textContent)) {
+            resultData.push(nodeList[i].textContent);
+          }
+        } // 如果是结点
+        else if (isElement(nodeList[i])) {
+            var attrs = {};
+
+            for (var j = 0; j < nodeList[i].attributes.length; j++) {
+              var key_type = (nodeList[i].attributes[j].nodeName + "").split('::');
+              attrs[key_type[0]] = {
+                value: nodeList[i].attributes[j].nodeValue,
+                ruler: key_type[1] || "default"
+              };
+            }
+
+            resultData.push({
+              series: (nodeList[i].nodeName + "").toLowerCase(),
+              attr: attrs,
+              children: doit(nodeList[i])
+            });
+          }
+      }
+
+      return resultData;
+    }(node);
+  }
+
   function painterMixin(LookView) {
     // 绘制方法
     LookView.prototype.$$painter = function () {
@@ -2681,7 +2673,7 @@
           }
         }
 
-        _this.__series[item.series].call(nouse, _this.__painter, attr);
+        _this.__series[item.series].link.call(nouse, _this.__painter, attr);
       });
 
       return this;
@@ -2763,19 +2755,26 @@
           };
 
           for (var key in renderArray[i].attr) {
-            // 【指令】l-bind:xxx="xxx"
+            var attrOption = that.__getAttrOptionBySeries(renderArray[i].series, key); // 【指令】l-bind:xxx="xxx"
+
+
             if (/^l\-bind\:/.test(key)) {
               render.attr[key.replace(/^l\-bind\:/, '')] = {
                 value: get(that, renderArray[i].attr[key].value),
-                type: renderArray[i].attr[key].type
+                ruler: renderArray[i].attr[key].ruler
               };
             } // 普通属性
             else {
                 render.attr[key] = {
                   value: renderArray[i].attr[key].value,
-                  type: renderArray[i].attr[key].type
+                  ruler: renderArray[i].attr[key].ruler
                 };
-              }
+              } // 共有的属性
+
+
+            render.attr[key].type = attrOption.type;
+            render.attr[key].required = attrOption.required;
+            render.attr[key]["default"] = attrOption["default"];
           } // 说明只是用来包裹的组
 
 
@@ -2977,12 +2976,12 @@
 
   function initGlobalApi (LookView) {
     // 挂载小组件
-    LookView.series = function (name, seriesFunction) {
+    LookView.series = function (name, serie) {
       if (isFunction(LookView.prototype.__series[name])) {
         console.error('[LookView warn]: The series[' + name + '] has been registered!');
       }
 
-      LookView.prototype.__series[name] = seriesFunction;
+      LookView.prototype.__series[name] = compiler(serie);
       return LookView;
     };
   }
@@ -3112,15 +3111,9 @@
 
 
   if ((typeof module === "undefined" ? "undefined" : _typeof(module)) === "object" && _typeof(module.exports) === "object") {
-    module.exports = {
-      LookView: LookView,
-      image2D: image2D_min,
-      $$: image2D_min
-    };
+    module.exports = LookView;
   } else {
     window.LookView = LookView;
-    window.image2D = image2D_min;
-    window.$$ = image2D_min;
   }
 
 }());

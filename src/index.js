@@ -122,7 +122,7 @@ LookView.prototype.$destory = function () {
 // 对外暴露调用接口
 
 if (typeof module === "object" && typeof module.exports === "object") {
-    module.exports = { LookView, image2D: $$, $$ };
+    module.exports = LookView;
 } else {
-    window.LookView = LookView; window.image2D = $$; window.$$ = $$;
+    window.LookView = LookView;
 }  
