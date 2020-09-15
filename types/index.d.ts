@@ -1,7 +1,4 @@
-import image2D from './image2d/index';
-import $$ from './image2d/index';
 import { option } from "./option";
-import { painter } from './image2d/painter';
 
 declare class LookView {
 
@@ -29,15 +26,9 @@ declare class LookView {
    * @param name 图形名称
    * @param serie 执行方法
    */
-  public static series(name: string, serie: (painter: painter, attr: {}) => {}): LookView;
-
-}
-
-export interface exportObject {
-
-  LookView: LookView, image2D, $$
+  public static series(): LookView;
 
 }
 
 // 导出
-export default exportObject;
+export default LookView;

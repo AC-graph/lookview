@@ -16,7 +16,7 @@ import isElement from '@yelloxing/core.js/isElement';
  *  attr:{
  *    key1:{
  *       value:"",
- *       type:"",// 默认string
+ *       ruler:"",// 默认无特殊刻度尺
  *    },
  *    key2:{
  *    },
@@ -57,7 +57,7 @@ export default function (template) {
 
           attrs[key_type[0]] = {
             value: nodeList[i].attributes[j].nodeValue,
-            type: key_type[1] || "default"
+            ruler: key_type[1] || "default"
           };
         }
 
