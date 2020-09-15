@@ -122,31 +122,57 @@ export function painterMixin(LookView) {
           attr: {}
         };
 
-        for (let key in renderArray[i].attr) {
+        let attrOptions = that.__getAttrOptionsBySeries(renderArray[i].series);
 
-          let attrOption = that.__getAttrOptionBySeries(renderArray[i].series, key);
+        // 传递属性
+        for (let key in renderArray[i].attr) {
 
           // 【指令】l-bind:xxx="xxx"
           if (/^l\-bind\:/.test(key)) {
             render.attr[key.replace(/^l\-bind\:/, '')] = {
-              value: get(that, renderArray[i].attr[key].value),
-              ruler: renderArray[i].attr[key].ruler
+              value: get(that, renderArray[i].attr[key].value)
             };
           }
 
           // 普通属性
           else {
             render.attr[key] = {
-              value: renderArray[i].attr[key].value,
-              ruler: renderArray[i].attr[key].ruler,
+              value: renderArray[i].attr[key].value
             };
           }
 
           // 共有的属性
-          render.attr[key].type = attrOption.type;
-          render.attr[key].required = attrOption.required;
-          render.attr[key].default = attrOption.default;
+          render.attr[key].ruler = renderArray[i].attr[key].ruler || "default"
+          render.attr[key].type = attrOptions[key].type || "default";
+          render.attr[key].required = attrOptions[key].required || false;
+          render.attr[key].default = attrOptions[key].default;
 
+        }
+
+        // 内置的默认属性
+        for (let key in attrOptions) {
+          if (key in renderArray[i].attr) {
+            // todo
+          } else {
+
+            // 如果是必输的，应该抛错
+            if (attrOptions[key].required) {
+              throw new Error('[LookView warn]: ' + key + ' is required!');
+            }
+
+            // 非必输的，填充默认值
+            else {
+              render.attr[key] = {
+                default: attrOptions[key].default,
+                required: false,
+                ruler: "default",
+                type: attrOptions[key].type,
+                value: attrOptions[key].default
+              };
+
+            }
+
+          }
         }
 
         // 说明只是用来包裹的组

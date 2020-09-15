@@ -8,7 +8,7 @@ export default ["color.black", "num.required", function ($colorBlack, $numRequir
       'fill-color': $colorBlack,
       'stroke-color': $colorBlack,
       'line-width': { type: "number", default: 1 },
-      dash: { type: "string", default: "[]" },
+      dash: { type: "json", default: [] },
       type: { type: "string", default: "full" },
       cx: $numRequired,
       cy: $numRequired,
@@ -18,15 +18,13 @@ export default ["color.black", "num.required", function ($colorBlack, $numRequir
       deg: $numRequired
     },
     link(painter, attr) {
+
       // 配置画笔
       painter.config({
         "fillStyle": attr['fill-color'],
         "strokeStyle": attr['stroke-color'],
         "lineWidth": attr['line-width'],
-
-        // 对于可以缺省的值和必输的值的校对，还没有实现，先注释
-        // "lineDash": JSON.parse(attr.dash)
-
+        "lineDash": attr.dash
       });
 
       let type = attr.type;

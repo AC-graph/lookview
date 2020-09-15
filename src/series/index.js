@@ -18,16 +18,8 @@ export function seriesMixin(LookView) {
 
   };
 
-  LookView.prototype.__getAttrOptionBySeries = function (seriesName, key) {
-
-    let options = this.__series[seriesName].attrs[key] || {
-      required: false,
-      type: "default",
-      ruler: "default"
-    };
-    options.required = options.required || false;
-
-    return options;
-  }
+  LookView.prototype.__getAttrOptionsBySeries = function (seriesName) {
+    return this.__series[seriesName].attrs;
+  };
 
 };
