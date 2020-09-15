@@ -141,6 +141,11 @@ export function painterMixin(LookView) {
           }
         }
 
+//    l-for
+        
+       //l-on
+
+
         // 说明只是用来包裹的组
         if (renderArray[i].series == 'group') {
           doit(renderArray[i].children);
