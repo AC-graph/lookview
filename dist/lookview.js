@@ -8,14 +8,14 @@
 * 
 * author 心叶
 *
-* version 2.0.3-beta
+* version 2.0.4-beta
 * 
 * build Fri Sep 04 2020
 *
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Wed Sep 16 2020 14:21:02 GMT+0800 (GMT+08:00)
+* Date:Wed Sep 16 2020 14:29:46 GMT+0800 (GMT+08:00)
 */
             
 (function () {
