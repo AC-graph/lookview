@@ -222,6 +222,9 @@ export function painterMixin(LookView) {
           }
         }
 
+
+
+
         // 说明只是用来包裹的组
         if (renderArray[i].series == 'group') {
           doit(renderArray[i].children);
