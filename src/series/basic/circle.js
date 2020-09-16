@@ -18,7 +18,7 @@ export default [ "color.black", "num.required",function($colorBlack,$numRequired
       link(painter, attr){
          painter.config({
             "fillStyle":attr["fill-color"],
-            "strokeStylr":attr["stroke-color"],
+            "strokeStyle":attr["stroke-color"],
             "lineWidth":attr["line-width"]
          });
          let type= attr.type;
