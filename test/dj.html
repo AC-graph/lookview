@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>基础对象设计 | 测试</title>
+    <script src="../dist/lookview.js"></script>
+    <link rel="shortcut icon" href="../logo-100.png">
+</head>
+
+<body>
+
+    <div id="root" style='height:500px'>
+        <text type="fill" x='70w' y='20h' l-bind:fill-color='color' deg='1pi'></text>
+        <text type="stroke" x='80w' y='20h' stroke-color='red' deg='0.5pi'></text>
+        <text type="full" x='90w' y='20h' stroke-color='red' fill-color='black'></text>
+
+        <path type='open' l-bind:stroke-color='color' x0='10w' y0='10h' x='15w' y='15h'></path>
+        <path type='open' x0='10w' dash=[1] y0='10h' x='10w' y='15h'></path>
+        <path type='open' x0='10w' y0='15h' x='15w' y='15h'></path>
+        <path l-bind:fill-color='color' type='close' x0='20w' y0='10h' x='20w' y='15h' x1='25w' y1='15h'></path>
+    </div>
+
+
+    <script>
+
+        var lookview = new LookView({
+
+            // 挂载点
+            el: document.getElementById('root'),
+
+            // 数据
+            data: function () {
+                return {
+                    color: 'red'
+                };
+            },
+
+            // 方法
+            methods: {
+                doit() {
+                    console.log('>>> doit');
+                }
+            },
+        });
+
+        console.log(lookview);
+
+        window.lookview = lookview;
+
+    </script>
+
+</body>
+
+</html>

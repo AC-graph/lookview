@@ -2488,6 +2488,7 @@
         type: "number",
         required: true
       },
+      // 非必输
       one: {
         type: "number",
         required: false,
@@ -2654,6 +2655,14 @@
           "default": "sans-serif"
         },
         'line-width': $numOne,
+        'text-align': {
+          type: "string",
+          "default": 'center'
+        },
+        'text-baseline': {
+          type: "string",
+          "default": 'middle'
+        },
         type: {
           type: "string",
           "default": "stroke"
@@ -2663,7 +2672,11 @@
           "default": "222"
         },
         x: $numRequired,
-        y: $numRequired
+        y: $numRequired,
+        deg: {
+          type: "number",
+          "default": "0pi"
+        }
       },
       link: function link(painter, attr) {
         painter.config({
@@ -2671,16 +2684,64 @@
           "strokeStyle": attr['stroke-color'],
           "fontSize": attr['font-size'],
           "fontFamily": attr['font-family'],
-          "lineWidth": attr['line-width']
+          "lineWidth": attr['line-width'],
+          "textAlign": attr['text-align'],
+          "textBaseline": attr['text-baseline']
         });
         var type = attr.type;
 
         if (isFunction(painter[type + "Text"])) {
-          painter[type + "Text"](attr.text, attr.x, attr.y);
+          painter[type + "Text"](attr.text, attr.x, attr.y, attr.deg);
         } else {
           // 错误提示
           console.error('[LookView warn]: Type error!' + JSON.stringify({
             series: "text",
+            type: type
+          }));
+        }
+      }
+    };
+  }];
+
+  // 路径
+  var path = ["color.black", "num.required", "num.one", function ($colorBlack, $numRequired, $numOne) {
+    return {
+      attrs: {
+        'fill-color': $colorBlack,
+        'stroke-color': $colorBlack,
+        'line-width': $numOne,
+        dash: {
+          type: "json",
+          "default": []
+        },
+        type: {
+          type: "string",
+          "default": "open"
+        },
+        x0: $numRequired,
+        y0: $numRequired,
+        x: $numRequired,
+        y: $numRequired,
+        x1: $numOne,
+        y1: $numOne
+      },
+      link: function link(painter, attr) {
+        painter.config({
+          "fillStyle": attr['fill-color'],
+          "strokeStyle": attr['stroke-color'],
+          "lineWidth": attr['line-width'],
+          "lineDash": attr.dash
+        });
+        var type = attr.type;
+
+        if (type == 'open') {
+          painter.beginPath().moveTo(attr.x0, attr.y0).lineTo(attr.x, attr.y).stroke();
+        } else if (type == 'close') {
+          painter.beginPath().moveTo(attr.x0, attr.y0).lineTo(attr.x, attr.y).lineTo(attr.x1, attr.y1).closePath().stroke().fill();
+        } else {
+          // 错误提示
+          console.error('[LookView error]: Type error!' + JSON.stringify({
+            series: "path",
             type: type
           }));
         }
@@ -2694,7 +2755,8 @@
       arc: compiler(arc),
       rect: compiler(rect),
       circle: compiler(circle),
-      text: compiler(text) // 组合图形
+      text: compiler(text),
+      path: compiler(path) // 组合图形
       // todo
 
     };
