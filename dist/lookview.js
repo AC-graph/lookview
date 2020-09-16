@@ -2229,6 +2229,21 @@
     }
   }
 
+  /**
+   * 判断一个值是不是String。
+   *
+   * @since V0.1.2
+   * @public
+   * @param {*} value 需要判断类型的值
+   * @returns {boolean} 如果是String返回true，否则返回false
+   */
+
+  function isString (value) {
+    var type = _typeof(value);
+
+    return type === 'string' || type === 'object' && value != null && !Array.isArray(value) && getType(value) === '[object String]';
+  }
+
   function initMixin(LookView) {
     LookView.prototype.$$init = function (options) {
       this.__options = options; // 需要双向绑定的数据
@@ -2496,8 +2511,8 @@
           "default": 1
         },
         dash: {
-          type: "string",
-          "default": "[]"
+          type: "json",
+          "default": []
         },
         type: {
           type: "string",
@@ -2515,9 +2530,8 @@
         painter.config({
           "fillStyle": attr['fill-color'],
           "strokeStyle": attr['stroke-color'],
-          "lineWidth": attr['line-width'] // 对于可以缺省的值和必输的值的校对，还没有实现，先注释
-          // "lineDash": JSON.parse(attr.dash)
-
+          "lineWidth": attr['line-width'],
+          "lineDash": attr.dash
         });
         var type = attr.type;
 
@@ -2535,22 +2549,62 @@
     };
   }];
 
+  var rect = ["color.black", "num.required", function ($colorBlack, $numRequired) {
+    return {
+      attrs: {
+        'fill-color': $colorBlack,
+        'stroke-color': $colorBlack,
+        'line-width': {
+          type: "number",
+          "default": 1
+        },
+        dash: {
+          type: "json",
+          "default": []
+        },
+        type: {
+          type: "string",
+          "default": "full"
+        },
+        x: $numRequired,
+        y: $numRequired,
+        width: $numRequired,
+        height: $numRequired
+      },
+      link: function link(painter, attr) {
+        // 配置画笔
+        painter.config({
+          "fillStyle": attr['fill-color'],
+          "strokeStyle": attr['stroke-color'],
+          "lineWidth": attr['line-width'] //预留配置区域
+
+        });
+        var type = attr.type;
+
+        if (isFunction(painter[type + "Rect"])) {
+          // 画出图形
+          painter[type + "Rect"](attr.x, attr.y, attr.width, attr.height);
+        } else {
+          console.error('[LookView warn]: Type error!' + JSON.stringify({
+            series: "rect",
+            type: type
+          }));
+        }
+      }
+    };
+  }];
+
   function seriesMixin(LookView) {
     LookView.prototype.__series = {
       // 基本图形
-      arc: compiler(arc) // 组合图形
+      arc: compiler(arc),
+      rect: compiler(rect) // 组合图形
       // todo
 
     };
 
-    LookView.prototype.__getAttrOptionBySeries = function (seriesName, key) {
-      var options = this.__series[seriesName].attrs[key] || {
-        required: false,
-        type: "default",
-        ruler: "default"
-      };
-      options.required = options.required || false;
-      return options;
+    LookView.prototype.__getAttrOptionsBySeries = function (seriesName) {
+      return this.__series[seriesName].attrs;
     };
   }
 
@@ -2734,20 +2788,19 @@
             attr: {}
           };
 
+          var attrOptions = that.__getAttrOptionsBySeries(renderArray[i].series); // 传递属性
+
+
           for (var key in renderArray[i].attr) {
-            var attrOption = that.__getAttrOptionBySeries(renderArray[i].series, key); // 【指令】l-bind:xxx="xxx"
-
-
+            // 【指令】l-bind:xxx="xxx"
             if (/^l\-bind\:/.test(key)) {
               render.attr[key.replace(/^l\-bind\:/, '')] = {
-                value: get(that, renderArray[i].attr[key].value),
-                ruler: renderArray[i].attr[key].ruler
+                value: get(that, renderArray[i].attr[key].value)
               };
             } // 普通属性
             else {
                 render.attr[key] = {
-                  value: renderArray[i].attr[key].value,
-                  ruler: renderArray[i].attr[key].ruler
+                  value: renderArray[i].attr[key].value
                 };
               } //    l-for
             //l-on
@@ -2764,9 +2817,29 @@
             } // 共有的属性
 
 
-            render.attr[key].type = attrOption.type;
-            render.attr[key].required = attrOption.required;
-            render.attr[key]["default"] = attrOption["default"];
+            render.attr[key].ruler = renderArray[i].attr[key].ruler || "default";
+            render.attr[key].type = attrOptions[key].type || "default";
+            render.attr[key].required = attrOptions[key].required || false;
+            render.attr[key]["default"] = attrOptions[key]["default"];
+          } // 内置的默认属性
+
+
+          for (var _key2 in attrOptions) {
+            if (_key2 in renderArray[i].attr) ; else {
+              // 如果是必输的，应该抛错
+              if (attrOptions[_key2].required) {
+                throw new Error('[LookView warn]: ' + _key2 + ' is required!');
+              } // 非必输的，填充默认值
+              else {
+                  render.attr[_key2] = {
+                    "default": attrOptions[_key2]["default"],
+                    required: false,
+                    ruler: "default",
+                    type: attrOptions[_key2].type,
+                    value: attrOptions[_key2]["default"]
+                  };
+                }
+            }
           } // 说明只是用来包裹的组
 
 
@@ -2855,6 +2928,18 @@
         // 字符串类型
         "string": function string(value) {
           return (value + " ").trim();
+        },
+        // json类型
+        "json": function json(value) {
+          if (isString(value)) {
+            try {
+              return JSON.parse(value);
+            } catch (e) {
+              throw new Error('[LookView warn]: Is not a valid JSON string!');
+            }
+          } else {
+            return value;
+          }
         },
         // 默认类型
         "default": function _default(value) {

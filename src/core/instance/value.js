@@ -1,4 +1,5 @@
 import isFunction from "@yelloxing/core.js/isFunction";
+import isString from '@yelloxing/core.js/isString';
 import evalExp from '../../tool/evalExp';
 
 export function valueMixin(LookView) {
@@ -68,6 +69,19 @@ export function valueMixin(LookView) {
       // 字符串类型
       "string": function (value) {
         return (value + " ").trim();
+      },
+
+      // json类型
+      "json": function (value) {
+        if (isString(value)) {
+          try {
+            return JSON.parse(value);
+          } catch (e) {
+            throw new Error('[LookView warn]: Is not a valid JSON string!');
+          }
+        } else {
+          return value;
+        }
       },
 
       // 默认类型
