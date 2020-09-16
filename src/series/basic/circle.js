@@ -25,7 +25,7 @@ export default [ "color.black", "num.required",function($colorBlack,$numRequired
          if(isFunction(painter[type+"Circle"])){
             painter[type+"Circle"](attr.cx,attr.cy,attr.radius);
          }else{
-            console.error('[LookView warn]: Type error!' + JSON.stringify({ series: "circle", type }));
+            console.error('[LookView error]: Type error!' + JSON.stringify({ series: "circle", type }));
          }
       }
 
