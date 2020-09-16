@@ -2594,11 +2594,53 @@
     };
   }];
 
+  var circle = ["color.black", "num.required", function ($colorBlack, $numRequired) {
+    return {
+      attrs: {
+        'fill-color': $colorBlack,
+        'stroke-color': $colorBlack,
+        'line-width': {
+          type: "number",
+          "default": 1
+        },
+        dash: {
+          type: "json",
+          "default": []
+        },
+        type: {
+          type: "string",
+          "default": "full"
+        },
+        cx: $numRequired,
+        cy: $numRequired,
+        radius: $numRequired
+      },
+      link: function link(painter, attr) {
+        painter.config({
+          "fillStyle": attr["fill-color"],
+          "strokeStylr": attr["stroke-color"],
+          "lineWidth": attr["line-width"]
+        });
+        var type = attr.type;
+
+        if (isFunction(painter[type + "Circle"])) {
+          painter[type + "Circle"](attr.cx, attr.cy, attr.radius);
+        } else {
+          console.error('[LookView warn]: Type error!' + JSON.stringify({
+            series: "arc",
+            type: type
+          }));
+        }
+      }
+    };
+  }];
+
   function seriesMixin(LookView) {
     LookView.prototype.__series = {
       // 基本图形
       arc: compiler(arc),
-      rect: compiler(rect) // 组合图形
+      rect: compiler(rect),
+      circle: compiler(circle) // 组合图形
       // todo
 
     };
