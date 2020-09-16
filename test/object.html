@@ -13,9 +13,19 @@
 <body>
 
     <div id="root" style='height:500px'>
+
+        <!-- 基本图形 -->
         <arc type='full' fill-color='red' stroke-color='pink' line-width='30' cx::rulerName='50w' cy::rulerName=250
             radius2::rulerName='100' radius1::rulerName='200' begin::rulerName='0' deg::rulerName='270deg'></arc>
         <rect x='10w' y='100' width='100' height='60'></rect>
+
+        <!-- 指令 -->
+        <arc cx='100' cy='400' radius1='30' radius2='50' deg='5' begin='1' fill-color='blue' l-if='flag'></arc>
+        <arc cx='100' cy='300' radius1='30' radius2='50' deg='5' begin='1' fill-color='green' l-if='!flag'></arc>
+        <rect x='30w' y='100' width='100' height='60' l-bind:fill-color='color' line-width='30' nouse='就测试一下'
+            l-bind:nouse-bind='info'>
+        </rect>
+
     </div>
 
     <script>
@@ -29,7 +39,9 @@
             data: function () {
                 return {
                     x: 100,
-                    flag: false
+                    flag: false,
+                    color: 'blue',
+                    info: "一些信息"
                 };
             },
 

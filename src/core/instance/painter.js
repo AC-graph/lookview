@@ -1,6 +1,10 @@
 import $$ from 'image2d';
 import get from '@yelloxing/core.js/get';
 
+let getAttrKey = function (key) {
+  return key.replace(/^l\-bind:/, '');
+};
+
 export function painterMixin(LookView) {
 
   // 绘制方法
@@ -109,17 +113,32 @@ export function painterMixin(LookView) {
     (function doit(renderArray) {
 
       for (let i = 0; i < renderArray.length; i++) {
+        let directive = [];
 
         // 【指令】l-if="flag"
         if ('l-if' in renderArray[i].attr) {
-          if (!get(that, renderArray[i].attr['l-if'].value)) {
+
+          let value = get(that, renderArray[i].attr['l-if'].value.replace(/^\!/, ''));
+          if (/^\!/.test(renderArray[i].attr['l-if'].value)) value = !value;
+          if (!value) {
             continue;
+          } else {
+            directive.push({
+              attr: 'l-if',
+              name: "l-if",
+              oral: {
+                value: renderArray[i].attr['l-if'].value
+              },
+              value: true
+            });
+            delete renderArray[i].attr['l-if'];
           }
         }
 
         let render = {
           series: renderArray[i].series,
-          attr: {}
+          attr: {},
+          directive
         };
 
         let attrOptions = that.__getAttrOptionsBySeries(renderArray[i].series);
@@ -127,11 +146,25 @@ export function painterMixin(LookView) {
         // 传递属性
         for (let key in renderArray[i].attr) {
 
+          let attrKey = getAttrKey(key);
+
           // 【指令】l-bind:xxx="xxx"
           if (/^l\-bind\:/.test(key)) {
-            render.attr[key.replace(/^l\-bind\:/, '')] = {
-              value: get(that, renderArray[i].attr[key].value)
+
+            let value = get(that, renderArray[i].attr[key].value);
+            render.attr[attrKey] = {
+              value
             };
+
+            render.directive.push({
+              attr: attrKey,
+              name: "l-bind",
+              oral: {
+                value: renderArray[i].attr[key].value
+              },
+              value
+            });
+
           }
 
           // 普通属性
@@ -141,23 +174,37 @@ export function painterMixin(LookView) {
             };
           }
 
-          // 共有的属性
-          render.attr[key].ruler = renderArray[i].attr[key].ruler || "default"
-          render.attr[key].type = attrOptions[key].type || "default";
-          render.attr[key].required = attrOptions[key].required || false;
-          render.attr[key].default = attrOptions[key].default;
+          if (attrKey in attrOptions) {
 
+            // 共有的一些配置
+            render.attr[attrKey].ruler = renderArray[i].attr[key].ruler || "default"
+            render.attr[attrKey].type = attrOptions[attrKey].type || "default";
+            render.attr[attrKey].required = attrOptions[attrKey].required || false;
+            render.attr[attrKey].default = attrOptions[attrKey].default;
+
+          } else {
+
+            console.warn('[LookView warn]: "' + attrKey + '" is an undefined property');
+
+          }
+
+        }
+
+
+        let tempAttrOptions = [];
+        for (let key in renderArray[i].attr) {
+          tempAttrOptions.push(getAttrKey(key));
         }
 
         // 内置的默认属性
         for (let key in attrOptions) {
-          if (key in renderArray[i].attr) {
+          if (tempAttrOptions.indexOf(key) > -1) {
             // todo
           } else {
 
             // 如果是必输的，应该抛错
             if (attrOptions[key].required) {
-              throw new Error('[LookView warn]: ' + key + ' is required!');
+              throw new Error('[LookView error]: ' + key + ' is required!');
             }
 
             // 非必输的，填充默认值

@@ -30,19 +30,19 @@ initGlobalApi(LookView);
 LookView.prototype.$mount = function (el, __isFocus) {
 
     if (this._isDestroyed) {
-        console.error('[LookView warn]: The object has been destroyed!');
+        console.warn('[LookView warn]: The object has been destroyed!');
         return;
     }
 
     this.__el = el;
 
     if (this._isMounted) {
-        console.error('[LookView warn]: The object is already mounted!');
+        console.warn('[LookView warn]: The object is already mounted!');
         return;
     }
 
     if (!__isFocus && !isElement(el)) {
-        console.error('[LookView warn]: Mount node does not exist!');
+        console.warn('[LookView warn]: Mount node does not exist!');
         return;
     }
 
@@ -76,12 +76,12 @@ LookView.prototype.$mount = function (el, __isFocus) {
 LookView.prototype.$unmount = function () {
 
     if (this._isDestroyed) {
-        console.error('[LookView warn]: The object has been destroyed!');
+        console.warn('[LookView warn]: The object has been destroyed!');
         return;
     }
 
     if (!this._isMounted) {
-        console.error('[LookView warn]: Object not mounted!');
+        console.warn('[LookView warn]: Object not mounted!');
         return;
     }
 
@@ -101,7 +101,7 @@ LookView.prototype.$unmount = function () {
 LookView.prototype.$destory = function () {
 
     if (this._isDestroyed) {
-        console.error('[LookView warn]: The object has been destroyed!');
+        console.warn('[LookView warn]: The object has been destroyed!');
         return;
     }
 

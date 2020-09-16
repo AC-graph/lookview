@@ -9,7 +9,7 @@ export default function (LookView) {
   LookView.series = function (name, serie) {
 
     if (isFunction(LookView.prototype.__series[name])) {
-      console.error('[LookView warn]: The series[' + name + '] has been registered!');
+      console.warn('[LookView warn]: The series[' + name + '] has been registered!');
     }
 
     LookView.prototype.__series[name] = compiler(serie);

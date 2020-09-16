@@ -12,7 +12,7 @@ import watcher from '../observe/watcher';
 function LookView(options) {
 
   if (!(this instanceof LookView)) {
-    console.error('[LookView warn]: LookView is a constructor and should be called with the `new` keyword');
+    console.warn('[LookView warn]: LookView is a constructor and should be called with the `new` keyword');
   }
 
   this.$$lifecycle(options.beforeCreate);

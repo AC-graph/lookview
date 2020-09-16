@@ -25,7 +25,7 @@ export default function (that) {
     isValidKey(key);
 
     if (isFunction(that[key])) {
-      console.error('[LookView warn]: Data property "' + key + '" has already been defined as a Method.');
+      console.warn('[LookView warn]: Data property "' + key + '" has already been defined as a Method.');
     }
 
     let value = that.__data[key];

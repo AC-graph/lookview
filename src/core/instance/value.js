@@ -77,7 +77,7 @@ export function valueMixin(LookView) {
           try {
             return JSON.parse(value);
           } catch (e) {
-            throw new Error('[LookView warn]: Is not a valid JSON string!');
+            throw new Error('[LookView error]: Is not a valid JSON string!');
           }
         } else {
           return value;
