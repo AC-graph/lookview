@@ -22,6 +22,12 @@ export default {
     required: {
       type: "number",
       required: true
+    },
+
+    one: {
+      type: "number",
+      required: false,
+      default: 1
     }
 
   }

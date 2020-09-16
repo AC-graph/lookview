@@ -1,23 +1,3 @@
-
-/*!
-* lookview - 提供更友好的数据可视化解决方案
-* https://github.com/AC-graph/lookview
-*
-* Includes image2D.js
-* https://yelloxing.gitee.io/image2d
-* 
-* author 心叶
-*
-* version 2.0.3-beta
-* 
-* build Fri Sep 04 2020
-*
-* Copyright 心叶
-* Released under the MIT license
-* 
-* Date:Wed Sep 16 2020 11:46:53 GMT+0800 (GMT+08:00)
-*/
-            
 (function () {
   'use strict';
 
@@ -2507,6 +2487,11 @@
       required: {
         type: "number",
         required: true
+      },
+      one: {
+        type: "number",
+        required: false,
+        "default": 1
       }
     }
   };
@@ -2655,12 +2640,61 @@
     };
   }];
 
+  var text = ["color.black", "num.required", "num.one", function ($colorBlack, $numRequired, $numOne) {
+    return {
+      attrs: {
+        'fill-color': $colorBlack,
+        'stroke-color': $colorBlack,
+        'font-size': {
+          type: "number",
+          "default": 16
+        },
+        'font-family': {
+          type: "string",
+          "default": "sans-serif"
+        },
+        'line-width': $numOne,
+        type: {
+          type: "string",
+          "default": "stroke"
+        },
+        text: {
+          type: "string",
+          "default": "222"
+        },
+        x: $numRequired,
+        y: $numRequired
+      },
+      link: function link(painter, attr) {
+        painter.config({
+          "fillStyle": attr['fill-color'],
+          "strokeStyle": attr['stroke-color'],
+          "fontSize": attr['font-size'],
+          "fontFamily": attr['font-family'],
+          "lineWidth": attr['line-width']
+        });
+        var type = attr.type;
+
+        if (isFunction(painter[type + "Text"])) {
+          painter[type + "Text"](attr.text, attr.x, attr.y);
+        } else {
+          // 错误提示
+          console.error('[LookView warn]: Type error!' + JSON.stringify({
+            series: "text",
+            type: type
+          }));
+        }
+      }
+    };
+  }];
+
   function seriesMixin(LookView) {
     LookView.prototype.__series = {
       // 基本图形
       arc: compiler(arc),
       rect: compiler(rect),
-      circle: compiler(circle) // 组合图形
+      circle: compiler(circle),
+      text: compiler(text) // 组合图形
       // todo
 
     };
