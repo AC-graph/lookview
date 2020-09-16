@@ -142,6 +142,24 @@ export function painterMixin(LookView) {
             };
           }
 
+//    l-for
+        
+       //l-on
+          for(let key in renderArray[i].attr){
+             
+            if(/^l\-on\:/.test(key)){
+
+              if (/^l\-bind\:/.test(key)) {
+                render.attr[key.replace(/^l\-on\:/,'')]={
+                  value: renderArray[i].attr[key].value,
+                     
+                  }
+              }
+
+                
+            }
+          }
+
           // 共有的属性
           render.attr[key].type = attrOption.type;
           render.attr[key].required = attrOption.required;
@@ -149,10 +167,8 @@ export function painterMixin(LookView) {
 
         }
 
-//    l-for
-        
-       //l-on
 
+      
 
         // 说明只是用来包裹的组
         if (renderArray[i].series == 'group') {

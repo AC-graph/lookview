@@ -1,23 +1,3 @@
-
-/*!
-* lookview - 提供更友好的数据可视化解决方案
-* https://github.com/AC-graph/lookview
-*
-* Includes image2D.js
-* https://yelloxing.gitee.io/image2d
-* 
-* author 心叶
-*
-* version 2.0.2-alpha.5
-* 
-* build Fri Sep 04 2020
-*
-* Copyright 心叶
-* Released under the MIT license
-* 
-* Date:Tue Sep 15 2020 11:20:41 GMT+0800 (GMT+08:00)
-*/
-            
 (function () {
   'use strict';
 
@@ -2769,7 +2749,19 @@
                   value: renderArray[i].attr[key].value,
                   ruler: renderArray[i].attr[key].ruler
                 };
-              } // 共有的属性
+              } //    l-for
+            //l-on
+
+
+            for (var _key in renderArray[i].attr) {
+              if (/^l\-on\:/.test(_key)) {
+                if (/^l\-bind\:/.test(_key)) {
+                  render.attr[_key.replace(/^l\-on\:/, '')] = {
+                    value: renderArray[i].attr[_key].value
+                  };
+                }
+              }
+            } // 共有的属性
 
 
             render.attr[key].type = attrOption.type;
