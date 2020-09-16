@@ -32,7 +32,7 @@ export default ["color.black", "num.required", function ($colorBlack, $numRequir
                 // 画出图形
                 painter[type + "Rect"](attr.x, attr.y, attr.width, attr.height);
             } else {
-                console.warn('[LookView warn]: Type error!' + JSON.stringify({ series: "rect", type }))
+                console.error('[LookView error]: Type error!' + JSON.stringify({ series: "rect", type }))
             }
         }
     }

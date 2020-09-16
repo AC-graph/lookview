@@ -18,14 +18,14 @@ export default [ "color.black", "num.required",function($colorBlack,$numRequired
       link(painter, attr){
          painter.config({
             "fillStyle":attr["fill-color"],
-            "strokeStylr":attr["stroke-color"],
+            "strokeStyle":attr["stroke-color"],
             "lineWidth":attr["line-width"]
          });
          let type= attr.type;
          if(isFunction(painter[type+"Circle"])){
             painter[type+"Circle"](attr.cx,attr.cy,attr.radius);
          }else{
-            console.error('[LookView warn]: Type error!' + JSON.stringify({ series: "circle", type }));
+            console.error('[LookView error]: Type error!' + JSON.stringify({ series: "circle", type }));
          }
       }
 

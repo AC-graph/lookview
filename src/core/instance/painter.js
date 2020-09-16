@@ -141,7 +141,7 @@ export function painterMixin(LookView) {
           directive
         };
 
-        let attrOptions = that.__getAttrOptionsBySeries(renderArray[i].series);
+        let attrOptions = that.$$getAttrOptionsBySeries(renderArray[i].series);
 
         // 传递属性
         for (let key in renderArray[i].attr) {

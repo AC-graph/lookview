@@ -23,7 +23,7 @@ export function seriesMixin(LookView) {
 
   };
 
-  LookView.prototype.__getAttrOptionsBySeries = function (seriesName) {
+  LookView.prototype.$$getAttrOptionsBySeries = function (seriesName) {
     return this.__series[seriesName].attrs;
   };
 
