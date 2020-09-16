@@ -36,7 +36,7 @@ export default ["color.black", "num.required", function ($colorBlack, $numRequir
       } else {
 
         // 错误提示
-        console.error('[LookView warn]: Type error!' + JSON.stringify({ series: "arc", type }));
+        console.warn('[LookView warn]: Type error!' + JSON.stringify({ series: "arc", type }));
       }
     }
   };

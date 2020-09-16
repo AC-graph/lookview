@@ -1,3 +1,23 @@
+
+/*!
+* lookview - 提供更友好的数据可视化解决方案
+* https://github.com/AC-graph/lookview
+*
+* Includes image2D.js
+* https://yelloxing.gitee.io/image2d
+* 
+* author 心叶
+*
+* version 2.0.3-beta
+* 
+* build Fri Sep 04 2020
+*
+* Copyright 心叶
+* Released under the MIT license
+* 
+* Date:Wed Sep 16 2020 11:46:53 GMT+0800 (GMT+08:00)
+*/
+            
 (function () {
   'use strict';
 
@@ -2225,7 +2245,7 @@
     // 判断是不是_或者$开头的
     // 这两个内部预留了
     if (/^[_$]/.test(key)) {
-      console.error('[LookView warn]: The beginning of _ or $ is not allowed：' + key);
+      console.warn('[LookView warn]: The beginning of _ or $ is not allowed：' + key);
     }
   }
 
@@ -2540,7 +2560,7 @@
           painter[type + "Arc"](attr.cx, attr.cy, attr.radius1, attr.radius2, attr.begin, attr.deg);
         } else {
           // 错误提示
-          console.error('[LookView warn]: Type error!' + JSON.stringify({
+          console.warn('[LookView warn]: Type error!' + JSON.stringify({
             series: "arc",
             type: type
           }));
@@ -2585,7 +2605,7 @@
           // 画出图形
           painter[type + "Rect"](attr.x, attr.y, attr.width, attr.height);
         } else {
-          console.error('[LookView warn]: Type error!' + JSON.stringify({
+          console.warn('[LookView warn]: Type error!' + JSON.stringify({
             series: "rect",
             type: type
           }));
@@ -2627,7 +2647,7 @@
           painter[type + "Circle"](attr.cx, attr.cy, attr.radius);
         } else {
           console.error('[LookView warn]: Type error!' + JSON.stringify({
-            series: "arc",
+            series: "circle",
             type: type
           }));
         }
@@ -2725,6 +2745,10 @@
     }(node);
   }
 
+  var getAttrKey = function getAttrKey(key) {
+    return key.replace(/^l\-bind:/, '');
+  };
+
   function painterMixin(LookView) {
     // 绘制方法
     LookView.prototype.$$painter = function () {
@@ -2818,59 +2842,83 @@
 
       (function doit(renderArray) {
         for (var i = 0; i < renderArray.length; i++) {
-          // 【指令】l-if="flag"
+          var directive = []; // 【指令】l-if="flag"
+
           if ('l-if' in renderArray[i].attr) {
-            if (!get(that, renderArray[i].attr['l-if'].value)) {
+            var value = get(that, renderArray[i].attr['l-if'].value.replace(/^\!/, ''));
+            if (/^\!/.test(renderArray[i].attr['l-if'].value)) value = !value;
+
+            if (!value) {
               continue;
+            } else {
+              directive.push({
+                attr: 'l-if',
+                name: "l-if",
+                oral: {
+                  value: renderArray[i].attr['l-if'].value
+                },
+                value: true
+              });
+              delete renderArray[i].attr['l-if'];
             }
           }
 
           var render = {
             series: renderArray[i].series,
-            attr: {}
+            attr: {},
+            directive: directive
           };
 
           var attrOptions = that.__getAttrOptionsBySeries(renderArray[i].series); // 传递属性
 
 
           for (var key in renderArray[i].attr) {
-            // 【指令】l-bind:xxx="xxx"
+            var attrKey = getAttrKey(key); // 【指令】l-bind:xxx="xxx"
+
             if (/^l\-bind\:/.test(key)) {
-              render.attr[key.replace(/^l\-bind\:/, '')] = {
-                value: get(that, renderArray[i].attr[key].value)
+              var _value = get(that, renderArray[i].attr[key].value);
+
+              render.attr[attrKey] = {
+                value: _value
               };
+              render.directive.push({
+                attr: attrKey,
+                name: "l-bind",
+                oral: {
+                  value: renderArray[i].attr[key].value
+                },
+                value: _value
+              });
             } // 普通属性
             else {
                 render.attr[key] = {
                   value: renderArray[i].attr[key].value
                 };
-              } //    l-for
-            //l-on
-
-
-            for (var _key in renderArray[i].attr) {
-              if (/^l\-on\:/.test(_key)) {
-                if (/^l\-bind\:/.test(_key)) {
-                  render.attr[_key.replace(/^l\-on\:/, '')] = {
-                    value: renderArray[i].attr[_key].value
-                  };
-                }
               }
-            } // 共有的属性
 
+            if (attrKey in attrOptions) {
+              // 共有的一些配置
+              render.attr[attrKey].ruler = renderArray[i].attr[key].ruler || "default";
+              render.attr[attrKey].type = attrOptions[attrKey].type || "default";
+              render.attr[attrKey].required = attrOptions[attrKey].required || false;
+              render.attr[attrKey]["default"] = attrOptions[attrKey]["default"];
+            } else {
+              console.warn('[LookView warn]: "' + attrKey + '" is an undefined property');
+            }
+          }
 
-            render.attr[key].ruler = renderArray[i].attr[key].ruler || "default";
-            render.attr[key].type = attrOptions[key].type || "default";
-            render.attr[key].required = attrOptions[key].required || false;
-            render.attr[key]["default"] = attrOptions[key]["default"];
+          var tempAttrOptions = [];
+
+          for (var _key in renderArray[i].attr) {
+            tempAttrOptions.push(getAttrKey(_key));
           } // 内置的默认属性
 
 
           for (var _key2 in attrOptions) {
-            if (_key2 in renderArray[i].attr) ; else {
+            if (tempAttrOptions.indexOf(_key2) > -1) ; else {
               // 如果是必输的，应该抛错
               if (attrOptions[_key2].required) {
-                throw new Error('[LookView warn]: ' + _key2 + ' is required!');
+                throw new Error('[LookView error]: ' + _key2 + ' is required!');
               } // 非必输的，填充默认值
               else {
                   render.attr[_key2] = {
@@ -2977,7 +3025,7 @@
             try {
               return JSON.parse(value);
             } catch (e) {
-              throw new Error('[LookView warn]: Is not a valid JSON string!');
+              throw new Error('[LookView error]: Is not a valid JSON string!');
             }
           } else {
             return value;
@@ -3029,7 +3077,7 @@
       isValidKey(key);
 
       if (isFunction(that[key])) {
-        console.error('[LookView warn]: Data property "' + key + '" has already been defined as a Method.');
+        console.warn('[LookView warn]: Data property "' + key + '" has already been defined as a Method.');
       }
 
       var value = that.__data[key];
@@ -3060,7 +3108,7 @@
 
   function LookView(options) {
     if (!(this instanceof LookView)) {
-      console.error('[LookView warn]: LookView is a constructor and should be called with the `new` keyword');
+      console.warn('[LookView warn]: LookView is a constructor and should be called with the `new` keyword');
     }
 
     this.$$lifecycle(options.beforeCreate); // 创建对象
@@ -3097,7 +3145,7 @@
     // 挂载小组件
     LookView.series = function (name, serie) {
       if (isFunction(LookView.prototype.__series[name])) {
-        console.error('[LookView warn]: The series[' + name + '] has been registered!');
+        console.warn('[LookView warn]: The series[' + name + '] has been registered!');
       }
 
       LookView.prototype.__series[name] = compiler(serie);
@@ -3152,19 +3200,19 @@
 
   LookView.prototype.$mount = function (el, __isFocus) {
     if (this._isDestroyed) {
-      console.error('[LookView warn]: The object has been destroyed!');
+      console.warn('[LookView warn]: The object has been destroyed!');
       return;
     }
 
     this.__el = el;
 
     if (this._isMounted) {
-      console.error('[LookView warn]: The object is already mounted!');
+      console.warn('[LookView warn]: The object is already mounted!');
       return;
     }
 
     if (!__isFocus && !isElement(el)) {
-      console.error('[LookView warn]: Mount node does not exist!');
+      console.warn('[LookView warn]: Mount node does not exist!');
       return;
     }
 
@@ -3192,12 +3240,12 @@
 
   LookView.prototype.$unmount = function () {
     if (this._isDestroyed) {
-      console.error('[LookView warn]: The object has been destroyed!');
+      console.warn('[LookView warn]: The object has been destroyed!');
       return;
     }
 
     if (!this._isMounted) {
-      console.error('[LookView warn]: Object not mounted!');
+      console.warn('[LookView warn]: Object not mounted!');
       return;
     }
 
@@ -3214,7 +3262,7 @@
 
   LookView.prototype.$destory = function () {
     if (this._isDestroyed) {
-      console.error('[LookView warn]: The object has been destroyed!');
+      console.warn('[LookView warn]: The object has been destroyed!');
       return;
     } // 先解除绑定
 

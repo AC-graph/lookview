@@ -46,16 +46,20 @@ module.exports = {
 
             });
 
+            console.log('\n添加开头的banner 完毕！');
+
         },
 
         // 复制依赖库的types
         types: function (cuf, pkg, rootPath) {
 
-                cuf.copySync(
-                    path.join(rootPath, './node_modules/image2d/types'),
-                    path.join(rootPath, './types/image2d'),
-                    true
-                );
+            cuf.copySync(
+                path.join(rootPath, './node_modules/image2d/types'),
+                path.join(rootPath, './types/image2d'),
+                true
+            );
+
+            console.log('\n复制依赖库的types 完毕！');
 
         }
 
