@@ -22,6 +22,36 @@ export default {
     required: {
       type: "number",
       required: true
+    },
+
+    one: {
+      type: "number",
+      required: false,
+      default: 1
+    }
+
+  },
+
+  // 数组
+  array: {
+
+    // 空数组
+    null: {
+      type: "json",
+      required: false,
+      default: []
+    }
+
+  },
+
+  // JSON
+  json: {
+
+    // 空数组
+    null: {
+      type: "json",
+      required: false,
+      default: {}
     }
 
   }

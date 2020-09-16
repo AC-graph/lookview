@@ -2,13 +2,13 @@ import isFunction from '@yelloxing/core.js/isFunction';
 
 // 圆弧
 
-export default ["color.black", "num.required", function ($colorBlack, $numRequired) {
+export default ["color.black", "num.required", "num.one", "array.null", function ($colorBlack, $numRequired, $numOne, $arrayNull) {
   return {
     attrs: {
       'fill-color': $colorBlack,
       'stroke-color': $colorBlack,
-      'line-width': { type: "number", default: 1 },
-      dash: { type: "json", default: [] },
+      'line-width': $numOne,
+      dash: $arrayNull,
       type: { type: "string", default: "full" },
       cx: $numRequired,
       cy: $numRequired,
