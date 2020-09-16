@@ -3,6 +3,7 @@ import compiler from './compiler';
 import arc from './basic/arc';
 import rect from './basic/rect'
 import circle from './basic/circle'
+
 // todo
 
 export function seriesMixin(LookView) {
@@ -13,7 +14,7 @@ export function seriesMixin(LookView) {
 
     arc: compiler(arc),
     rect: compiler(rect),
-    circle:compiler(circle)
+    circle: compiler(circle)
 
     // 组合图形
 
@@ -21,7 +22,7 @@ export function seriesMixin(LookView) {
 
   };
 
-  LookView.prototype.__getAttrOptionsBySeries = function (seriesName) {
+  LookView.prototype.$$getAttrOptionsBySeries = function (seriesName) {
     return this.__series[seriesName].attrs;
   };
 

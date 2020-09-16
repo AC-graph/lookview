@@ -15,7 +15,7 @@
 * Copyright 心叶
 * Released under the MIT license
 * 
-* Date:Wed Sep 16 2020 11:46:53 GMT+0800 (GMT+08:00)
+* Date:Wed Sep 16 2020 14:21:02 GMT+0800 (GMT+08:00)
 */
             
 (function () {
@@ -2560,7 +2560,7 @@
           painter[type + "Arc"](attr.cx, attr.cy, attr.radius1, attr.radius2, attr.begin, attr.deg);
         } else {
           // 错误提示
-          console.warn('[LookView warn]: Type error!' + JSON.stringify({
+          console.error('[LookView error]: Type error!' + JSON.stringify({
             series: "arc",
             type: type
           }));
@@ -2605,7 +2605,7 @@
           // 画出图形
           painter[type + "Rect"](attr.x, attr.y, attr.width, attr.height);
         } else {
-          console.warn('[LookView warn]: Type error!' + JSON.stringify({
+          console.error('[LookView error]: Type error!' + JSON.stringify({
             series: "rect",
             type: type
           }));
@@ -2638,7 +2638,7 @@
       link: function link(painter, attr) {
         painter.config({
           "fillStyle": attr["fill-color"],
-          "strokeStylr": attr["stroke-color"],
+          "strokeStyle": attr["stroke-color"],
           "lineWidth": attr["line-width"]
         });
         var type = attr.type;
@@ -2646,7 +2646,7 @@
         if (isFunction(painter[type + "Circle"])) {
           painter[type + "Circle"](attr.cx, attr.cy, attr.radius);
         } else {
-          console.error('[LookView warn]: Type error!' + JSON.stringify({
+          console.error('[LookView error]: Type error!' + JSON.stringify({
             series: "circle",
             type: type
           }));
@@ -2665,7 +2665,7 @@
 
     };
 
-    LookView.prototype.__getAttrOptionsBySeries = function (seriesName) {
+    LookView.prototype.$$getAttrOptionsBySeries = function (seriesName) {
       return this.__series[seriesName].attrs;
     };
   }
@@ -2868,9 +2868,7 @@
             attr: {},
             directive: directive
           };
-
-          var attrOptions = that.__getAttrOptionsBySeries(renderArray[i].series); // 传递属性
-
+          var attrOptions = that.$$getAttrOptionsBySeries(renderArray[i].series); // 传递属性
 
           for (var key in renderArray[i].attr) {
             var attrKey = getAttrKey(key); // 【指令】l-bind:xxx="xxx"
