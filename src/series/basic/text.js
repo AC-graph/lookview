@@ -29,7 +29,7 @@ export default ["color.black", "num.required", "num.one", function ($colorBlack,
                 painter[type + "Text"](attr.text, attr.x, attr.y);
             } else {
                 // 错误提示
-                console.error('[LookView warn]: Type error!' + JSON.stringify({ series: "text", type }));
+                console.error('[LookView error]: Type error!' + JSON.stringify({ series: "text", type }));
             }
         }
     };
