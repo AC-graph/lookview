@@ -2627,7 +2627,7 @@
           painter[type + "Circle"](attr.cx, attr.cy, attr.radius);
         } else {
           console.error('[LookView warn]: Type error!' + JSON.stringify({
-            series: "arc",
+            series: "circle",
             type: type
           }));
         }
