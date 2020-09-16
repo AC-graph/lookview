@@ -1,23 +1,3 @@
-
-/*!
-* lookview - 提供更友好的数据可视化解决方案
-* https://github.com/AC-graph/lookview
-*
-* Includes image2D.js
-* https://yelloxing.gitee.io/image2d
-* 
-* author 心叶
-*
-* version 2.0.3-beta
-* 
-* build Fri Sep 04 2020
-*
-* Copyright 心叶
-* Released under the MIT license
-* 
-* Date:Tue Sep 15 2020 17:51:07 GMT+0800 (GMT+08:00)
-*/
-            
 (function () {
   'use strict';
 
@@ -981,15 +961,14 @@
         return [+i[0], +i[1], +i[2], i[3] == undefined ? 1 : +i[3]];
       };
 
-      var U = function t(e, r) {
-        if (!(r && r >= 0 && r <= 1)) r = 1;
-        var n = [];
+      var U = function t(e) {
+        var r = [];
 
-        for (var i = 1; i <= e; i++) {
-          n.push("rgba(" + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + r + ")");
+        for (var n = 1; n <= e; n++) {
+          r.push("rgb(" + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + "," + (Math.random(1) * 230 + 20).toFixed(0) + ")");
         }
 
-        return n;
+        return r;
       };
 
       var X = function t(e, r) {
@@ -1413,7 +1392,7 @@
           if (d["arc-start-cap"] != "round") c.lineTo(r, n);else c.arc((r + i) * .5, (n + o) * .5, s, t, t - Math.PI, true);
         });
 
-        if (d["arc-start-cap"] == "butt") c.closePath();
+        c.closePath();
         return c;
       };
 
@@ -1734,8 +1713,7 @@
           if (v["arc-end-cap"] != "round") d += "L" + u + " " + l;else d += "A" + s + " " + s + " " + " 0 1 0 " + u + " " + l;
           d += "A" + g + " " + g + " 0 " + c + " 0 " + i + " " + o;
           if (v["arc-start-cap"] != "round") d += "L" + r + " " + n;else d += "A" + s + " " + s + " " + " 0 1 0 " + r + " " + n;
-          if (v["arc-start-cap"] == "butt") d += "Z";
-          h.attr("d", d);
+          h.attr("d", d + "Z");
         });
 
         return h;
@@ -2569,10 +2547,56 @@
     };
   }];
 
+  var rect = ["color.black", "num.required", function ($colorBlack, $numRequired) {
+    return {
+      attrs: {
+        'fill-color': $colorBlack,
+        'stroke-color': $colorBlack,
+        'line-width': {
+          type: "number",
+          "default": 1
+        },
+        dash: {
+          type: "json",
+          "default": []
+        },
+        type: {
+          type: "string",
+          "default": "full"
+        },
+        x: $numRequired,
+        y: $numRequired,
+        width: $numRequired,
+        height: $numRequired
+      },
+      link: function link(painter, attr) {
+        // 配置画笔
+        painter.config({
+          "fillStyle": attr['fill-color'],
+          "strokeStyle": attr['stroke-color'],
+          "lineWidth": attr['line-width'] //预留配置区域
+
+        });
+        var type = attr.type;
+
+        if (isFunction(painter[type + "Rect"])) {
+          // 画出图形
+          painter[type + "Rect"](attr.x, attr.y, attr.width, attr.height);
+        } else {
+          console.error('[LookView warn]: Type error!' + JSON.stringify({
+            series: "rect",
+            type: type
+          }));
+        }
+      }
+    };
+  }];
+
   function seriesMixin(LookView) {
     LookView.prototype.__series = {
       // 基本图形
-      arc: compiler(arc) // 组合图形
+      arc: compiler(arc),
+      rect: compiler(rect) // 组合图形
       // todo
 
     };

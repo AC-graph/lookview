@@ -1,7 +1,7 @@
 import compiler from './compiler';
 
 import arc from './basic/arc';
-
+import rect from './basic/rect'
 // todo
 
 export function seriesMixin(LookView) {
@@ -10,8 +10,8 @@ export function seriesMixin(LookView) {
 
     // 基本图形
 
-    arc: compiler(arc)
-
+    arc: compiler(arc),
+    rect: compiler(rect)
     // 组合图形
 
     // todo
