@@ -1,6 +1,6 @@
 // 路径
 
-export default ["color.black", "num.one", "json.required","json.null", function ($colorBlack, $numOne, $jsonRequired,$jsonNull) {
+export default ["color.black", "num.one", "json.required", "json.null", function ($colorBlack, $numOne, $jsonRequired, $jsonNull) {
     return {
         attrs: {
             'fill-color': $colorBlack,
