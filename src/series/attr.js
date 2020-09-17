@@ -35,6 +35,7 @@ export default {
       required: true
     },
 
+    // 非必输
     one: {
       type: "number",
       required: false,

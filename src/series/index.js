@@ -4,6 +4,7 @@ import arc from './basic/arc';
 import rect from './basic/rect';
 import circle from './basic/circle';
 import text from './basic/text';
+import path from './basic/path';
 // todo
 
 export function seriesMixin(LookView) {
@@ -16,6 +17,7 @@ export function seriesMixin(LookView) {
     rect: compiler(rect),
     circle: compiler(circle),
     text: compiler(text),
+    path: compiler(path),
 
     // 组合图形
 

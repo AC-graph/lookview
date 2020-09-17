@@ -9,10 +9,13 @@ export default ["color.black", "num.required", "num.one", "str.required", functi
             'font-size': { type: "number", default: 16 },
             'font-family': { type: "string", default: "sans-serif" },
             'line-width': $numOne,
+            'text-align': { type: "string", default: 'center' },
+            'text-baseline': { type: "string", default: 'middle' },
             type: { type: "string", default: "stroke" },
             content: $strRequired,
             x: $numRequired,
             y: $numRequired,
+            deg: { type: "number", default: "0pi" }
         },
         link(painter, attr) {
             painter.config({
@@ -21,6 +24,8 @@ export default ["color.black", "num.required", "num.one", "str.required", functi
                 "fontSize": attr['font-size'],
                 "fontFamily": attr['font-family'],
                 "lineWidth": attr['line-width'],
+                "textAlign": attr['text-align'],
+                "textBaseline": attr['text-baseline'],
             });
 
             let type = attr.type;
