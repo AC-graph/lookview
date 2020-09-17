@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>基础对象设计 | 测试</title>
+  <script src="../dist/lookview.js"></script>
+  <link rel="shortcut icon" href="../logo-100.png">
+</head>
+
+<body>
+
+  <div id="root" style='height:500px'>
+
+    <arc type='full' fill-color='red' stroke-color='pink' line-width='30' cx::rulerName='50w' cy::rulerName=250
+      radius2::rulerName='100' radius1::rulerName='200' begin='0' deg='270deg'></arc>
+
+  </div>
+
+
+  <script>
+
+    var lookview = new LookView({
+
+      // 挂载点
+      el: document.getElementById('root'),
+
+    });
+
+    console.log(lookview);
+
+    window.lookview = lookview;
+
+  </script>
+
+</body>
+
+</html>

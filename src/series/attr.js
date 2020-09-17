@@ -1,5 +1,16 @@
 export default {
 
+  // 字符串
+  str: {
+
+    // 必输
+    required: {
+      type: "string",
+      required: true
+    }
+
+  },
+
   // 颜色值
   color: {
 
@@ -29,6 +40,36 @@ export default {
       type: "number",
       required: false,
       default: 1
+    }
+
+  },
+
+  // 数组
+  array: {
+
+    // 空数组
+    null: {
+      type: "json",
+      required: false,
+      default: []
+    }
+
+  },
+
+  // JSON
+  json: {
+
+    // 必输
+    required: {
+      type: "json",
+      required: true
+    },
+
+    // 空数组
+    null: {
+      type: "json",
+      required: false,
+      default: {}
     }
 
   }
