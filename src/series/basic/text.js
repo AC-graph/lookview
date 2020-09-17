@@ -31,7 +31,7 @@ export default ["color.black", "num.required", "num.one", "str.required", functi
             let type = attr.type;
 
             if (isFunction(painter[type + "Text"])) {
-                painter[type + "Text"](attr.content, attr.x, attr.y);
+                painter[type + "Text"](attr.content, attr.x, attr.y, attr.deg);
             } else {
                 // 错误提示
                 console.error('[LookView error]: Type error!' + JSON.stringify({ series: "text", type }));

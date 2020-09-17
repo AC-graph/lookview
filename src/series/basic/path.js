@@ -1,20 +1,14 @@
 // 路径
 
-export default ["color.black", "num.required", "num.one", function ($colorBlack, $numRequired, $numOne) {
+export default ["color.black", "num.one", "json.required","json.null", function ($colorBlack, $numOne, $jsonRequired,$jsonNull) {
     return {
         attrs: {
             'fill-color': $colorBlack,
             'stroke-color': $colorBlack,
             'line-width': $numOne,
-            dash: { type: "json", default: [] },
+            dash: $jsonNull,
             type: { type: "string", default: "open" },
-            array: { type: "json", required: true },
-            // x0: $numRequired,
-            // y0: $numRequired,
-            // x: $numRequired,
-            // y: $numRequired,
-            // x1: $numOne,
-            // y1: $numOne,
+            array: $jsonRequired,
         },
         link(painter, attr) {
             painter.config({
@@ -40,15 +34,6 @@ export default ["color.black", "num.required", "num.one", function ($colorBlack,
                 // 错误提示
                 console.error('[LookView error]: Type error!' + JSON.stringify({ series: "path", type }));
             }
-
-            // if (type == 'open') {
-            //     painter.beginPath().moveTo(attr.x0, attr.y0).lineTo(attr.x, attr.y).stroke();
-            // } else if (type == 'close') {
-            //     painter.beginPath().moveTo(attr.x0, attr.y0).lineTo(attr.x, attr.y).lineTo(attr.x1, attr.y1).closePath().stroke().fill();
-            // } else {
-            //     // 错误提示
-            //     console.error('[LookView error]: Type error!' + JSON.stringify({ series: "path", type }));
-            // }
         }
     };
 }];
