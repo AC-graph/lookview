@@ -1,6 +1,6 @@
 {
   "name": "lookview",
-  "version": "2.0.3-beta",
+  "version": "2.0.7-beta",
   "description": "提供更友好的数据可视化解决方案",
   "main": "dist/lookview.min.js",
   "typings": "types/index.d.ts",
@@ -8,7 +8,10 @@
   "scripts": {
     "start": "npm install && npm run dev",
     "dev": "rollup --config rollup.config.js --watch",
-    "build": "cuf --delete dist && rollup --config rollup.config.js && uglifyjs ./dist/lookview.js -o ./dist/lookview.min.js && cuf --config ./cuf.config.js banner && cuf --config ./cuf.config.js types"
+    "build": "cuf --delete dist && rollup --config rollup.config.js && uglifyjs ./dist/lookview.js -o ./dist/lookview.min.js && cuf --config ./cuf.config.js banner && cuf --config ./cuf.config.js types",
+    "publish-latest": "npm run build && npm publish",
+    "publish-beta": "npm install && npm run build && npm publish --tag='beta'",
+    "publish-alpha": "npm install && npm run build && npm publish --tag='alpha'"
   },
   "repository": {
     "type": "git",

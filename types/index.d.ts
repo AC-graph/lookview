@@ -24,9 +24,30 @@ declare class LookView {
   /**
    * 挂载的新图形
    * @param name 图形名称
-   * @param serie 执行方法
+   * @param serie 格式如：
+   * 
+   * ["type1","type2",function($type1,$type2){
+   * 
+   *  return {
+   * 
+   *    attrs: {
+   * 
+   *        // 配置选项
+   * 
+   *    },
+   * 
+   *    link(painter, attr) {
+   * 
+   *      // 绘制
+   * 
+   *    }
+   * 
+   * };  
+   * 
+   * }]
+   * 
    */
-  public static series(): LookView;
+  public static series(name: string, serie:Array): LookView;
 
 }
 

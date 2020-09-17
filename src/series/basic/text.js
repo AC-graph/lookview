@@ -1,7 +1,7 @@
 import isFunction from '@yelloxing/core.js/isFunction';
 // 文字
 
-export default ["color.black", "num.required", "num.one", function ($colorBlack, $numRequired, $numOne) {
+export default ["color.black", "num.required", "num.one", "str.required", function ($colorBlack, $numRequired, $numOne, $strRequired) {
     return {
         attrs: {
             'fill-color': $colorBlack,
@@ -12,7 +12,7 @@ export default ["color.black", "num.required", "num.one", function ($colorBlack,
             'text-align': { type: "string", default: 'center' },
             'text-baseline': { type: "string", default: 'middle' },
             type: { type: "string", default: "stroke" },
-            text: { type: "string", default: "222" },
+            content: $strRequired,
             x: $numRequired,
             y: $numRequired,
             deg: { type: "number", default: "0pi" }
@@ -31,10 +31,10 @@ export default ["color.black", "num.required", "num.one", function ($colorBlack,
             let type = attr.type;
 
             if (isFunction(painter[type + "Text"])) {
-                painter[type + "Text"](attr.text, attr.x, attr.y, attr.deg);
+                painter[type + "Text"](attr.content, attr.x, attr.y);
             } else {
                 // 错误提示
-                console.error('[LookView warn]: Type error!' + JSON.stringify({ series: "text", type }));
+                console.error('[LookView error]: Type error!' + JSON.stringify({ series: "text", type }));
             }
         }
     };
