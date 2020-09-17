@@ -17,10 +17,12 @@
         <text type="stroke" x='80w' y='20h' stroke-color='red' deg='0.5pi'></text>
         <text type="full" x='90w' y='20h' stroke-color='red' fill-color='black'></text>
 
-        <path type='open' l-bind:stroke-color='color' x0='10w' y0='10h' x='15w' y='15h'></path>
+        <!-- <path type='open' l-bind:stroke-color='color' x0='10w' y0='10h' x='15w' y='15h'></path>
         <path type='open' x0='10w' dash=[1] y0='10h' x='10w' y='15h'></path>
-        <path type='open' x0='10w' y0='15h' x='15w' y='15h'></path>
-        <path l-bind:fill-color='color' type='close' x0='20w' y0='10h' x='20w' y='15h' x1='25w' y1='15h'></path>
+        <path type='open' x0='10w' y0='15h' x='15w' y='15h'></path> -->
+        <!-- <path l-bind:fill-color='color' type='close' x0='20w' y0='10h' x='20w' y='15h' x1='25w' y1='15h'></path> -->
+        <path l-bind:array='data' type='open'></path>
+        <path l-bind:array='data1' type='close'></path>
     </div>
 
 
@@ -34,7 +36,9 @@
             // 数据
             data: function () {
                 return {
-                    color: 'red'
+                    color: 'red',
+                    data: [[150, 150], [150, 200], [20, 20], [150, 150]],
+                    data1: [[200, 150], [200, 200], [30, 20]]
                 };
             },
 
