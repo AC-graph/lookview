@@ -17,6 +17,7 @@
     <!-- <arc type='full' fill-color='red' stroke-color='pink' line-width='30' cx::rulerName='50w' cy::rulerName=250
       radius2::rulerName='100' radius1::rulerName='200' begin='0' deg='270deg'></arc> -->
     <lineruler l-bind:base-point='basePoint' l-bind:data='data' type='N'></lineruler>
+    <polarruler l-bind:base-point='basePoint' l-bind:data='textdata' radius=300></polarruler>
   </div>
 
 
@@ -31,8 +32,9 @@
       data: function () {
         return {
           color: 'red',
-          basePoint:[400,400],
-          data: [168,177,182,201,186,159],
+          basePoint: [400, 400],
+          data: [168, 177, 182, 201, 186, 159],
+          textdata: ['南京', '北京', '上海', '广州', '福州', '深圳'],
         };
       },
 
