@@ -27,7 +27,7 @@ export function seriesMixin(LookView) {
 
     // 组合图形
     lineruler: compiler(lineruler),
-    // polarruler: compiler(polarruler),
+    polarruler: compiler(polarruler),
     // todo
 
   };
