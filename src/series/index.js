@@ -7,6 +7,8 @@ import text from './basic/text';
 import path from './basic/path';
 import quadratic from './basic/quadratic';
 import bezier from './basic/bezier';
+import lineruler from './combine/line-ruler';
+import polarruler from './combine/polar-ruler';
 // todo
 
 export function seriesMixin(LookView) {
@@ -24,11 +26,11 @@ export function seriesMixin(LookView) {
     bezier: compiler(bezier),
 
     // 组合图形
-
+    lineruler: compiler(lineruler),
+    // polarruler: compiler(polarruler),
     // todo
 
   };
-
   LookView.prototype.$$getAttrOptionsBySeries = function (seriesName) {
     return this.__series[seriesName].attrs;
   };

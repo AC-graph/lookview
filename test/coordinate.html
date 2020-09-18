@@ -12,11 +12,11 @@
 
 <body>
 
-  <div id="root" style='height:500px'>
+  <div id="root" style='height:1000px'>
 
-    <arc type='full' fill-color='red' stroke-color='pink' line-width='30' cx::rulerName='50w' cy::rulerName=250
-      radius2::rulerName='100' radius1::rulerName='200' begin='0' deg='270deg'></arc>
-
+    <!-- <arc type='full' fill-color='red' stroke-color='pink' line-width='30' cx::rulerName='50w' cy::rulerName=250
+      radius2::rulerName='100' radius1::rulerName='200' begin='0' deg='270deg'></arc> -->
+    <lineruler l-bind:base-point='basePoint' l-bind:data='data' type='N'></lineruler>
   </div>
 
 
@@ -26,6 +26,15 @@
 
       // 挂载点
       el: document.getElementById('root'),
+
+      // 数据
+      data: function () {
+        return {
+          color: 'red',
+          basePoint:[400,400],
+          data: [168,177,182,201,186,159],
+        };
+      },
 
     });
 
