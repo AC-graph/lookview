@@ -8,7 +8,7 @@
   "scripts": {
     "start": "npm install && npm run dev",
     "dev": "rollup --config rollup.config.js --watch",
-    "build": "cuf --delete dist && rollup --config rollup.config.js && uglifyjs ./dist/lookview.js -o ./dist/lookview.min.js && cuf --config ./cuf.config.js banner && cuf --config ./cuf.config.js types",
+    "build": "cuf --delete dist && rollup --config rollup.config.js && uglifyjs ./dist/lookview.js -m -o ./dist/lookview.min.js && cuf --config ./cuf.config.js banner && cuf --config ./cuf.config.js types",
     "publish-latest": "npm run build && npm publish",
     "publish-beta": "npm install && npm run build && npm publish --tag='beta'",
     "publish-alpha": "npm install && npm run build && npm publish --tag='alpha'"
@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "@yelloxing/core.js": "^0.3.7",
-    "image2d": "1.9.1"
+    "image2d": "1.10.0"
   }
 }

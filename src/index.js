@@ -1,4 +1,4 @@
-import $$ from 'image2d';
+import $$ from './image2D';
 import LookView from './core/instance/index';
 import initGlobalApi from './core/global-api/index';
 import isElement from '@yelloxing/core.js/isElement';

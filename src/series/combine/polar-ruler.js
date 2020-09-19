@@ -1,4 +1,4 @@
-import $$ from 'image2d'
+import $$ from '../../image2D'
 
 // 极坐标刻度尺
 export default ["color.black", "num.one", "num.required", "json.null", "json.required", function ($colorBlack, $numOne, $numRequired, $jsonNull, $jsonRequired) {
