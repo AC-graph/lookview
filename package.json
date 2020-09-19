@@ -40,6 +40,6 @@
   },
   "dependencies": {
     "@yelloxing/core.js": "^0.3.7",
-    "image2d": "1.10.0"
+    "image2d": "1.10.3"
   }
 }

@@ -36,6 +36,8 @@ import {
     unbind,
     position,
     painter,
+    painterCanvas2D,
+    painterSVG,
     layer
 
 } from 'image2d/src/export.js';
@@ -54,7 +56,7 @@ image2D.prototype.extend({
     css: style,
     attr: attribute,
     size,
-    painter,
+    painter: painterCanvas2D,
     appendTo
 
 });
