@@ -25,8 +25,8 @@ import {
     text,
     html,
     size,
-    style,
-    attribute,
+    css,
+    attr,
     datum,
     data,
     enter,
@@ -53,8 +53,8 @@ image2D.extend({
 // 挂载需要的类方法
 image2D.prototype.extend({
 
-    css: style,
-    attr: attribute,
+    css,
+    attr,
     size,
     painter: painterCanvas2D,
     appendTo
