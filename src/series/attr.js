@@ -7,6 +7,24 @@ export default {
     required: {
       type: "string",
       required: true
+    },
+
+  },
+
+  // 布尔值
+  bool: {
+
+    // 必输
+    required: {
+      type: "boolean",
+      required: true
+    },
+
+    // 非必输
+    true: {
+      type: "boolean",
+      required: false,
+      default: 'true'
     }
 
   },
