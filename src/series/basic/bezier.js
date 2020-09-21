@@ -1,12 +1,12 @@
 // 三次贝塞尔曲线
-export default ["color.black", "num.one", "num.required", "json.null", function ($colorBlack, $numOne, $numRequired, $jsonNull) {
+export default ["color.black", "num.one", "num.required", "array.null", function ($colorBlack, $numOne, $numRequired, $arrayNull) {
     return {
         attrs: {
             'stroke-color': $colorBlack,
             'fill-color':$colorBlack,
             'line-width': $numOne,
             type: { type: "string", default: "stroke" },
-            dash: $jsonNull,
+            dash: $arrayNull,
             x0: $numRequired,
             y0: $numRequired,
             cp1x: $numRequired,

@@ -1,7 +1,7 @@
 
 // 直角坐标刻度尺
 
-export default ["color.black", "num.one", "json.null", "json.required", "str.required", function ($colorBlack, $numOne, $jsonNull, $jsonRequired, $strRequired) {
+export default ["color.black", "num.one", "array.null", "json.required", "str.required", function ($colorBlack, $numOne, $arrayNull, $jsonRequired, $strRequired) {
     return {
         attrs: {
             'stroke-color': $colorBlack,
@@ -12,7 +12,7 @@ export default ["color.black", "num.one", "json.null", "json.required", "str.req
             'font-family': { type: "string", default: "sans-serif" },
             'text-align': { type: "string", default: 'center' },
             'text-baseline': { type: "string", default: 'middle' },
-            dash: $jsonNull,
+            dash: $arrayNull,
             data: $jsonRequired,
             type: $strRequired,
         },
