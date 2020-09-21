@@ -1,12 +1,12 @@
 // 路径
 
-export default ["color.black", "num.one", "json.required", "json.null", function ($colorBlack, $numOne, $jsonRequired, $jsonNull) {
+export default ["color.black", "num.one", "json.required", "array.null", function ($colorBlack, $numOne, $jsonRequired, $arrayNull) {
     return {
         attrs: {
             'fill-color': $colorBlack,
             'stroke-color': $colorBlack,
             'line-width': $numOne,
-            dash: $jsonNull,
+            dash: $arrayNull,
             type: { type: "string", default: "open" },
             array: $jsonRequired,
         },

@@ -1,7 +1,7 @@
 import $$ from '../../image2D'
 
 // 极坐标刻度尺
-export default ["color.black", "num.one", "num.required", "json.null", "json.required", function ($colorBlack, $numOne, $numRequired, $jsonNull, $jsonRequired) {
+export default ["color.black", "num.one", "num.required", "array.null", "json.required", function ($colorBlack, $numOne, $numRequired, $arrayNull, $jsonRequired) {
     return {
         attrs: {
             'stroke-color': $colorBlack,
@@ -12,7 +12,7 @@ export default ["color.black", "num.one", "num.required", "json.null", "json.req
             'font-family': { type: "string", default: "sans-serif" },
             'text-align': { type: "string", default: 'center' },
             'text-baseline': { type: "string", default: 'middle' },
-            dash: $jsonNull,
+            dash: $arrayNull,
             data: $jsonRequired,
             radius: $numRequired,
         },
