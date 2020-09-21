@@ -30,7 +30,7 @@ export function painterMixin(LookView) {
         }
 
         // 坐标系
-        if (item.attr[key].ruler != 'default') {
+        if (item.attr[key].ruler && item.attr[key].ruler != 'default') {
 
           // 为了加速，我们再去校验映射注册是否正确
           // 因此这里报错有可能是名称错误
