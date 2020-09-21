@@ -69,7 +69,7 @@ export default {
     null: {
       type: "json",
       required: false,
-      default: []
+      default: {}
     }
 
   }
