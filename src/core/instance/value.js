@@ -88,23 +88,8 @@ export function valueMixin(LookView) {
       "default": function (value) {
         value = (value + " ").trim();
 
-        // 数字类型
-        if (/^\d+$/.test(value)) {
-          return 0 - -value;
-        }
-
-        // 布尔类型
-        else if (value == 'true') {
-          return true;
-        }
-        else if (value == 'false') {
-          return false;
-        }
-
-        // 字符串类型
-        else {
-          return value;
-        }
+        // 由于都内置了类型，这里就不需要再进行默认值猜测了
+        return value;
 
       }
 
