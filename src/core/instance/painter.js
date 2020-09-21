@@ -28,6 +28,20 @@ export function painterMixin(LookView) {
         if (key != 'font-size') {
           attr[key] = this.$$calcValue(item.attr[key], fontSize);
         }
+
+        // 坐标系
+        if (item.attr[key].ruler && item.attr[key].ruler != 'default') {
+
+          // 为了加速，我们再去校验映射注册是否正确
+          // 因此这里报错有可能是名称错误
+          attr[key] = this.__coordinate[item.attr[key].ruler].link.call(this, attr[key],
+
+            // 这里待优化
+            JSON.parse(JSON.stringify(item.attr[key])),
+
+            fontSize);
+        }
+
       }
 
       this.__series[item.series].link.call(nouse, this.__painter, attr);
