@@ -9,6 +9,7 @@ import quadratic from './basic/quadratic';
 import bezier from './basic/bezier';
 import lineruler from './combine/line-ruler';
 import polarruler from './combine/polar-ruler';
+import rects from './basic/rects';
 // todo
 
 export function seriesMixin(LookView) {
@@ -24,7 +25,7 @@ export function seriesMixin(LookView) {
     path: compiler(path),
     quadratic: compiler(quadratic),
     bezier: compiler(bezier),
-
+    rects:compiler(rects),
     // 组合图形
     lineruler: compiler(lineruler),
     polarruler: compiler(polarruler),
