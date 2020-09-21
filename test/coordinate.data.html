@@ -14,8 +14,8 @@
 
   <div id="root" style='height:1000px'>
 
-    <arc type='full' fill-color='red' stroke-color='pink' line-width='30' cx='50w' cy=250
-      radius2='100' radius1='200' begin='0' deg::='270deg'></arc>
+    <arc type='full' fill-color='red' stroke-color='black' cx::demo2='100' cy=250 radius2='100' radius1='200' begin='0'
+      deg::demo1='600'></arc>
 
   </div>
 
@@ -34,7 +34,29 @@
       },
 
       // 坐标系
-      
+      coordinate: {
+
+        demo1: function () {
+          return {
+            link: function (value) {
+              return (value / 1000) * Math.PI * 2;
+            }
+          };
+        },
+
+        // 你也可以注入内置服务来帮助你计算
+        demo2: ['$calc', function ($calc) {
+
+          return {
+            link: function (value, attr, fontSize) {
+              attr.value = (value / 2) + "w";
+              return $calc(attr, fontSize);
+
+            }
+          };
+        }]
+
+      }
 
     });
 
