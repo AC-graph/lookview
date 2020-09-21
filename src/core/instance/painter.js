@@ -1,4 +1,4 @@
-import $$ from 'image2d';
+import $$ from '../../image2D';
 import get from '@yelloxing/core.js/get';
 
 let getAttrKey = function (key) {
