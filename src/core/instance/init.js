@@ -1,6 +1,6 @@
 import isFunction from '@yelloxing/core.js/isFunction';
 import isValidKey from '../../tool/isValidKey';
-import isString from '@yelloxing/core.js/isString';
+import coordinate from '../../coordinate/index';
 
 export function initMixin(LookView) {
 
@@ -27,6 +27,28 @@ export function initMixin(LookView) {
     for (let key in this.__data) {
       // 数据的校验在监听的时候进行
       this[key] = this.__data[key];
+    }
+
+    // 坐标系
+    this.__coordinate = {};
+
+    // 额外添加一些非坐标系服务
+    coordinate.$calc = this.$$calcValue;
+
+    for (let key in options.coordinate) {
+      let value = options.coordinate[key];
+      if (isFunction(value)) {
+        this.__coordinate[key] = value();
+      } else {
+
+        let coordinateServer = [];
+        for (let i = value.length - 2; i >= 0; i--) {
+          coordinateServer.unshift(coordinate[value[i]]);
+        }
+
+        this.__coordinate[key] = value[value.length - 1].apply(null, coordinateServer);
+
+      }
     }
 
     return this;
