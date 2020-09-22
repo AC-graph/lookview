@@ -15,10 +15,10 @@
   <div id="root" style='height:500px'>
 
     <!-- 普通的如果想运算，使用calc -->
-    <text x='10w' y='calc(10w + 20)' content='内容'></text>
+    <!-- <text x='10w' y='calc(10w + 20)' content='内容'></text> -->
 
     <!-- l-for测试 -->
-    <text x='10w' l-bind:y::demo='key' l-bind:content='value' l-for='(value, key) in datalist'></text>
+    <text x='10w' l-bind:y::demo1='key' l-bind:content='value' l-for='(value, key) in datalist'></text>
 
   </div>
 
@@ -42,7 +42,7 @@
         demo1: function () {
           return {
             link: function (value) {
-              return value * 30;
+              return value * 30 + 50;
             }
           };
         }

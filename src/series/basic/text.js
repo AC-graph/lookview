@@ -18,6 +18,7 @@ export default ["color.black", "num.required", "num.one", "str.required", functi
             deg: { type: "number", default: "0pi" }
         },
         link(painter, attr) {
+
             painter.config({
                 "fillStyle": attr['fill-color'],
                 "strokeStyle": attr['stroke-color'],

@@ -7,10 +7,15 @@ let getAttrKey = function (key) {
 
 let getLForObject = function (lFor, that) {
 
-  console.log(lFor, that);
-  debugger
+  let temp = lFor.split(' in ');
+  let temp0 = temp[0].trim().replace('(', '').replace(')', '').split(',');
+  let temp1 = temp[1].trim();
 
-  
+  return {
+    data: get(that, temp1),
+    keyName: temp0.length > 1 ? temp0[1].trim() : null,
+    valueName: temp0[0].trim()
+  };
 
 };
 
@@ -25,7 +30,7 @@ export function painterMixin(LookView) {
     // 后期可以通过此添加一些额外的辅助数据，目前没有考虑好，因此预留
     let nouse = {}, that = this;
 
-    this.__renderSeries.forEach(function doit(item, notPainter) {
+    let doit = function (item, notPainter) {
 
       let fontSize = 16, attr = {};
 
@@ -72,7 +77,11 @@ export function painterMixin(LookView) {
       if (notPainter) return attr;
       that.__series[item.series].link.call(nouse, that.__painter, attr);
 
-    });
+    };
+
+    for (let i = 0; i < this.__renderSeries.length; i++) {
+      doit(this.__renderSeries[i]);
+    }
 
     return this;
   };
@@ -162,8 +171,21 @@ export function painterMixin(LookView) {
 
           let lFor = getLForObject(renderArray[i].attr['l-for'].value, that), tempRenderArray = [];
 
-          // todo
-          debugger
+          for (let key in lFor.data) {
+
+            // 此处待优化
+            let temp = JSON.parse(JSON.stringify(renderArray[i]));
+
+            delete temp.attr['l-for'];
+
+            temp.scope = {
+              [lFor.valueName]: lFor.data[key]
+            };
+
+            if (lFor.keyName != null) temp.scope[lFor.keyName] = key;
+
+            tempRenderArray.push(temp);
+          }
 
           doit(tempRenderArray);
           continue;
@@ -207,7 +229,14 @@ export function painterMixin(LookView) {
           // 【指令】l-bind:xxx="xxx"
           if (/^l\-bind\:/.test(key)) {
 
-            let value = get(that, renderArray[i].attr[key].value);
+            let value, oralValue = renderArray[i].attr[key].value;
+
+            if (renderArray[i].scope && oralValue in renderArray[i].scope) {
+              value = renderArray[i].scope[oralValue];
+            } else {
+              value = get(that, oralValue);
+            }
+
             render.attr[attrKey] = {
               value
             };
@@ -216,7 +245,7 @@ export function painterMixin(LookView) {
               attr: attrKey,
               name: "l-bind",
               oral: {
-                value: renderArray[i].attr[key].value
+                value: oralValue
               },
               value
             });
