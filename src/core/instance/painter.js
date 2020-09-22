@@ -14,19 +14,35 @@ export function painterMixin(LookView) {
     this.__painter.clearRect();
 
     // 后期可以通过此添加一些额外的辅助数据，目前没有考虑好，因此预留
-    let nouse = {};
+    let nouse = {}, that = this;
 
-    this.__renderSeries.forEach(item => {
+    this.__renderSeries.forEach(function doit(item, notPainter) {
 
       let fontSize = 16, attr = {};
 
       // 由于em单位导致font-size比较特殊，我们先计算出来留着使用
-      if (item.attr['font-size']) fontSize = this.$$calcValue('font-size', fontSize);
+      if (item.attr['font-size']) fontSize = that.$$calcValue('font-size', fontSize);
       attr['font-size'] = fontSize;
 
       for (let key in item.attr) {
+
+        // 针对特殊的实现，深度解析
+        // $开头的是特殊属性
+        if (/^\$/.test(key)) {
+          let temp = [];
+          for (let i = 0; i < item.attr[key].value.length; i++) {
+            let subItem = item.attr[key].value[i];
+
+            let compiler_subItem = doit(subItem, true);
+            temp.push(compiler_subItem);
+
+          }
+          attr[key] = temp;
+          continue;
+        }
+
         if (key != 'font-size') {
-          attr[key] = this.$$calcValue(item.attr[key], fontSize);
+          attr[key] = that.$$calcValue(item.attr[key], fontSize);
         }
 
         // 坐标系
@@ -34,7 +50,7 @@ export function painterMixin(LookView) {
 
           // 为了加速，我们再去校验映射注册是否正确
           // 因此这里报错有可能是名称错误
-          attr[key] = this.__coordinate[item.attr[key].ruler].link.call(this, attr[key],
+          attr[key] = that.__coordinate[item.attr[key].ruler].link.call(that, attr[key],
 
             // 这里待优化
             JSON.parse(JSON.stringify(item.attr[key])),
@@ -44,7 +60,8 @@ export function painterMixin(LookView) {
 
       }
 
-      this.__series[item.series].link.call(nouse, this.__painter, attr);
+      if (notPainter) return attr;
+      that.__series[item.series].link.call(nouse, that.__painter, attr);
 
     });
 
@@ -124,7 +141,9 @@ export function painterMixin(LookView) {
 
     let renderSeries = [], that = this;
 
-    (function doit(renderArray) {
+    (function doit(renderArray, notPush, pSeries) {
+
+      let tempSubAttrs = [];
 
       for (let i = 0; i < renderArray.length; i++) {
         let directive = [];
@@ -155,7 +174,7 @@ export function painterMixin(LookView) {
           directive
         };
 
-        let attrOptions = that.$$getAttrOptionsBySeries(renderArray[i].series);
+        let attrOptions = that.$$getAttrOptionsBySeries(renderArray[i].series, pSeries);
 
         // 传递属性
         for (let key in renderArray[i].attr) {
@@ -183,9 +202,16 @@ export function painterMixin(LookView) {
 
           // 普通属性
           else {
-            render.attr[key] = {
-              value: renderArray[i].attr[key].value
-            };
+            if ("value" in renderArray[i].attr[key]) {
+              render.attr[key] = {
+                value: renderArray[i].attr[key].value
+              };
+            } else if (!notPush) {
+              render.attr[key] = {
+                value: doit(renderArray[i].attr[key], true, render.series)
+              };
+            }
+
           }
 
           if (attrKey in attrOptions) {
@@ -198,7 +224,7 @@ export function painterMixin(LookView) {
 
           } else {
 
-            console.warn('[LookView warn]: "' + attrKey + '" is an undefined property');
+            if (!/^\$/.test(attrKey)) console.warn('[LookView warn]: "' + attrKey + '" is an undefined property');
 
           }
 
@@ -236,9 +262,6 @@ export function painterMixin(LookView) {
           }
         }
 
-
-
-
         // 说明只是用来包裹的组
         if (renderArray[i].series == 'group') {
           doit(renderArray[i].children);
@@ -246,10 +269,18 @@ export function painterMixin(LookView) {
 
         // 默认认为是普通的图形
         else {
-          renderSeries.push(render);
+          // 如果是内置的子标签，返回拼接成完整的
+          // 比如path下的line-to的解析
+          if (notPush) {
+            tempSubAttrs.push(render);
+          } else {
+            renderSeries.push(render);
+          }
         }
 
       }
+
+      return tempSubAttrs;
 
     })(this.__render);
 
