@@ -30,7 +30,6 @@ export default ["color.black", "num.one", "num.required", "str.required", "array
             }
         },
         link(painter, attr) {
-            debugger
             painter.config({
                 "fillStyle": attr['fill-color'],
                 "strokeStyle": attr['stroke-color'],
