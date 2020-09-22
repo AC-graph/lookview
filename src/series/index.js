@@ -10,7 +10,7 @@ import bezier from './basic/bezier';
 import xruler from './combine/x-ruler';
 import yruler from './combine/y-ruler';
 import polarruler from './combine/polar-ruler';
-import rects from './basic/rects';
+import rects from './combine/rects';
 // todo
 
 export function seriesMixin(LookView) {
@@ -26,12 +26,12 @@ export function seriesMixin(LookView) {
     path: compiler(path),
     quadratic: compiler(quadratic),
     bezier: compiler(bezier),
-    rects:compiler(rects),
+    
     // 组合图形
     "x-ruler": compiler(xruler),
     "y-ruler": compiler(yruler),
     "polar-ruler": compiler(polarruler),
-    // todo
+    rects:compiler(rects),
 
   };
   LookView.prototype.$$getAttrOptionsBySeries = function (seriesName) {
