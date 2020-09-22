@@ -3,7 +3,7 @@
 export default ["color.black", "num.one", "num.required", "str.required", "array.null", function ($colorBlack, $numOne, $numRequired, $strRequired, $arrayNull) {
     return {
         attrs: {
-            
+
             'fill-color': $colorBlack,
             'stroke-color': $colorBlack,
             'line-width': $numOne,

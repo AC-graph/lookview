@@ -14,8 +14,8 @@
 
   <div id="root" style='height:1000px'>
     <path type='stroke' fill-color='red' stroke-color='pink' line-width='30'>
-        <move-to x="10w" y="10"></move-to>
-        <line-to x="30w" l-bind:y="y"></line-to>
+      <move-to x="10w" y="10"></move-to>
+      <line-to x="30w" l-bind:y="y"></line-to>
     </path>
   </div>
 
@@ -30,7 +30,7 @@
       // 数据
       data: function () {
         return {
-          y:100,
+          y: 100,
           color: 'red',
           basePoint: [400, 400],
           data: [168, 177, 182, 201, 186, 159],
@@ -38,7 +38,7 @@
         };
       },
 
-      created:function(){
+      created: function () {
         console.log(this);
       }
 
