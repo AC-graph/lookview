@@ -27,7 +27,7 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
 
       })
       let type = attr.type;
-     
+
       painter.beginPath()
         .moveTo(attr["zero-x"], attr["zero-y"])
         .lineTo(attr["zero-x"] + attr.width, attr["zero-y"])
@@ -42,7 +42,7 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
         }
         return maxvalue;
       }
-      
+
       //计算小矩形的最优宽度
       let wid = 1;
       if (attr.data.length) {
@@ -58,39 +58,54 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
       for (let k = 0; k < attr.data.length; k++) {
         arr.push(attr.data[k]);
       }
-      
-      
+
+
       function drawRect() {
-      
+
         for (let i = 0; i < attr.data.length; i++) {
           let hei = 5;
           //每个小矩形的高 
           hei = attr.height / maxNum(attr.data) * attr.data[i] - attr.height / maxNum(attr.data);
-          $$.animation((deep) => { painter.fillRect(attr["zero-x"] + temp * (i + 1) + wid * i, attr["zero-y"], wid, hei * -deep); }, 5000);
-          
-          //painter.fillRect(attr["zero-x"] + temp * (i + 1) + wid * i, attr["zero-y"] - hei, wid, hei);
+
+          painter.fillRect(attr["zero-x"] + temp * (i + 1) + wid * i, attr["zero-y"] - hei, wid, hei);
+
         }
-      } 
-      drawRect();
+      }
+
+
+      update();
+      
+      //写一个数组中数据的和的方法以便判断数据的数据是否改变
+      function subarr(data) {
+        let subs = 0;
+        for (let i = 0; i < data.length; i++) {
+          subs += data[i];
+        }
+        return subs;
+      }
 
       function update() {
-        let oldArr = [];
-        if (arr != oldArr) {
+        let oldArr = arr;
+        //判断旧数组和新获取的数组的值是否改变
+        if (subarr(oldArr) == subarr(attr.data)) {
           for (let i = 0; i < attr.data.length; i++) {
-            if (oldArr[i] != attr.data[i]) {
-              oldArr[i] = attr.data[i];
-              let hei = 5;
-              //每个小矩形的高 
-              hei = attr.height / maxNum(attr.data) * oldArr[i] - attr.height / maxNum(attr.data);
-              painter.fillRect(attr["zero-x"] + temp * (i + 1) + wid * i, attr["zero-y"] - hei, wid, hei);
-             
-            }
-          }
-        }
+            let hei = 5;
+            //每个小矩形的高 
+            hei = attr.height / maxNum(attr.data) * attr.data[i] - attr.height / maxNum(attr.data);
+            //动画效果
+            $$.animation((deep) => {
 
+              painter.fillRect(attr["zero-x"] + temp * (i + 1) + wid * i, attr["zero-y"], wid, hei * -deep);
+
+            }, 5000);
+
+          }
+        } else if (subarr(oldArr) != subarr(attr.data)) {
+          drawRect();
+
+        }
         oldArr = attr.data;
 
-        //debugger
       }
     }
 
