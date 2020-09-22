@@ -34,7 +34,11 @@ export function painterMixin(LookView) {
             let subItem = item.attr[key].value[i];
 
             let compiler_subItem = doit(subItem, true);
-            temp.push(compiler_subItem);
+            temp.push({
+              attr: compiler_subItem,
+              series: subItem.series,
+              directive: subItem.directive
+            });
 
           }
           attr[key] = temp;
