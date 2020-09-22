@@ -50,7 +50,6 @@ export default function (template) {
 
       // 如果是结点
       else if (isElement(nodeList[i])) {
-
         let attrs = {};
         for (let j = 0; j < nodeList[i].attributes.length; j++) {
           let key_type = (nodeList[i].attributes[j].nodeName + "").split('::');
@@ -61,12 +60,45 @@ export default function (template) {
           };
         }
 
+        // 识别Path标签下的所有标签，将标节点名字全部转成大写
+        if (nodeList[i].nodeName.toUpperCase() == 'PATH') {
+          let lines = [];
+
+          // 将Path节点下的子节点进行循环
+          for (let j = 0; j < nodeList[i].children.length; j++) {
+            let lineattr = {};
+
+            // 把子节点上所设置的属性获取出来
+            for (let k = 0; k < nodeList[i].children[j].attributes.length; k++) {
+
+              let key_type = (nodeList[i].children[j].attributes[k].nodeName + "").split('::');
+              lineattr[key_type[0]] = {
+                value: nodeList[i].children[j].attributes[k].nodeValue,
+                ruler: key_type[1] || "default"
+              };
+            }
+
+            // 将属性放入数组中去
+            lines.push({
+              series: (nodeList[i].children[j].nodeName + "").toLowerCase(),
+              attr: lineattr
+            });
+          }
+
+          // 子节点的属性放回到Path节点中去
+          attrs.$lines = lines;
+          resultData.push({
+            series: (nodeList[i].nodeName + "").toLowerCase(),
+            attr: attrs,
+          });
+          continue;
+        }
+
         resultData.push({
           series: (nodeList[i].nodeName + "").toLowerCase(),
           attr: attrs,
           children: doit(nodeList[i])
         });
-
       }
 
     }

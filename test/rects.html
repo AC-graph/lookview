@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多个矩形测试</title>
+    <script src="../dist/lookview.js"></script>
+    <link rel="shortcut icon" href="../logo-100.png">
+</head>
+<body>
+    <div id="root" style='height:1000px'>
+       <rects l-bind:data="datalist" zero-x="500" zero-y="500" width="500" height="500"  l-bind:fill-color="color" ></rects>
+       
+      </div>
+    
+    
+      <script>
+    
+        var lookview = new LookView({
+    
+          // 挂载点
+          el: document.getElementById('root'),
+    
+          // 数据
+          data: function () {
+            return {
+              datalist:[5,7,3,4,3,3,4,50],  
+              color: 'red',
+              
+            };
+          },
+    
+        });
+    
+        console.log(lookview);
+    
+        window.lookview = lookview;
+    
+      </script>
+</body>
+</html>
