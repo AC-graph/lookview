@@ -13,15 +13,22 @@
 <body>
 
   <div id="root" style='height:2000px'>
+    <!-- 测试直角刻度尺 -->
+    <x-ruler zero-x='60w' zero-y='30h' l-bind:data='data0' width='25w' zero='false' drant=1></x-ruler>
+    <y-ruler zero-x='60w' zero-y='30h' l-bind:data='data0' width='25w' zero='false' drant=1></y-ruler>
 
-    <!-- <arc type='full' fill-color='red' stroke-color='pink' line-width='30' cx::rulerName='50w' cy::rulerName=250
-      radius2::rulerName='100' radius1::rulerName='200' begin='0' deg='270deg'></arc> -->
-    <x-ruler zero-x='50w' zero-y='50h' l-bind:data='data' width='30w' zero='false'></x-ruler>
-    <x-ruler zero-x='50w' zero-y='50h' l-bind:data='data' width='-30w' zero='false'></x-ruler>
-    <y-ruler zero-x='50w' zero-y='50h' l-bind:data='data' width='30w' zero='false'></y-ruler>
-    <y-ruler zero-x='50w' zero-y='50h' l-bind:data='data' width='-30w' zero='false'></y-ruler>
-    <polar-ruler cx='70w' cy='35h'  l-bind:data='textdata' begin='10deg' deg='-210deg' radius='10min'></polar-ruler>
-    <polar-ruler cx='30w' cy='35h'  l-bind:data='textdata' begin='10deg' deg='210deg' radius='10min'></polar-ruler>
+    <x-ruler zero-x='30w' zero-y='30h' l-bind:data='data1' width='-25w' zero='false' drant=2></x-ruler>
+    <y-ruler zero-x='30w' zero-y='30h' l-bind:data='data1' width='25w' zero='false' drant=2></y-ruler>
+
+    <x-ruler zero-x='30w' zero-y='60h' l-bind:data='data2' width='-25w' zero='false' drant=3></x-ruler>
+    <y-ruler zero-x='30w' zero-y='60h' l-bind:data='data2' width='-25w' zero='false' drant=3></y-ruler>
+
+    <x-ruler zero-x='60w' zero-y='60h' l-bind:data='data3' width='25w' zero='false' drant=4></x-ruler>
+    <y-ruler zero-x='60w' zero-y='60h' l-bind:data='data3' width='-25w' zero='false' drant=4></y-ruler>
+
+    <!-- 测试极刻度尺 -->
+    <polar-ruler cx='40w' cy='45h' l-bind:data='textdata' begin='10deg' deg='-210deg' radius='8min'></polar-ruler>
+    <polar-ruler cx='50w' cy='45h' l-bind:data='textdata' begin='10deg' deg='210deg' radius='8min'></polar-ruler>
   </div>
 
 
@@ -37,8 +44,11 @@
         return {
           color: 'red',
           // basePoint: [400, 400],
-          data: [168, 177, 182, 201, 186, 159],
-          textdata: ['南京', '北京', '上海', '广州', '福州', '深圳'],
+          data0: [-11, 11, 22, 33, 44, 55],
+          data1: [-22, 22, 44, 66, 88, 110],
+          data2: [-33, 66, 99, 132, 164, 196],
+          data3: [-44, 88, 132, 176, 220, 264],
+          textdata: ['0%', '16.7%', '33.3%', '50.0%', '66.7%', '83.3%'],
         };
       },
 

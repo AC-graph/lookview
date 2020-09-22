@@ -25,6 +25,9 @@
         <path l-bind:array='data1' type='close'></path>
         <quadratic x0='10w' y0='50h' x1='50w' y1='50h' cpx='30w' cpy='70h'></quadratic>
         <bezier x0='10w' y0='80h' x1='40w' y1='80h' cp1x='20w' cp1y='65h' cp2x='30w' cp2y='95h' type="fill"></bezier>
+        <x-ruler zero-x='50w' zero-y='50h' l-bind:data='data2' width='30w' zero='true'></x-ruler>
+        <x-ruler zero-x='50w' zero-y='20h' l-bind:data='data2' width='-30w' zero='false'></x-ruler>
+
     </div>
 
 
@@ -40,7 +43,8 @@
                 return {
                     color: 'red',
                     data: [[150, 150], [150, 200], [20, 20], [150, 150]],
-                    data1: [[200, 150], [200, 200], [30, 20]]
+                    data1: [[200, 150], [200, 200], [30, 20]],
+                    data2: [-26, 177, 182, 201, 186, 159]
                 };
             },
 
