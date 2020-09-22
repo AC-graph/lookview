@@ -1,51 +1,54 @@
 
-// 直角坐标刻度尺
+// 直角坐标刻度尺-X
 
-export default ["color.black", "num.one", "array.null", "json.required", "str.required", function ($colorBlack, $numOne, $arrayNull, $jsonRequired, $strRequired) {
+export default ["color.black", "num.one", "num.required", "array.null", "json.required", "bool.true", function ($colorBlack, $numOne, $numRequired, $arrayNull, $jsonRequired, $boolTrue) {
     return {
         attrs: {
             'stroke-color': $colorBlack,
             'fill-color': $colorBlack,
             'line-width': $numOne,
-            'base-point': $jsonRequired,
+            'zero-x': $numRequired,
+            'zero-y': $numRequired,
             'font-size': { type: "number", default: 16 },
             'font-family': { type: "string", default: "sans-serif" },
             'text-align': { type: "string", default: 'center' },
             'text-baseline': { type: "string", default: 'middle' },
             dash: $arrayNull,
             data: $jsonRequired,
-            type: $strRequired,
+            width: $numRequired,
+            zero: $boolTrue,
         },
         link(painter, attr) {
             // clength为刻度尺在画布中的长度
-            let rule, max, cxlength, cylength, originX, originY;
+            let rule, max, cxlength, originX, originY;
             rule = 5;
             max = Math.max(...attr.data);
-            cxlength = 0;
-            cylength = 0;
-            originX = attr['base-point'][0];
-            originY = attr['base-point'][1];
-            // 判断直角坐标轴的朝向
-            if (attr.type == 'N') {
-                cylength = '300';
-            } else if (attr.type == 'S') {
-                cylength = '-300';
-            } else if (attr.type == 'W') {
-                cxlength = '300';
-            } else if (attr.type == 'E') {
-                cxlength = '-300';
-            } else {
-                // 错误提示
-                console.error('[LookView error]: Type error!');
-            }
+            cxlength = -attr.width;
+            originX = attr['zero-x'];
+            originY = attr['zero-y'];
 
             // 画刻度尺
-            painter.config({
-                "fillStyle": attr['fill-color'],
-                "strokeStyle": attr['stroke-color'],
-                "lineWidth": attr['line-width'],
-                "lineDash": attr.dash,
-            }).beginPath().moveTo(originX, originY).lineTo(originX - cxlength, originY - cylength).stroke()
+            if (attr.width > 0) {
+                painter.config({
+                    "fillStyle": attr['fill-color'],
+                    "strokeStyle": attr['stroke-color'],
+                    "lineWidth": attr['line-width'],
+                    "lineDash": attr.dash,
+                }).beginPath().moveTo(originX, originY).lineTo(originX - cxlength + 30, originY).stroke()
+                    .beginPath().moveTo(originX - cxlength + 30, originY).lineTo(originX - cxlength + 25.7573, originY - 4.2426).stroke()
+                    .beginPath().moveTo(originX - cxlength + 30, originY).lineTo(originX - cxlength + 25.7573, originY + 4.2426).stroke()
+            } else {
+                painter.config({
+                    "fillStyle": attr['fill-color'],
+                    "strokeStyle": attr['stroke-color'],
+                    "lineWidth": attr['line-width'],
+                    "lineDash": attr.dash,
+                }).beginPath().moveTo(originX, originY).lineTo(originX - cxlength - 30, originY).stroke()
+                    .beginPath().moveTo(originX - cxlength - 30, originY).lineTo(originX - cxlength - 25.7573, originY - 4.2426).stroke()
+                    .beginPath().moveTo(originX - cxlength - 30, originY).lineTo(originX - cxlength - 25.7573, originY + 4.2426).stroke()
+            }
+
+
 
             // 对rule稍作处理
             if (Math.ceil(max / rule) > 10) {
@@ -56,26 +59,7 @@ export default ["color.black", "num.one", "array.null", "json.required", "str.re
             };
 
             // 画小刻度+刻度值
-            if (attr.type == 'N' || attr.type == 'S') {
-                for (let i = 0; i <= Math.ceil(max / rule); i++) {
-                    painter.config({
-                        "fillStyle": attr['fill-color'],
-                        "strokeStyle": attr['stroke-color'],
-                        "lineWidth": attr['line-width'],
-                        "lineDash": attr.dash,
-                    }).beginPath()
-                        .moveTo(originX, originY - i * cylength / Math.ceil(max / rule))
-                        .lineTo(originX - 10, originY - i * cylength / Math.ceil(max / rule)).stroke()
-                    painter.config({
-                        "fillStyle": attr['fill-color'],
-                        "fontSize": attr['font-size'],
-                        "fontFamily": attr['font-family'],
-                        "lineWidth": attr['line-width'],
-                        "textAlign": attr['text-align'],
-                        "textBaseline": attr['text-baseline'],
-                    }).fillText(rule * i, originX - 25, originY - i * cylength / Math.ceil(max / rule));
-                }
-            } else {
+            if (attr.zero == 'true') {
                 for (let i = 0; i <= Math.ceil(max / rule); i++) {
                     painter.config({
                         "fillStyle": attr['fill-color'],
@@ -84,7 +68,7 @@ export default ["color.black", "num.one", "array.null", "json.required", "str.re
                         "lineDash": attr.dash,
                     }).beginPath()
                         .moveTo(originX - i * cxlength / Math.ceil(max / rule), originY)
-                        .lineTo(originX - i * cxlength / Math.ceil(max / rule), originY - 10).stroke()
+                        .lineTo(originX - i * cxlength / Math.ceil(max / rule), originY - 6).stroke()
                     painter.config({
                         "fillStyle": attr['fill-color'],
                         "fontSize": attr['font-size'],
@@ -92,9 +76,29 @@ export default ["color.black", "num.one", "array.null", "json.required", "str.re
                         "lineWidth": attr['line-width'],
                         "textAlign": attr['text-align'],
                         "textBaseline": attr['text-baseline'],
-                    }).fillText(rule * i, originX - i * cxlength / Math.ceil(max / rule), originY - 25);
+                    }).fillText(rule * i, originX - i * cxlength / Math.ceil(max / rule), originY + 25);
                 }
-            };
+            }else{
+                for (let i = 1; i <= Math.ceil(max / rule); i++) {
+                    painter.config({
+                        "fillStyle": attr['fill-color'],
+                        "strokeStyle": attr['stroke-color'],
+                        "lineWidth": attr['line-width'],
+                        "lineDash": attr.dash,
+                    }).beginPath()
+                        .moveTo(originX - i * cxlength / Math.ceil(max / rule), originY)
+                        .lineTo(originX - i * cxlength / Math.ceil(max / rule), originY - 6).stroke()
+                    painter.config({
+                        "fillStyle": attr['fill-color'],
+                        "fontSize": attr['font-size'],
+                        "fontFamily": attr['font-family'],
+                        "lineWidth": attr['line-width'],
+                        "textAlign": attr['text-align'],
+                        "textBaseline": attr['text-baseline'],
+                    }).fillText(rule * i, originX - i * cxlength / Math.ceil(max / rule), originY + 25);
+                }
+            }
+
         }
     };
 }]

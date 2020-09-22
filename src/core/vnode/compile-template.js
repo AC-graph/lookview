@@ -50,7 +50,6 @@ export default function (template) {
 
       // 如果是结点
       else if (isElement(nodeList[i])) {
-
         let attrs = {};
         for (let j = 0; j < nodeList[i].attributes.length; j++) {
           let key_type = (nodeList[i].attributes[j].nodeName + "").split('::');
@@ -60,13 +59,36 @@ export default function (template) {
             ruler: key_type[1] || "default"
           };
         }
-
+        //识别Path标签下的所有标签
+        if (nodeList[i].nodeName.toUpperCase() == 'PATH') {//转成全部大写
+          let lines = [];
+          for (let j = 0; j < nodeList[i].children.length; j++) {
+            let lineattr = {};
+            for (let k = 0; k < nodeList[i].children[j].attributes.length; k++) {
+              let key_type = (nodeList[i].children[j].attributes[k].nodeName + "").split('::');
+              lineattr[key_type[0]] = {
+                value: nodeList[i].children[j].attributes[k].nodeValue,
+                ruler: key_type[1] || "default"
+              };
+            }
+            lines.push({
+              series: (nodeList[i].children[j].nodeName + "").toLowerCase(),
+              attr: lineattr
+            });
+          }
+          attrs.$lines = lines;
+          resultData.push({
+            series: (nodeList[i].nodeName + "").toLowerCase(),
+            attr: attrs,
+          });
+          console.log(resultData);
+          continue;
+        }
         resultData.push({
           series: (nodeList[i].nodeName + "").toLowerCase(),
           attr: attrs,
           children: doit(nodeList[i])
         });
-
       }
 
     }

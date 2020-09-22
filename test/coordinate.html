@@ -12,12 +12,16 @@
 
 <body>
 
-  <div id="root" style='height:1000px'>
+  <div id="root" style='height:2000px'>
 
     <!-- <arc type='full' fill-color='red' stroke-color='pink' line-width='30' cx::rulerName='50w' cy::rulerName=250
       radius2::rulerName='100' radius1::rulerName='200' begin='0' deg='270deg'></arc> -->
-    <lineruler l-bind:base-point='basePoint' l-bind:data='data' type='N'></lineruler>
-    <polarruler l-bind:base-point='basePoint' l-bind:data='textdata' radius=300></polarruler>
+    <x-ruler zero-x='50w' zero-y='50h' l-bind:data='data' width='30w' zero='false'></x-ruler>
+    <x-ruler zero-x='50w' zero-y='50h' l-bind:data='data' width='-30w' zero='false'></x-ruler>
+    <y-ruler zero-x='50w' zero-y='50h' l-bind:data='data' width='30w' zero='false'></y-ruler>
+    <y-ruler zero-x='50w' zero-y='50h' l-bind:data='data' width='-30w' zero='false'></y-ruler>
+    <polar-ruler cx='70w' cy='35h'  l-bind:data='textdata' begin='10deg' deg='-210deg' radius='10min'></polar-ruler>
+    <polar-ruler cx='30w' cy='35h'  l-bind:data='textdata' begin='10deg' deg='210deg' radius='10min'></polar-ruler>
   </div>
 
 
@@ -32,7 +36,7 @@
       data: function () {
         return {
           color: 'red',
-          basePoint: [400, 400],
+          // basePoint: [400, 400],
           data: [168, 177, 182, 201, 186, 159],
           textdata: ['南京', '北京', '上海', '广州', '福州', '深圳'],
         };

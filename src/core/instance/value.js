@@ -84,6 +84,16 @@ export function valueMixin(LookView) {
         }
       },
 
+      // 布尔类型
+      "boolean": function (value) {
+        if (value == 'true') {
+          return true;
+        }
+        else {
+          return false;
+        }
+      },
+
       // 默认类型
       "default": function (value) {
         value = (value + " ").trim();
