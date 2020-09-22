@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>基础对象设计 | 测试</title>
+  <script src="../dist/lookview.js"></script>
+  <link rel="shortcut icon" href="../logo-100.png">
+</head>
+
+<body>
+
+  <div id="root" style='height:500px'>
+
+    <!-- 普通的如果想运算，使用calc -->
+    <text x='10w' y='calc(10w + 20)' content='内容'></text>
+
+    <!-- l-for测试 -->
+    <text x='10w' l-bind:y::demo='key' l-bind:content='value' l-for='(value, key) in datalist'></text>
+
+  </div>
+
+  <script>
+
+    var lookview = new LookView({
+
+      // 挂载点
+      el: document.getElementById('root'),
+
+      // 数据
+      data: function () {
+        return {
+          datalist: ["我", '爱', '你', '，', '中', '国', '！']
+        };
+      },
+
+      // 坐标系
+      coordinate: {
+
+        demo1: function () {
+          return {
+            link: function (value) {
+              return value * 30;
+            }
+          };
+        }
+      }
+
+    });
+
+    console.log(lookview);
+
+  </script>
+
+</body>
+
+</html>

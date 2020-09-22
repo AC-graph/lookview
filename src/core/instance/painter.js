@@ -5,6 +5,15 @@ let getAttrKey = function (key) {
   return key.replace(/^l\-bind:/, '');
 };
 
+let getLForObject = function (lFor, that) {
+
+  console.log(lFor, that);
+  debugger
+
+  
+
+};
+
 export function painterMixin(LookView) {
 
   // 绘制方法
@@ -127,6 +136,20 @@ export function painterMixin(LookView) {
     (function doit(renderArray) {
 
       for (let i = 0; i < renderArray.length; i++) {
+
+        // 【指令】l-for='(value,key) in dataList'
+        // 此指令优先级最高
+        if ('l-for' in renderArray[i].attr) {
+
+          let lFor = getLForObject(renderArray[i].attr['l-for'].value, that), tempRenderArray = [];
+
+          // todo
+          debugger
+
+          doit(tempRenderArray);
+          continue;
+        }
+
         let directive = [];
 
         // 【指令】l-if="flag"
