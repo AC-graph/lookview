@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>基础对象设计 | 测试</title>
+  <script src="../dist/lookview.js"></script>
+  <link rel="shortcut icon" href="../logo-100.png">
+</head>
+
+<body>
+
+  <div id="root" style='height:1000px'>
+    <path type='full' fill-color='red' stroke-color='pink' line-width='30w'>
+        <move-to x="10w" y="10"></move-to>
+        <line-to x="30w" l-bind:y="y"></line-to>
+    </path>
+  </div>
+
+
+  <script>
+
+    var lookview = new LookView({
+
+      // 挂载点
+      el: document.getElementById('root'),
+
+      // 数据
+      data: function () {
+        return {
+          y:100,
+          color: 'red',
+          basePoint: [400, 400],
+          data: [168, 177, 182, 201, 186, 159],
+          textdata: ['南京', '北京', '上海', '广州', '福州', '深圳'],
+        };
+      },
+
+      created:function(){
+        console.log(this);
+      }
+
+    });
+
+    console.log(lookview);
+
+    window.lookview = lookview;
+
+  </script>
+
+</body>
+
+</html>

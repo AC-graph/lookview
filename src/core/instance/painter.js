@@ -110,7 +110,9 @@ export function painterMixin(LookView) {
 
     let renderSeries = [], that = this;
 
-    (function doit(renderArray) {
+    (function doit(renderArray, notPush, pSeries) {
+
+      let tempSubAttrs = [];
 
       for (let i = 0; i < renderArray.length; i++) {
         let directive = [];
@@ -141,7 +143,7 @@ export function painterMixin(LookView) {
           directive
         };
 
-        let attrOptions = that.$$getAttrOptionsBySeries(renderArray[i].series);
+        let attrOptions = that.$$getAttrOptionsBySeries(renderArray[i].series, pSeries);
 
         // 传递属性
         for (let key in renderArray[i].attr) {
@@ -169,9 +171,16 @@ export function painterMixin(LookView) {
 
           // 普通属性
           else {
-            render.attr[key] = {
-              value: renderArray[i].attr[key].value
-            };
+            if ("value" in renderArray[i].attr[key]) {
+              render.attr[key] = {
+                value: renderArray[i].attr[key].value
+              };
+            } else {
+              render.attr[key] = {
+                value: doit(renderArray[i].attr[key], true, render.series)
+              };
+            }
+
           }
 
           if (attrKey in attrOptions) {
@@ -222,9 +231,6 @@ export function painterMixin(LookView) {
           }
         }
 
-
-
-
         // 说明只是用来包裹的组
         if (renderArray[i].series == 'group') {
           doit(renderArray[i].children);
@@ -232,10 +238,18 @@ export function painterMixin(LookView) {
 
         // 默认认为是普通的图形
         else {
-          renderSeries.push(render);
+          // 如果是内置的子标签，返回拼接成完整的
+          // 比如path下的line-to的解析
+          if (notPush) {
+            tempSubAttrs.push(render);
+          } else {
+            renderSeries.push(render);
+          }
         }
 
       }
+
+      return tempSubAttrs;
 
     })(this.__render);
 
