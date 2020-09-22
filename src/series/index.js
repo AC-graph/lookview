@@ -32,6 +32,7 @@ export function seriesMixin(LookView) {
 
   };
   LookView.prototype.$$getAttrOptionsBySeries = function (seriesName, pSeries) {
+    // 判断是否是子标签，并根据答案返回结果
     if (pSeries != undefined) {
       return this.__series[pSeries].subAttrs[seriesName];
     } else {

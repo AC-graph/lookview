@@ -38,10 +38,13 @@ export default ["color.black", "num.one", "num.required", "str.required", "array
                 "lineWidth": attr['line-width'],
                 "lineDash": attr.dash,
             });
+
+            // 获取子标签的数量并循环画出线条
             for (let i = 0; i < attr.$lines.length; i++) {
                 if (i == 0) {
                     painter.beginPath();
                 }
+                
                 if (attr.$lines[i].series == 'move-to') {
                     painter.moveTo(attr.$lines[i].attr.x, attr.$lines[i].attr.y);
                 } else if (attr.$lines[i].series == 'line-to') {

@@ -30,9 +30,12 @@ export function painterMixin(LookView) {
         // $开头的是特殊属性
         if (/^\$/.test(key)) {
           let temp = [];
+
+          // 将$开头的特殊属性中的属性值解析后放回到attr中去
           for (let i = 0; i < item.attr[key].value.length; i++) {
             let subItem = item.attr[key].value[i];
 
+            // 将子标签的属性进行解析
             let compiler_subItem = doit(subItem, true);
             temp.push({
               attr: compiler_subItem,

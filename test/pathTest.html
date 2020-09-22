@@ -13,9 +13,11 @@
 <body>
 
   <div id="root" style='height:1000px'>
-    <path type='stroke' fill-color='red' stroke-color='pink' line-width='30'>
+    <path type='stroke' fill-color='red' stroke-color='pink' line-width='10'>
         <move-to x="10w" y="10"></move-to>
         <line-to x="30w" l-bind:y="y"></line-to>
+        <bezier-to type='2' cp1x="30w" cp1y="30h" x="50w" y="20h"></bezier-to>
+        <bezier-to type='3' cp1x="30w" cp1y="30h" cp2x="30w" cp2y="40h" x="40w" y="40h"></bezier-to>
     </path>
   </div>
 
