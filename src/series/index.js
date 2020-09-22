@@ -5,9 +5,11 @@ import rect from './basic/rect';
 import circle from './basic/circle';
 import text from './basic/text';
 import path from './basic/path';
+
 import xruler from './combine/x-ruler';
 import yruler from './combine/y-ruler';
 import polarruler from './combine/polar-ruler';
+import rects from './combine/rects';
 
 export function seriesMixin(LookView) {
 
@@ -22,13 +24,20 @@ export function seriesMixin(LookView) {
     path: compiler(path),
 
     // 组合图形
+
     "x-ruler": compiler(xruler),
     "y-ruler": compiler(yruler),
     "polar-ruler": compiler(polarruler),
+    rects: compiler(rects),
 
   };
-  LookView.prototype.$$getAttrOptionsBySeries = function (seriesName) {
-    return this.__series[seriesName].attrs;
+  LookView.prototype.$$getAttrOptionsBySeries = function (seriesName, pSeries) {
+    // 判断是否是子标签，并根据答案返回结果
+    if (pSeries != undefined) {
+      return this.__series[pSeries].subAttrs[seriesName];
+    } else {
+      return this.__series[seriesName].attrs;
+    }
   };
 
 };
