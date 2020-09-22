@@ -140,7 +140,6 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
 
             }
 
-
         }
     };
 }]
