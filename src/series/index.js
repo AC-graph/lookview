@@ -22,7 +22,6 @@ export function seriesMixin(LookView) {
     circle: compiler(circle),
     text: compiler(text),
     path: compiler(path),
-
     // 组合图形
 
     "x-ruler": compiler(xruler),
