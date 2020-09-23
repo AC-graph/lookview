@@ -10,6 +10,7 @@ import xruler from './combine/x-ruler';
 import yruler from './combine/y-ruler';
 import polarruler from './combine/polar-ruler';
 import rects from './combine/rects';
+import arcs from './combine/arcs';
 
 export function seriesMixin(LookView) {
 
@@ -28,6 +29,7 @@ export function seriesMixin(LookView) {
     "y-ruler": compiler(yruler),
     "polar-ruler": compiler(polarruler),
     rects: compiler(rects),
+    arcs:compiler(arcs),
 
   };
   LookView.prototype.$$getAttrOptionsBySeries = function (seriesName, pSeries) {
