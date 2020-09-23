@@ -78,7 +78,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
 
                     // ddd存放刻度值旋转后的坐标
                     let ddd = [];
-                    ddd = $$.rotate(originX, originY, deg * i / Math.ceil(max / rule), originX + (radius + 25) * Math.cos(begin), originY + (radius + 25) * Math.sin(begin))
+                    ddd = $$.rotate(originX, originY, deg * i / Math.ceil(max / rule), originX + (radius + 30) * Math.cos(begin), originY + (radius + 30) * Math.sin(begin))
                     painter.config({
                         "fillStyle": attr["fill-color"],
                         "lineWidth": attr["line-width"]
@@ -91,8 +91,8 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     // 画刻度值
                     painter.config({
                         "fillStyle": attr['fill-color'],
-                        "fontSize": attr['font-size'],
-                        "fontFamily": attr['font-family'],
+                        "font-size": attr['font-size'],
+                        "font-family": attr['font-family'],
                         "lineWidth": attr['line-width'],
                         "textAlign": attr['text-align'],
                         "textBaseline": attr['text-baseline']
@@ -104,7 +104,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
 
                     // ddd存放刻度值旋转后的坐标
                     let ddd = [];
-                    ddd = $$.rotate(originX, originY, rulerc * i, originX + (radius + 25) * Math.cos(begin), originY + (radius + 25) * Math.sin(begin))
+                    ddd = $$.rotate(originX, originY, rulerc * i, originX + (radius + 30) * Math.cos(begin), originY + (radius + 30) * Math.sin(begin))
                     painter.config({
                         "fillStyle": attr["fill-color"],
                         "lineWidth": attr["line-width"]
@@ -117,16 +117,14 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     // 画刻度值
                     painter.config({
                         "fillStyle": attr['fill-color'],
-                        "fontSize": attr['font-size'],
-                        "fontFamily": attr['font-family'],
+                        "font-size": attr['font-size'],
+                        "font-family": attr['font-family'],
                         "lineWidth": attr['line-width'],
                         "textAlign": attr['text-align'],
                         "textBaseline": attr['text-baseline']
                     }).fillText(attr.data[i], ddd[0], ddd[1])
                 }
             }
-
-
         }
     };
 }];
