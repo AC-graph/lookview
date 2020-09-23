@@ -109,11 +109,11 @@ export default function (template) {
           }
 
           // 如果不存在content属性或者属性值为空时，将标签下的所有内容放入新建的content属性中
-          if (flag == false || (flag == true && nodeList[i].attributes.content.value == "")) {
+          if (flag == false) {
 
             // innerHTML和innerText都能传相同的值这里暂定使用innerText
             let subContent = {
-              value: nodeList[i].innerText,
+              value: nodeList[i].innerHTML,
               ruler: "default"
             };
             attrs.content = subContent;
