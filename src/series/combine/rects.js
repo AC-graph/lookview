@@ -96,9 +96,13 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
             let h1 = 5, h2 = 5, h3 = 5;
             //let hei = 5;
             //每个小矩形的高 
-            var maxvalue = attr.data[0] + attr.data2[0] + attr.data3[0];
+            let maxvalue = attr.data[0] + attr.data2[0] + attr.data3[0];
+            
+            for(let i = 0; i < attr.data.length; i++){
+               maxvalue = maxvalue < attr.data[i] + attr.data2[i] + attr.data3[i] ? attr.data[i] + attr.data2[i] + attr.data3[i] : maxvalue
+            }
 
-            maxvalue = maxvalue < attr.data[i] + attr.data2[i] + attr.data3[i] ? attr.data[i] + attr.data2[i] + attr.data3[i] : maxvalue
+           
             //三种不同数据小矩形的高度
             h1 = attr.height / maxvalue * attr.data[i] - attr.height / maxvalue;
             h2 = attr.height / maxvalue * attr.data2[i] - attr.height / maxvalue;
