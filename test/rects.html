@@ -9,7 +9,7 @@
 </head>
 <body>
     <div id="root" style='height:1000px'>
-       <rects l-bind:data="datalist" zero-x="500" zero-y="500" width="500" height="500"  l-bind:fill-color="color" ></rects>
+       <rects l-bind:data="datalist" zero-x="500" zero-y="500" width="500" height="500"   l-bind:data2="data2" l-bind:data3="data3"></rects>
        
       </div>
     
@@ -24,7 +24,9 @@
           // 数据
           data: function () {
             return {
-              datalist:[23,13,33,24,24,13],  
+              datalist:[23,13,33,24,24,13], 
+              data2:[24,35,24,23,26,36],
+              data3:[36,27,38,35,47,23],
               color: 'red',
               
             };
