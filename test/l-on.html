@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>基础对象设计 | 测试</title>
+  <script src="../dist/lookview.js"></script>
+  <link rel="shortcut icon" href="../logo-100.png">
+</head>
+
+<body>
+
+  <div id="root" style='height:500px'>
+
+    <arc l-for='value in datalist' type='full' fill-color='red' l-bind:stroke-color::value1='value' line-width='4'
+      cx='50w' l-bind:cy::value0='value' radius2='100' radius1='120' begin='0' deg='270deg' l-on:click:default='doit'>
+    </arc>
+
+    <text type="full" x='50w' font-size='90' y='20h' stroke-color='red' l-on:mousemove='doit2' fill-color='black'
+      content='内容3'>123自行车</text>
+
+  </div>
+
+  <script>
+
+    var lookview = new LookView({
+
+      // 挂载点
+      el: document.getElementById('root'),
+
+      // 坐标系
+      coordinate: {
+
+        value0: function () {
+          return {
+            link: function (value) {
+              return value[0];
+            }
+          };
+        },
+
+        value1: function () {
+          return {
+            link: function (value) {
+              return value[1];
+            }
+          };
+        }
+
+      },
+
+      data() {
+        return {
+          datalist: [[140, 'pink'], [200, 'blue'], [300, 'green']]
+        };
+      },
+
+      methods: {
+        doit: function (targetEvent) {
+          console.log(targetEvent);
+          alert('你点击了弧形');
+        },
+        doit2: function () {
+          console.log('点击了文字');
+        }
+      }
+
+    });
+
+    console.log(lookview);
+
+    window.lookview = lookview;
+
+  </script>
+
+</body>
+
+</html>

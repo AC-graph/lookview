@@ -96,27 +96,15 @@ export default function (template) {
 
         // 识别text标签下的所有文字
         if (nodeList[i].nodeName.toUpperCase() == 'TEXT') {
-
-          let flag = false;
-
-          // 确定text标签中是否存在content属性
-          for (let j = 0; j < nodeList[i].attributes.length; j++) {
-
-            if (nodeList[i].attributes[j].nodeName == "content") {
-              flag = true;
-              break;
-            }
-          }
-
+          
           // 如果不存在content属性或者属性值为空时，将标签下的所有内容放入新建的content属性中
-          if (flag == false) {
+          if (!("content" in nodeList[i].attributes[j].nodeName)) {
 
             // innerHTML和innerText都能传相同的值这里暂定使用innerText
-            let subContent = {
+            attrs.content= {
               value: nodeList[i].innerHTML,
               ruler: "default"
             };
-            attrs.content = subContent;
           }
         }
 

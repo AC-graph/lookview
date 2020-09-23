@@ -15,6 +15,13 @@ export default ["color.black", "num.required", "num.one", "array.null", function
          radius: $numRequired,
 
       },
+      region: {
+         default(painter, attr) {
+            painter.config({
+               "lineWidth": attr["line-width"]
+            })[attr.type + "Circle"](attr.cx, attr.cy, attr.radius);
+         }
+      },
       link(painter, attr) {
          painter.config({
             "fillStyle": attr["fill-color"],

@@ -17,13 +17,24 @@ export default ["color.black", "num.required", "num.one", "str.required", functi
             y: $numRequired,
             deg: { type: "number", default: "0pi" }
         },
+        region: {
+            default(painter, attr) {
+                painter.config({
+                    "font-size": attr['font-size'],
+                    "font-family": attr['font-family'],
+                    "lineWidth": attr['line-width'],
+                    "textAlign": attr['text-align'],
+                    "textBaseline": attr['text-baseline'],
+                })[attr.type + "Text"](attr.content, attr.x, attr.y, attr.deg);
+            }
+        },
         link(painter, attr) {
 
             painter.config({
                 "fillStyle": attr['fill-color'],
                 "strokeStyle": attr['stroke-color'],
-                "fontSize": attr['font-size'],
-                "fontFamily": attr['font-family'],
+                "font-size": attr['font-size'],
+                "font-family": attr['font-family'],
                 "lineWidth": attr['line-width'],
                 "textAlign": attr['text-align'],
                 "textBaseline": attr['text-baseline'],
