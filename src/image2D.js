@@ -42,6 +42,9 @@ import {
 
 } from 'image2d/src/export.js';
 
+// 额外补充的
+import region from './core/region/index';
+
 // 挂载需要的静态方法
 image2D.extend({
 
@@ -57,7 +60,11 @@ image2D.prototype.extend({
     attr,
     size,
     painter: painterCanvas2D,
-    appendTo
+    appendTo,
+    position,
+    region,
+    bind,
+    unbind
 
 });
 

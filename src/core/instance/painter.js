@@ -27,15 +27,18 @@ export function painterMixin(LookView) {
     // 重新绘制前，清空画布
     this.__painter.clearRect();
 
+    // 清除登记的区域信息
+    this.__region.erase();
+
     // 后期可以通过此添加一些额外的辅助数据，目前没有考虑好，因此预留
     let nouse = {}, that = this;
 
-    let doit = function (item, notPainter) {
+    let doit = function (item, notPainter, index) {
 
       let fontSize = 16, attr = {};
 
       // 由于em单位导致font-size比较特殊，我们先计算出来留着使用
-      if (item.attr['font-size']) fontSize = that.$$calcValue('font-size', fontSize);
+      if (item.attr['font-size']) fontSize = that.$$calcValue(item.attr['font-size'], fontSize);
       attr['font-size'] = fontSize;
 
       for (let key in item.attr) {
@@ -82,12 +85,24 @@ export function painterMixin(LookView) {
       }
 
       if (notPainter) return attr;
+
+      // 绘制
       that.__series[item.series].link.call(nouse, that.__painter, attr);
+
+      // 记录需要登记的区域
+      let region = that.__series[item.series].region;
+      if (region) {
+        for (let regionName in region) {
+          that.__region.drawer(index + "-" + regionName, function (regionPainter) {
+            region[regionName](regionPainter, attr);
+          });
+        }
+      }
 
     };
 
     for (let i = 0; i < this.__renderSeries.length; i++) {
-      doit(this.__renderSeries[i]);
+      doit(this.__renderSeries[i], false, i);
     }
 
     return this;
@@ -140,6 +155,9 @@ export function painterMixin(LookView) {
         // 部分数据的计算依赖尺寸，因此这里需要重新初始化
         this.$$initValue(width, height);
 
+        // 同步更新区域大小
+        this.__region.updateSize(width, height);
+
         if (!__notPainter) this.$$painter();
 
       }, 1000, () => {
@@ -153,6 +171,10 @@ export function painterMixin(LookView) {
     else {
 
       this.$$initValue(newSize.width, newSize.height);
+
+      // 同步更新区域大小
+      this.__region.updateSize(newSize.width, newSize.height);
+
       if (!__notPainter) this.$$painter();
       this.$$lifecycle('resized');
 
@@ -163,6 +185,18 @@ export function painterMixin(LookView) {
 
   // 数据改变调用的重绘方法
   LookView.prototype.$updateByData = function (__notPainter) {
+
+    this.__events = {
+
+      // 点击元素
+      "click": {},
+
+      // 鼠标移动
+      "mousemove": {}
+
+    };
+
+    let index = 0;
 
     let renderSeries = [], that = this;
 
@@ -259,6 +293,21 @@ export function painterMixin(LookView) {
 
           }
 
+          // 【指令】l-on:eventType:regionName="xxx"
+          else if (/l\-on\:/.test(key)) {
+            let keyArray = (key.replace(/^l\-on\:/, '') + ":default").split(':');
+            let methodName = renderArray[i].attr[key].value;
+            that.__events[keyArray[0]][index + "-" + keyArray[1]] = {
+              index,
+              region: keyArray[1],
+              method: {
+                name: methodName,
+                callback: get(that, methodName)
+              }
+            };
+            index += 1;
+          }
+
           // 普通属性
           else {
             if ("value" in renderArray[i].attr[key]) {
@@ -283,7 +332,7 @@ export function painterMixin(LookView) {
 
           } else {
 
-            if (!/^\$/.test(attrKey)) console.warn('[LookView warn]: "' + attrKey + '" is an undefined property');
+            if (!/^\$/.test(attrKey) && !/^l\-on\:/.test(attrKey)) console.warn('[LookView warn]: "' + attrKey + '" is an undefined property');
 
           }
 

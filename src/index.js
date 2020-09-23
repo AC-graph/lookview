@@ -56,7 +56,45 @@ LookView.prototype.$mount = function (el, __isFocus) {
 
     // 初始化添加画布
     el.innerHTML = '';
-    this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>').appendTo(el);
+    this.__canvas = $$('<canvas>非常抱歉，您的浏览器不支持canvas!</canvas>')
+
+        // 监听点击
+        .bind('click', event => {
+
+            let region = this.__region.getRegion(event);
+            if (region != undefined) {
+                let regionOn = this.__events.click[region[0]];
+                if (regionOn != undefined) {
+                    regionOn.method.callback.call(this, {
+                        region: regionOn.region,
+                        attr: this.__renderSeries[regionOn.index].attr,
+                        event
+                    });
+                }
+            }
+        })
+
+        // 监听鼠标移动
+        .bind('mousemove', event => {
+
+            let region = this.__region.getRegion(event);
+            if (region != undefined) {
+                let regionOn = this.__events.mousemove[region[0]];
+                if (regionOn != undefined) {
+                    regionOn.method.callback.call(this, {
+                        region: regionOn.region,
+                        attr: this.__renderSeries[regionOn.index.attr],
+                        event
+                    });
+                }
+            }
+
+        })
+
+        .appendTo(el);
+
+    // 创建区域对象
+    this.__region = this.__canvas.region();
 
     // // 绘制
     this.$updateView(true);
