@@ -24,32 +24,32 @@ export function valueMixin(LookView) {
 
       // 数字类型
       "number": value => {
-        value = (value + " ").trim();
+        let strValue = (value + " ").trim();
 
         // 常规的辅助计算
-        if (/w$/.test(value)) {
-          return (0 - -value.replace('w', '')) * w;
-        } else if (/h$/.test(value)) {
-          return (0 - -value.replace('h', '')) * h;
-        } else if (/min$/.test(value)) {
-          return (0 - -value.replace('min', '')) * min;
-        } else if (/max$/.test(value)) {
-          return (0 - -value.replace('max', '')) * max;
-        } else if (/pi$/.test(value)) {
-          return (0 - -value.replace('pi', '')) * Math.PI;
-        } else if (/deg$/.test(value)) {
-          return (0 - -value.replace('deg', '')) / 180 * Math.PI;
+        if (/^\d+w$/.test(strValue)) {
+          return (0 - -strValue.replace('w', '')) * w;
+        } else if (/^\d+h$/.test(strValue)) {
+          return (0 - -strValue.replace('h', '')) * h;
+        } else if (/^\d+min$/.test(strValue)) {
+          return (0 - -strValue.replace('min', '')) * min;
+        } else if (/^\d+max$/.test(strValue)) {
+          return (0 - -strValue.replace('max', '')) * max;
+        } else if (/^\d+pi$/.test(strValue)) {
+          return (0 - -strValue.replace('pi', '')) * Math.PI;
+        } else if (/^\d+deg$/.test(strValue)) {
+          return (0 - -strValue.replace('deg', '')) / 180 * Math.PI;
         }
 
         // 文字
-        else if (/em$/.test(value)) {
-          return (0 - -value.replace('em', '')) * fontSize;
+        else if (/^\d+em$/.test(strValue)) {
+          return (0 - -strValue.replace('em', '')) * fontSize;
         }
 
         // 特殊的计算calc
-        else if (/^calc\(/.test(value)) {
+        else if (/^calc\(/.test(strValue)) {
 
-          let valueExp = value.replace(/^calc\(/, '').replace(/\)$/, '').replace(/ +/g, ' ').split(' ');
+          let valueExp = strValue.replace(/^calc\(/, '').replace(/\)$/, '').replace(/ +/g, ' ').split(' ');
 
           for (let i = 0; i < valueExp.length; i += 2) {
             valueExp[i] = doFuns.number(valueExp[i]);
@@ -59,16 +59,20 @@ export function valueMixin(LookView) {
 
         }
 
-        // 默认只进行类型强转
+        // 进行类型强转
+        else if (/^\d+$/.test(strValue)) {
+          return 0 - -strValue;
+        }
+
         else {
-          return 0 - -value;
+          return value;
         }
 
       },
 
       // 字符串类型
       "string": function (value) {
-        return (value + " ").trim();
+        return value;
       },
 
       // json类型
