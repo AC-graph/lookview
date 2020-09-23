@@ -17,6 +17,16 @@ export default ["color.black", "num.required", "num.one", "array.null", function
       begin: $numRequired,
       deg: $numRequired
     },
+    region: {
+      default(painter, attr) {
+
+        painter.config({
+          "lineWidth": attr['line-width'],
+          "lineDash": attr.dash
+        })[attr.type + "Arc"](attr.cx, attr.cy, attr.radius1, attr.radius2, attr.begin, attr.deg);
+
+      }
+    },
     link(painter, attr) {
 
       // 配置画笔
