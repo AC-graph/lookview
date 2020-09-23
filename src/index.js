@@ -65,7 +65,11 @@ LookView.prototype.$mount = function (el, __isFocus) {
             if (region != undefined) {
                 let regionOn = this.__events.click[region[0]];
                 if (regionOn != undefined) {
-                    regionOn.method.callback.call(this, regionOn);
+                    regionOn.method.callback.call(this, {
+                        region: regionOn.region,
+                        attr: this.__renderSeries[regionOn.index].attr,
+                        event
+                    });
                 }
             }
         })
@@ -77,7 +81,11 @@ LookView.prototype.$mount = function (el, __isFocus) {
             if (region != undefined) {
                 let regionOn = this.__events.mousemove[region[0]];
                 if (regionOn != undefined) {
-                    regionOn.method.callback.call(this, regionOn);
+                    regionOn.method.callback.call(this, {
+                        region: regionOn.region,
+                        attr: this.__renderSeries[regionOn.index.attr],
+                        event
+                    });
                 }
             }
 

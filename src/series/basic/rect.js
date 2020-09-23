@@ -15,15 +15,19 @@ export default ["color.black", "num.required", "num.one", "array.null", function
             width: $numRequired,
             height: $numRequired
         },
+        region: {
+            default(painter, attr) {
+                painter.config({
+                    "lineWidth": attr['line-width']
+                })[attr.type + "Rect"](attr.x, attr.y, attr.width, attr.height);
+            }
+        },
         link(painter, attr) {
             // 配置画笔
             painter.config({
                 "fillStyle": attr['fill-color'],
                 "strokeStyle": attr['stroke-color'],
-                "lineWidth": attr['line-width'],
-
-                //预留配置区域
-
+                "lineWidth": attr['line-width']
             });
 
             let type = attr.type;

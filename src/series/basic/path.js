@@ -44,7 +44,7 @@ export default ["color.black", "num.one", "num.required", "str.required", "array
                 if (i == 0) {
                     painter.beginPath();
                 }
-                
+
                 if (attr.$lines[i].series == 'move-to') {
                     painter.moveTo(attr.$lines[i].attr.x, attr.$lines[i].attr.y);
                 } else if (attr.$lines[i].series == 'line-to') {

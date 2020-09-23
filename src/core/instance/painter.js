@@ -38,7 +38,7 @@ export function painterMixin(LookView) {
       let fontSize = 16, attr = {};
 
       // 由于em单位导致font-size比较特殊，我们先计算出来留着使用
-      if (item.attr['font-size']) fontSize = that.$$calcValue('font-size', fontSize);
+      if (item.attr['font-size']) fontSize = that.$$calcValue(item.attr['font-size'], fontSize);
       attr['font-size'] = fontSize;
 
       for (let key in item.attr) {
