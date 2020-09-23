@@ -18,6 +18,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             width: $numRequired,
             zero: $boolTrue,//判断原点是否需要绘制
             drant: $numOne,// 判断象限
+            'data-type': { type: "string", default: 'num' }//处理的数据类型
         },
         link(painter, attr) {
 
@@ -62,24 +63,46 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     .beginPath().moveTo(originX, originY - cylength - 30).lineTo(originX + 4.2426, originY - cylength - 25.7573).stroke()
                     .beginPath().moveTo(originX, originY - cylength - 30).lineTo(originX - 4.2426, originY - cylength - 25.7573).stroke()
 
-                // 画小刻度+刻度值
-                for (let i = attr.zero ? 0 : 1; i <= Math.ceil(max / rule); i++) {
-                    painter.config({
-                        "fillStyle": attr['fill-color'],
-                        "strokeStyle": attr['stroke-color'],
-                        "fontSize": attr['font-size'],
-                        "fontFamily": attr['font-family'],
-                        "lineWidth": attr['line-width'],
-                        "textAlign": attr['text-align'],
-                        "textBaseline": attr['text-baseline'],
-                        "lineDash": attr.dash,
-                    }).beginPath()
-                        // 小刻度
-                        .moveTo(originX, originY - i * cylength / Math.ceil(max / rule))
-                        .lineTo(originX + 6 * dflag, originY - i * cylength / Math.ceil(max / rule)).stroke()
-                        // 刻度值
-                        .fillText(rule * i, originX - 25 * dflag, originY - i * cylength / Math.ceil(max / rule));
+                if (attr['data-type'] == 'num') {
+                    // 画小刻度+刻度值
+                    for (let i = attr.zero ? 0 : 1; i <= Math.ceil(max / rule); i++) {
+                        painter.config({
+                            "fillStyle": attr['fill-color'],
+                            "strokeStyle": attr['stroke-color'],
+                            "fontSize": attr['font-size'],
+                            "fontFamily": attr['font-family'],
+                            "lineWidth": attr['line-width'],
+                            "textAlign": attr['text-align'],
+                            "textBaseline": attr['text-baseline'],
+                            "lineDash": attr.dash,
+                        }).beginPath()
+                            // 小刻度
+                            .moveTo(originX, originY - i * cylength / Math.ceil(max / rule))
+                            .lineTo(originX + 6 * dflag, originY - i * cylength / Math.ceil(max / rule)).stroke()
+                            // 刻度值
+                            .fillText(rule * i, originX - 25 * dflag, originY - i * cylength / Math.ceil(max / rule));
+                    }
+                } else if (attr['data-type'] == 'str') {
+                    // 画小刻度+刻度值
+                    for (let i = 1; i <= attr.data.length; i++) {
+                        painter.config({
+                            "fillStyle": attr['fill-color'],
+                            "strokeStyle": attr['stroke-color'],
+                            "fontSize": attr['font-size'],
+                            "fontFamily": attr['font-family'],
+                            "lineWidth": attr['line-width'],
+                            "textAlign": attr['text-align'],
+                            "textBaseline": attr['text-baseline'],
+                            "lineDash": attr.dash,
+                        }).beginPath()
+                            // 小刻度
+                            .moveTo(originX, originY - i * cylength / attr.data.length)
+                            .lineTo(originX + 6 * dflag, originY - i * cylength / attr.data.length).stroke()
+                            // 刻度值
+                            .fillText(attr.data[i - 1], originX - 25 * dflag, originY - i * cylength / attr.data.length);
+                    }
                 }
+
             } else {
                 painter.config({
                     "fillStyle": attr['fill-color'],
@@ -91,24 +114,46 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     .beginPath().moveTo(originX, originY - cylength + 30).lineTo(originX + 4.2426, originY - cylength + 25.7573).stroke()
                     .beginPath().moveTo(originX, originY - cylength + 30).lineTo(originX - 4.2426, originY - cylength + 25.7573).stroke()
 
-                // 画小刻度+刻度值
-                for (let i = attr.zero ? 0 : 1; i <= Math.ceil(max / rule); i++) {
-                    painter.config({
-                        "fillStyle": attr['fill-color'],
-                        "strokeStyle": attr['stroke-color'],
-                        "fontSize": attr['font-size'],
-                        "fontFamily": attr['font-family'],
-                        "lineWidth": attr['line-width'],
-                        "textAlign": attr['text-align'],
-                        "textBaseline": attr['text-baseline'],
-                        "lineDash": attr.dash,
-                    }).beginPath()
-                        // 画小刻度
-                        .moveTo(originX, originY - i * cylength / Math.ceil(max / rule))
-                        .lineTo(originX - 6 * dflag, originY - i * cylength / Math.ceil(max / rule)).stroke()
-                        // 刻度值
-                        .fillText(rule * i, originX + 25 * dflag, originY - i * cylength / Math.ceil(max / rule));
+                if (attr['data-type'] == 'num') {
+                    // 画小刻度+刻度值
+                    for (let i = attr.zero ? 0 : 1; i <= Math.ceil(max / rule); i++) {
+                        painter.config({
+                            "fillStyle": attr['fill-color'],
+                            "strokeStyle": attr['stroke-color'],
+                            "fontSize": attr['font-size'],
+                            "fontFamily": attr['font-family'],
+                            "lineWidth": attr['line-width'],
+                            "textAlign": attr['text-align'],
+                            "textBaseline": attr['text-baseline'],
+                            "lineDash": attr.dash,
+                        }).beginPath()
+                            // 画小刻度
+                            .moveTo(originX, originY - i * cylength / Math.ceil(max / rule))
+                            .lineTo(originX - 6 * dflag, originY - i * cylength / Math.ceil(max / rule)).stroke()
+                            // 刻度值
+                            .fillText(rule * i, originX + 25 * dflag, originY - i * cylength / Math.ceil(max / rule));
+                    }
+                } else if (attr['data-type'] == 'str') {
+                    // 画小刻度+刻度值
+                    for (let i = 1; i <= attr.data.length; i++) {
+                        painter.config({
+                            "fillStyle": attr['fill-color'],
+                            "strokeStyle": attr['stroke-color'],
+                            "fontSize": attr['font-size'],
+                            "fontFamily": attr['font-family'],
+                            "lineWidth": attr['line-width'],
+                            "textAlign": attr['text-align'],
+                            "textBaseline": attr['text-baseline'],
+                            "lineDash": attr.dash,
+                        }).beginPath()
+                            // 画小刻度
+                            .moveTo(originX, originY - i * cylength / attr.data.length)
+                            .lineTo(originX - 6 * dflag, originY - i * cylength / attr.data.length).stroke()
+                            // 刻度值
+                            .fillText(attr.data[i - 1], originX + 25 * dflag, originY - i * cylength / attr.data.length);
+                    }
                 }
+
 
             }
             // 画负方向刻度尺
