@@ -49,7 +49,8 @@ import region from './core/region/index';
 image2D.extend({
 
     animation,
-    rotate
+    rotate,
+    getRandomColors,
 
 });
 

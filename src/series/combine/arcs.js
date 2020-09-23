@@ -13,10 +13,7 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
             data: $jsonRequired,
             cx: $numRequired,
             cy: $numRequired,
-            radius: $numRequired,//用户给定的大圆的半径作为刻度
-            // data2: $jsonRequired,
-            // data3: $jsonRequired,
-
+            radius: $numRequired,//用户给定的大圆的半径作为刻度      
         },
         link(painter, attr) {
 
@@ -27,7 +24,7 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
                 "lineWidth": attr['line-width'],
                 "lineDash": attr.dash
             });
-
+            // 获取二维数组的每一列和的最大值
             function maxvalue(data) {
                 let max = 0;
 
@@ -38,14 +35,10 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
                         sum[i] += data[j][i];
                         max = max < sum[i] ? sum[i] : max;
                     }
-
                 }
                 return max;
-
             }
-
-            console.log("最大值为" + maxvalue(attr.data));
-
+            // 画出辅助的坐标基线和以坐标基线为半径的圆
             painter.beginPath()
                 .moveTo(attr.cx, attr.cy)
                 .lineTo(attr.cx + attr.radius, attr.cy)
@@ -56,83 +49,29 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
             })
                 .strokeCircle(attr.cx, attr.cy, attr.radius);
 
-
-
-
-
-            //  for(let i=0;i<attr.data[0].length;i++){
-
-            //      for(let j=0;j<attr.data.length;j++){
-            //         let start = 0, deg = 0;
-            //         let r=0;
-            //         r = attr.radius / maxvalue(attr.data) * attr.data[j][i] - attr.radius / maxvalue(attr.data);
-
-            //         start = ((Math.PI * 2) / attr.data[j].length) *i ;
-            //         deg = ((3 / 2) / attr.data[j].length) * Math.PI;
-                    
-
-            //         painter
-            //         .config({
-            //             fillStyle: "red"
-            //         })
-            //         .fillArc(attr.cx, attr.cy, 0, r, start, deg )
-
-            //     }
-            //  }
-
-
-
+            //开始画弧
+            let arr = [];
+            // 获取一组颜色
+            let colors = $$.getRandomColors(attr.data.length);
+            //两次for循环获取二维数组中的数
             for (let i = 0; i < attr.data.length; i++) {
-                
-                if (attr.data[i].length != null) {
-                    for (let j = 0; j < attr.data[i].length; j++) {
-
-                        let start = 0, deg = 0;
-                        let r1 = 5, r2 = 5, r3 = 5; i
-
-
-                        r1 = attr.radius / maxvalue(attr.data) * attr.data[0][j] - attr.radius / maxvalue(attr.data);
-                        r2 = attr.radius / maxvalue(attr.data) * attr.data[ 1][j] - attr.radius / maxvalue(attr.data);
-                        r3 = attr.radius / maxvalue(attr.data) * attr.data[ 2][j] - attr.radius / maxvalue(attr.data);
-
-                        start = ((Math.PI * 2) / attr.data[i].length) * j;
-                        deg = ((3 / 2) / attr.data[i].length) * Math.PI;
-                        $$.animation((deep) => {
-
-                            painter
-                                .config({
-                                    fillStyle: "red"
-                                })
-                                .fillArc(attr.cx, attr.cy, 0, r1, start, deg * deep)
-
-                            painter
-                                .config({
-                                    fillStyle: "blue"
-                                })
-                                .fillArc(attr.cx, attr.cy, r1, r1 + r2, start, deg * deep)
-
-                            painter
-                                .config({
-                                    fillStyle: "green"
-                                })
-                                .fillArc(attr.cx, attr.cy, r1 + r2, r1 + r2 + r3, start, deg * deep)
-
-
-                        }, 2000);
-
+                let start, deg = 0;
+                for (let j = 0; j < attr.data[i].length; j++) {
+                    if (i == 0) {
+                        arr[j] = 0;
                     }
+                    //起始弧度
+                    start = ((Math.PI * 2) / attr.data[i].length) * j;
+                    // 跨越弧度
+                    deg = ((3 / 2) / attr.data[i].length) * Math.PI;
+                    painter.config({
+                        fillStyle: colors[i]
+                    })
+                        .fillArc(attr.cx, attr.cy, arr[j] * (attr.radius / maxvalue(attr.data)), (arr[j] + attr.data[i][j]) * (attr.radius / maxvalue(attr.data)), start, deg);
+                    arr[j] += attr.data[i][j];
                 }
 
-
-
             }
-
-
-
-
-
-
-
         }
     };
 }];
