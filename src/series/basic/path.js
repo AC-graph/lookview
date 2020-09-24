@@ -3,7 +3,6 @@
 export default ["color.black", "num.one", "num.required", "str.required", "array.null", function ($colorBlack, $numOne, $numRequired, $strRequired, $arrayNull) {
     return {
         attrs: {
-
             'fill-color': $colorBlack,
             'stroke-color': $colorBlack,
             'line-width': $numOne,
@@ -12,7 +11,6 @@ export default ["color.black", "num.one", "num.required", "str.required", "array
             close: { type: "string", default: "false" }
         },
         subAttrs: {
-
             "move-to": {
                 'x': $numRequired,
                 'y': $numRequired
@@ -41,34 +39,64 @@ export default ["color.black", "num.one", "num.required", "str.required", "array
 
             // 获取子标签的数量并循环画出线条
             for (let i = 0; i < attr.$lines.length; i++) {
+
                 if (i == 0) {
+
                     painter.beginPath();
+
                 }
 
+                // 判断子标签所表示要画的线
                 if (attr.$lines[i].series == 'move-to') {
+
                     painter.moveTo(attr.$lines[i].attr.x, attr.$lines[i].attr.y);
+
                 } else if (attr.$lines[i].series == 'line-to') {
+
                     painter.lineTo(attr.$lines[i].attr.x, attr.$lines[i].attr.y);
+
                 } else if (attr.$lines[i].series == 'bezier-to') {
+
+                    // 判断贝塞尔曲线的类型
                     if (attr.$lines[i].attr.type == '2') {
-                        painter.quadraticCurveTo(attr.$lines[i].attr.cp1x, attr.$lines[i].attr.cp1y, attr.$lines[i].attr.x, attr.$lines[i].attr.y);
+
+                        painter.quadraticCurveTo(
+                            attr.$lines[i].attr.cp1x, attr.$lines[i].attr.cp1y,
+                            attr.$lines[i].attr.x, attr.$lines[i].attr.y
+                        );
+
                     }
+
                     else if (attr.$lines[i].attr.type == '3') {
-                        painter.bezierCurveTo(attr.$lines[i].attr.cp1x, attr.$lines[i].attr.cp1y,
-                            attr.$lines[i].attr.cp2x, attr.$lines[i].attr.cp2y, attr.$lines[i].attr.x, attr.$lines[i].attr.y);
+
+                        painter.bezierCurveTo(
+                            attr.$lines[i].attr.cp1x, attr.$lines[i].attr.cp1y,
+                            attr.$lines[i].attr.cp2x, attr.$lines[i].attr.cp2y,
+                            attr.$lines[i].attr.x, attr.$lines[i].attr.y
+                        );
+
                     }
                 }
 
+                // 结束选择闭合类型
                 if (i == attr.$lines.length - 1 && attr.type == 'stroke') {
+
                     painter.stroke();
+
                 } else if (i == attr.$lines.length - 1 && attr.type == 'fill') {
+
                     painter.fill();
+
                 } else if (i == attr.$lines.length - 1 && attr.type == 'full') {
+
                     painter.full();
+
                 }
 
                 if (i == attr.$lines.length - 1 && attr.close == 'true') {
+
                     painter.closePath();
+
                 }
             }
         }
