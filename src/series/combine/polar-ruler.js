@@ -64,16 +64,27 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             // 判断要处理的数据类型
             if (attr['data-type'] == 'num') {
                 let rule, max
-                rule = 5;
                 max = Math.max(...attr.data);
 
                 // 对rule稍作处理
-                if (Math.ceil(max / rule) > 10) {
-                    for (let j = 0; ; j++) {
-                        rule = 5 + 5 * j;
-                        if (Math.ceil(max / rule) <= 10) break;
-                    }
-                };
+                if (max > 0 && max < 9) {
+                    rule = 0.5;
+                    if (Math.ceil(max / rule) > 10 || Math.ceil(max / rule) < 4) {
+                        for (let j = 0; ; j++) {
+                            rule = 0.5 + 0.5 * j;
+                            if (Math.ceil(max / rule) <= 10 && Math.ceil(max / rule) >= 4) break;
+                        }
+                    };
+                } else {
+                    rule = 2;
+                    if (Math.ceil(max / rule) > 10 || Math.ceil(max / rule) < 4) {
+                        for (let j = 0; ; j++) {
+                            rule = 2 + 2 * j;
+                            if (Math.ceil(max / rule) <= 10 && Math.ceil(max / rule) >= 4) break;
+                        }
+                    };
+                }
+
                 for (let i = 0; i <= Math.ceil(max / rule); i++) {
 
                     // ddd存放刻度值旋转后的坐标

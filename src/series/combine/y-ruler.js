@@ -29,8 +29,16 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             // flag记录往反方向延伸多少个小区间
             // dflag记录正负
             let rule, max, min, cylength, originX, originY, flag, dflag;
-            rule = 5;
-            max = Math.max(...attr.data);
+
+            // 传入的数据全正||全负||有正有负时max的处理
+            if (Math.max(...attr.data) > 0 && Math.min(...attr.data) > 0) {
+                max = Math.max(...attr.data)
+            } else if (Math.max(...attr.data) > 0 && Math.min(...attr.data) < 0) {
+                max = Math.abs(Math.max(...attr.data)) > Math.abs(Math.min(...attr.data)) ? Math.abs(Math.max(...attr.data)) : Math.abs(Math.min(...attr.data));
+            } else if (Math.max(...attr.data) < 0 && Math.min(...attr.data) < 0) {
+                max = Math.abs(Math.min(...attr.data))
+            }
+
             min = Math.min(...attr.data);
             cylength = attr.width;
             originX = attr['zero-x'];
@@ -44,12 +52,23 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             }
 
             // 对rule稍作处理
-            if (Math.ceil(max / rule) > 10) {
-                for (let j = 0; ; j++) {
-                    rule = 5 + 5 * j;
-                    if (Math.ceil(max / rule) <= 10) break;
-                }
-            };
+            if (max > 0 && max < 9) {
+                rule = 0.5;
+                if (Math.ceil(max / rule) > 10 || Math.ceil(max / rule) < 4) {
+                    for (let j = 0; ; j++) {
+                        rule = 0.5 + 0.5 * j;
+                        if (Math.ceil(max / rule) <= 10 && Math.ceil(max / rule) >= 4) break;
+                    }
+                };
+            } else {
+                rule = 2;
+                if (Math.ceil(max / rule) > 10 || Math.ceil(max / rule) < 4) {
+                    for (let j = 0; ; j++) {
+                        rule = 2 + 2 * j;
+                        if (Math.ceil(max / rule) <= 10 && Math.ceil(max / rule) >= 4) break;
+                    }
+                };
+            }
 
             // 画正方向刻度尺
             if (attr.width > 0) {
