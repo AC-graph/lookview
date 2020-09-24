@@ -1,45 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>多个矩形测试</title>
-    <script src="../dist/lookview.js"></script>
-    <link rel="shortcut icon" href="../logo-100.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>多个矩形测试</title>
+  <script src="../dist/lookview.js"></script>
+  <link rel="shortcut icon" href="../logo-100.png">
 </head>
+
 <body>
-    <div id="root" style='height:1000px'>
-       <rects l-bind:data="data" zero-x="500" zero-y="500" width="500" height="500"   ></rects>
-       
-      </div>
-    
-    
-      <script>
-    
-        var lookview = new LookView({
-    
-          // 挂载点
-          el: document.getElementById('root'),
-    
-          // 数据
-          data: function () {
-            return {
-              data: [
-                        [10, 20, 30, 40, 50, 60],
-                        [70, 80, 90, 100, 110, 120],
-                        [130, 140,150, 160, 170, 180],
-                    ],
-              color: 'red',
-              
-            };
-          },
-    
-        });
-    
-        console.log(lookview);
-    
-        window.lookview = lookview;
-    
-      </script>
+
+  <div id="root" style='height:1000px'>
+    <rects l-bind:data="data" l-bind:colors='color' zero-x="calc(50w - 250)" zero-y="500" width="500" height="500">
+    </rects>
+  </div>
+
+  <script>
+
+    var lookview = new LookView({
+
+      // 挂载点
+      el: document.getElementById('root'),
+
+      // 数据
+      data: function () {
+        return {
+          data: [
+            [10, 20, 30, 40, 50, 60],
+            [70, 80, 90, 100, 110, 120],
+            [130, 140, 150, 160, 170, 180]
+          ],
+          color: ['red', 'blue', 'green']
+
+        };
+      },
+
+    });
+
+    console.log(lookview);
+
+    window.lookview = lookview;
+
+  </script>
 </body>
+
 </html>
