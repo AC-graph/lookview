@@ -24,14 +24,7 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
         "lineWidth": attr['line-width'],
 
       })
-     //画出辅助线x轴y轴
-      painter.beginPath()
-        .moveTo(attr["zero-x"], attr["zero-y"])
-        .lineTo(attr["zero-x"] + attr.width, attr["zero-y"])
-        .moveTo(attr["zero-x"], attr["zero-y"])
-        .lineTo(attr["zero-x"], attr["zero-y"] - attr.height)
-        .stroke()
-       
+
         // 获取二维数组每列的和的最大值
       function maxvalue(data) {
         let max = 0;
