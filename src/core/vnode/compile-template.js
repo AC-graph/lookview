@@ -105,7 +105,7 @@ export default function (template) {
               flag=true
             };
           }
-          // 如果不存在content属性或者属性值为空时，将标签下的所有内容放入新建的content属性中
+          // 如果不存在content属性，将标签下的所有内容放入新建的content属性中
           if (!flag) {
 
             // innerHTML和innerText都能传相同的值这里暂定使用innerText

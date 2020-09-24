@@ -15,7 +15,7 @@
   <div id="root" style='height:2000px'>
 
     <!-- 测试直角刻度尺处理num数据 -->
-    <!-- <x-ruler zero-x='60w' zero-y='30h' l-bind:data='data0' width='25w' zero='false' drant=1></x-ruler>
+    <x-ruler zero-x='60w' zero-y='30h' l-bind:data='data0' width='25w' zero='false' drant=1></x-ruler>
     <y-ruler zero-x='60w' zero-y='30h' l-bind:data='data0' width='25w' zero='false' drant=1></y-ruler>
 
     <x-ruler zero-x='30w' zero-y='30h' l-bind:data='data1' width='-25w' zero='false' drant=2></x-ruler>
@@ -25,7 +25,7 @@
     <y-ruler zero-x='30w' zero-y='60h' l-bind:data='data2' width='-25w' zero='false' drant=3></y-ruler>
 
     <x-ruler zero-x='60w' zero-y='60h' l-bind:data='data3' width='25w' zero='false' drant=4></x-ruler>
-    <y-ruler zero-x='60w' zero-y='60h' l-bind:data='data3' width='-25w' zero='false' drant=4></y-ruler> -->
+    <y-ruler zero-x='60w' zero-y='60h' l-bind:data='data3' width='-25w' zero='false' drant=4></y-ruler>
 
     <!-- 测试极刻度尺处理num数据 -->
     <!-- <polar-ruler cx='40w' cy='45h' l-bind:data='textdata' begin='10deg' deg='-210deg' radius='8min' data-type='str'></polar-ruler>
@@ -34,7 +34,7 @@
 
 
     <!-- 测试直角刻度尺处理str数据 -->
-    <x-ruler zero-x='60w' zero-y='30h' l-bind:data='textdata' width='25w' zero='false' drant=1 data-type='str'>
+    <!-- <x-ruler zero-x='60w' zero-y='30h' l-bind:data='textdata' width='25w' zero='false' drant=1 data-type='str'>
     </x-ruler>
     <y-ruler zero-x='60w' zero-y='30h' l-bind:data='textdata' width='25w' zero='false' drant=1 data-type='str'
       text-align='right'>
@@ -56,7 +56,7 @@
     </x-ruler>
     <y-ruler zero-x='60w' zero-y='60h' l-bind:data='textdata' width='-25w' zero='false' drant=4 data-type='str'
       text-align='right'>
-    </y-ruler>
+    </y-ruler> -->
 
     <!-- 测试极刻度尺 -->
     <polar-ruler cx='40w' cy='45h' l-bind:data='data0' begin='10deg' deg='-210deg' radius='8min'></polar-ruler>
@@ -76,7 +76,7 @@
         return {
           color: 'red',
           // basePoint: [400, 400],
-          data0: [-11, 11, 22, 33, 44, 55],
+          data0: [-1, -1, -1, 2, -1, -1],
           data1: [-22, 22, 44, 66, 88, 110],
           data2: [-33, 66, 99, 132, 164, 196],
           data3: [-44, 88, 132, 176, 220, 264],
