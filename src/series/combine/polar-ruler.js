@@ -7,7 +7,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             'stroke-color': $colorBlack,
             'fill-color': $colorBlack,
             'line-width': $numOne,
-            'font-size': { type: "number", default: 16 },
+            'font-size': { type: "number", default: 10 },
             'font-family': { type: "string", default: "sans-serif" },
             'text-align': { type: "string", default: 'center' },
             'text-baseline': { type: "string", default: 'middle' },

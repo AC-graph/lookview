@@ -9,7 +9,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             'line-width': $numOne,
             'zero-x': $numRequired,//原点横坐标
             'zero-y': $numRequired,//原点纵坐标
-            'font-size': { type: "number", default: 16 },
+            'font-size': { type: "number", default: 10 },
             'font-family': { type: "string", default: "sans-serif" },
             'text-align': { type: "string", default: 'center' },
             'text-baseline': { type: "string", default: 'middle' },
