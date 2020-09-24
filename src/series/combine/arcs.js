@@ -38,17 +38,7 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
                 }
                 return max;
             }
-            // 画出辅助的坐标基线和以坐标基线为半径的圆
-            painter.beginPath()
-                .moveTo(attr.cx, attr.cy)
-                .lineTo(attr.cx + attr.radius, attr.cy)
-                .stroke()
-
-            painter.config({
-                strokeStyle: "pink",
-            })
-                .strokeCircle(attr.cx, attr.cy, attr.radius);
-
+           
             //开始画弧
             let arr = [];
             // 获取一组颜色
