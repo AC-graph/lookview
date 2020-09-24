@@ -27,22 +27,22 @@ export function valueMixin(LookView) {
         let strValue = (value + " ").trim();
 
         // 常规的辅助计算
-        if (/^\d+w$/.test(strValue)) {
+        if (/^\-{0,1}\d+w$/.test(strValue)) {
           return (0 - -strValue.replace('w', '')) * w;
-        } else if (/^\d+h$/.test(strValue)) {
+        } else if (/^\-{0,1}\d+h$/.test(strValue)) {
           return (0 - -strValue.replace('h', '')) * h;
-        } else if (/^\d+min$/.test(strValue)) {
+        } else if (/^\-{0,1}\d+min$/.test(strValue)) {
           return (0 - -strValue.replace('min', '')) * min;
-        } else if (/^\d+max$/.test(strValue)) {
+        } else if (/^\-{0,1}\d+max$/.test(strValue)) {
           return (0 - -strValue.replace('max', '')) * max;
-        } else if (/^\d+pi$/.test(strValue)) {
+        } else if (/^\-{0,1}\d+pi$/.test(strValue)) {
           return (0 - -strValue.replace('pi', '')) * Math.PI;
-        } else if (/^\d+deg$/.test(strValue)) {
+        } else if (/^\-{0,1}\d+deg$/.test(strValue)) {
           return (0 - -strValue.replace('deg', '')) / 180 * Math.PI;
         }
 
         // 文字
-        else if (/^\d+em$/.test(strValue)) {
+        else if (/^\-{0,1}\d+em$/.test(strValue)) {
           return (0 - -strValue.replace('em', '')) * fontSize;
         }
 
@@ -60,7 +60,7 @@ export function valueMixin(LookView) {
         }
 
         // 进行类型强转
-        else if (/^\d+$/.test(strValue)) {
+        else if (/^\-{0,1}\d+$/.test(strValue)) {
           return 0 - -strValue;
         }
 

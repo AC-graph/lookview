@@ -62,7 +62,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     // 画小箭头
                     .beginPath().moveTo(originX - cxlength + 30, originY).lineTo(originX - cxlength + 25.7573, originY - 4.2426).stroke()
                     .beginPath().moveTo(originX - cxlength + 30, originY).lineTo(originX - cxlength + 25.7573, originY + 4.2426).stroke()
-            } else {
+            } else{
                 painter.config({
                     "fillStyle": attr['fill-color'],
                     "strokeStyle": attr['stroke-color'],
@@ -73,14 +73,15 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     .beginPath().moveTo(originX - cxlength - 30, originY).lineTo(originX - cxlength - 25.7573, originY - 4.2426).stroke()
                     .beginPath().moveTo(originX - cxlength - 30, originY).lineTo(originX - cxlength - 25.7573, originY + 4.2426).stroke()
             }
+            
             // 画小刻度+刻度值
             if (attr['data-type'] == 'num') {
                 for (let i = attr.zero ? 0 : 1; i <= Math.ceil(max / rule); i++) {
                     painter.config({
                         "fillStyle": attr['fill-color'],
                         "strokeStyle": attr['stroke-color'],
-                        "fontSize": attr['font-size'],
-                        "fontFamily": attr['font-family'],
+                        "font-size": attr['font-size'],
+                        "font-family": attr['font-family'],
                         "lineWidth": attr['line-width'],
                         "textAlign": attr['text-align'],
                         "textBaseline": attr['text-baseline'],
@@ -97,8 +98,8 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     painter.config({
                         "fillStyle": attr['fill-color'],
                         "strokeStyle": attr['stroke-color'],
-                        "fontSize": attr['font-size'],
-                        "fontFamily": attr['font-family'],
+                        "font-size": attr['font-size'],
+                        "font-family": attr['font-family'],
                         "lineWidth": attr['line-width'],
                         "textAlign": attr['text-align'],
                         "textBaseline": attr['text-baseline'],
@@ -108,10 +109,9 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                         .moveTo(originX - i * cxlength / attr.data.length, originY)
                         .lineTo(originX - i * cxlength / attr.data.length, originY - 6 * dflag).stroke()
                         // 刻度值
-                        .fillText(attr.data[i-1], originX - i * cxlength / attr.data.length, originY + 25 * dflag);
+                        .fillText(attr.data[i - 1], originX - i * cxlength / attr.data.length, originY + 25 * dflag);
                 }
             }
-
 
             // 画负方向刻度尺
             if (min < 0) {
@@ -136,8 +136,8 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                         "fillStyle": attr['fill-color'],
                         "strokeStyle": attr['stroke-color'],
                         "lineWidth": attr['line-width'],
-                        "fontSize": attr['font-size'],
-                        "fontFamily": attr['font-family'],
+                        "font-size": attr['font-size'],
+                        "font-family": attr['font-family'],
                         "textAlign": attr['text-align'],
                         "textBaseline": attr['text-baseline'],
                         "lineDash": attr.dash,
