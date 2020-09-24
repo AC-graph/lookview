@@ -75,7 +75,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                             if (Math.ceil(max / rule) <= 10 && Math.ceil(max / rule) >= 4) break;
                         }
                     };
-                } else {
+                } else if (max >= 9) {
                     rule = 2;
                     if (Math.ceil(max / rule) > 10 || Math.ceil(max / rule) < 4) {
                         for (let j = 0; ; j++) {
@@ -83,6 +83,8 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                             if (Math.ceil(max / rule) <= 10 && Math.ceil(max / rule) >= 4) break;
                         }
                     };
+                } else if (max <= 0) {
+                    throw new Error('[LookView error]: Data error! Cannot be all nagative numbers!');
                 }
 
                 for (let i = 0; i <= Math.ceil(max / rule); i++) {

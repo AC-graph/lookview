@@ -36,7 +36,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             } else if (Math.max(...attr.data) > 0 && Math.min(...attr.data) < 0) {
                 max = Math.abs(Math.max(...attr.data)) > Math.abs(Math.min(...attr.data)) ? Math.abs(Math.max(...attr.data)) : Math.abs(Math.min(...attr.data));
             } else if (Math.max(...attr.data) < 0 && Math.min(...attr.data) < 0) {
-                max = Math.abs(Math.min(...attr.data))
+                throw new Error('[LookView error]: Data error! Cannot be all nagative numbers!');
             }
 
             min = Math.min(...attr.data);

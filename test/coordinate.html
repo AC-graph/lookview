@@ -59,8 +59,8 @@
     </y-ruler> -->
 
     <!-- 测试极刻度尺 -->
-    <polar-ruler cx='40w' cy='45h' l-bind:data='data0' begin='10deg' deg='-210deg' radius='8min'></polar-ruler>
-    <polar-ruler cx='50w' cy='45h' l-bind:data='data0' begin='10deg' deg='210deg' radius='8min'></polar-ruler>
+    <polar-ruler cx='40w' cy='45h' l-bind:data='data4' begin='10deg' deg='-210deg' radius='8min'></polar-ruler>
+    <polar-ruler cx='50w' cy='45h' l-bind:data='data4' begin='10deg' deg='210deg' radius='8min'></polar-ruler>
   </div>
 
 
@@ -75,11 +75,11 @@
       data: function () {
         return {
           color: 'red',
-          // basePoint: [400, 400],
           data0: [-1, -1, -1, 2, -1, -1],
           data1: [-22, 22, 44, 66, 88, 110],
           data2: [-33, 66, 99, 132, 164, 196],
           data3: [-44, 88, 132, 176, 220, 264],
+          data4: [-2, -3, 24, -5],
           textdata: ['上校', '不懂装懂', 'planB', '上古', '精神', '标题党'],
         };
       },
