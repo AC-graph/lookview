@@ -97,8 +97,16 @@ export default function (template) {
         // 识别text标签下的所有文字
         if (nodeList[i].nodeName.toUpperCase() == 'TEXT') {
           
+          let flag=false;
+          for(let j=0;j<nodeList[i].attributes.length;j++){
+
+            //判断是否存在content属性，正则表达式是为了将content前的指令去除，易于分辨
+            if("content"==nodeList[i].attributes[j].nodeName.replace(/^l\-bind\:/,'').split('::')[0]){
+              flag=true
+            };
+          }
           // 如果不存在content属性或者属性值为空时，将标签下的所有内容放入新建的content属性中
-          if (!("content" in nodeList[i].attributes[j].nodeName)) {
+          if (!flag) {
 
             // innerHTML和innerText都能传相同的值这里暂定使用innerText
             attrs.content= {
