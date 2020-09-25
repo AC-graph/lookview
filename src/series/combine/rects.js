@@ -29,16 +29,13 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
         }
         return max;
       }
-      //计算小矩形的最优宽度
-      let wid = 1;
-      if (attr.data[0].length) {
-        wid = attr.width / (2 * attr.data[0].length + 1);
-      }
-      //每个矩形之间的距离
-      let temp = 5;
-      //计算公式：  temp + (每个矩形的宽+temp)*数组长度=width
-      temp = (attr.width - wid * attr.data[0].length) / (1 + attr.data[0].length);
-
+      //开始画矩形
+      let temp = 5;//temp宽度和数组长度有关，每个小矩形相对于temp居中
+      let wid = 1;//每个小矩形的宽度
+      let tem = 1;//每个小矩形之间的距离是2*tem
+      temp = attr.width / attr.data[0].length;
+      wid = temp / 3;
+      tem = (temp - wid) / 2;
       //开始画矩形
       let arr = [];
       for (let i = 0; i < attr.data.length; i++) {
@@ -47,13 +44,10 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
             arr[j] = 0;
           }
           painter
-
             .config({
               fillStyle: attr.colors[i]
             })
-
-            .fillRect(attr["zero-x"] + temp * (j + 1) + wid * j, attr["zero-y"] - (arr[j] + attr.data[i][j]) * (attr.width / maxvalue(attr.data)), wid, attr.data[i][j] * (attr.width / maxvalue(attr.data)));
-
+            .fillRect(attr["zero-x"] + tem + temp * j, attr["zero-y"] - (arr[j] + attr.data[i][j]) * (attr.height / maxvalue(attr.data)), wid, attr.data[i][j] * (attr.height / maxvalue(attr.data)));
           arr[j] += attr.data[i][j];
 
         }
