@@ -8,7 +8,7 @@
   <a href="https://github.com/yelloxing/lookview/blob/master/LICENSE"><img src="https://img.shields.io/npm/l/lookview.svg" alt="License"></a>
 </p>
 
-> 研发中，敬请期待！
+> 如何使用和相关说明请移步[在线文档](http://yelloxing.gitee.io/lookview-api/)
 
 ## 开源协议
 

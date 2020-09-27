@@ -29,10 +29,15 @@ export function seriesMixin(LookView) {
     "y-ruler": compiler(yruler),
     "polar-ruler": compiler(polarruler),
     rects: compiler(rects),
-    arcs:compiler(arcs),
+    arcs: compiler(arcs),
 
   };
   LookView.prototype.$$getAttrOptionsBySeries = function (seriesName, pSeries) {
+
+    if (seriesName.toLowerCase() == 'group') {
+      return {};
+    }
+
     // 判断是否是子标签，并根据答案返回结果
     if (pSeries != undefined) {
       return this.__series[pSeries].subAttrs[seriesName];
