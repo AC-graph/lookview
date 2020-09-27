@@ -37,7 +37,7 @@ export function seriesMixin(LookView) {
     if (seriesName.toLowerCase() == 'group') {
       return {};
     }
-
+  
     // 判断是否是子标签，并根据答案返回结果
     if (pSeries != undefined) {
       return this.__series[pSeries].subAttrs[seriesName];
