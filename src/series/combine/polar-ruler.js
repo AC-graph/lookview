@@ -45,20 +45,20 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                 painter.config({
                     "strokeStyle": attr["stroke-color"],
                     "lineWidth": attr["line-width"]
-                }).arc(originX, originY, radius, begin, deg + 0.05 * deg).stroke()
+                }).beginPath().arc(originX, originY, radius, begin, deg + 0.05 * deg).stroke()
                     // 画箭头
-                    .beginPath().moveTo(dd[0], dd[1]).lineTo(dd1[0], dd1[1]).stroke()
-                    .beginPath().moveTo(dd[0], dd[1]).lineTo(dd2[0], dd2[1]).stroke()
+                    .moveTo(dd[0], dd[1]).lineTo(dd1[0], dd1[1]).stroke()
+                    .moveTo(dd[0], dd[1]).lineTo(dd2[0], dd2[1]).stroke()
             } else {
                 dd3 = $$.rotate(originX, originY, deg + 0.05 * deg, originX + radius * Math.cos(begin) - 6 * Math.cos(2 * Math.PI / 3 - begin), originY + radius * Math.sin(begin) + 6 * Math.sin(2 * Math.PI / 3 - begin));
                 dd4 = $$.rotate(originX, originY, deg + 0.05 * deg, originX + radius * Math.cos(begin) - 6 * Math.cos(Math.PI / 3 - begin), originY + radius * Math.sin(begin) + 6 * Math.sin(Math.PI / 3 - begin));
                 painter.config({
                     "strokeStyle": attr["stroke-color"],
                     "lineWidth": attr["line-width"]
-                }).arc(originX, originY, radius, begin, deg + 0.05 * deg).stroke()
+                }).beginPath().arc(originX, originY, radius, begin, deg + 0.05 * deg).stroke()
                     // 画箭头
-                    .beginPath().moveTo(dd[0], dd[1]).lineTo(dd3[0], dd3[1]).stroke()
-                    .beginPath().moveTo(dd[0], dd[1]).lineTo(dd4[0], dd4[1]).stroke()
+                    .moveTo(dd[0], dd[1]).lineTo(dd3[0], dd3[1]).stroke()
+                    .moveTo(dd[0], dd[1]).lineTo(dd4[0], dd4[1]).stroke()
             }
 
             // 判断要处理的数据类型

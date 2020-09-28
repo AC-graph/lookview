@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>例子测试</title>
+    <script src="../dist/lookview.js"></script>
+    <link rel="shortcut icon" href="../logo-100.png">
+</head>
+
+<body>
+    <div id="root" style='height:1000px'>
+        <!-- <arcs l-bind:data="data" l-bind:colors='color' cx="50w" cy="500" radius="300"></arcs>
+        <polar-ruler cx="600" cy="300" l-bind:data="data1" radius="190" begin="180deg" deg='90deg'></polar-ruler>
+        <circle cx='300' cy='400' radius='80' fill-color='red'></circle>
+        <x-ruler zero-x='300' zero-y='300' l-bind:data="data1" width=300></x-ruler>
+        <polar-ruler cx="300" cy="300" l-bind:data="data1" radius="190" begin="180deg" deg='90deg'></polar-ruler> -->
+
+        <!-- <x-ruler zero-x='5w' zero-y='60h' l-bind:data="data" data-type='str' width='70w'></x-ruler>
+        <y-ruler zero-x='5w' zero-y='60h' l-bind:data="data1" data-type='num' width='50h'></y-ruler> -->
+
+        <path type="stroke" close="true">
+            <move-to x="300" y="300"></move-to>
+            <line-to l-bind:x="x" l-bind:y="y"></line-to>
+            <line-to l-bind:x::demo1="value" l-bind:y::demo1="key" l-for='(value, key) in datalist'></line-to>
+            <bezier-to type="3" x="300" y="300" cp1x="250" cp1y="50" cp2x="350" cp2y="50"></bezier-to>
+        </path>
+    </div>
+
+
+    <script>
+
+        var lookview = new LookView({
+
+            // 挂载点
+            el: document.getElementById('root'),
+
+            // 数据
+            data: function () {
+                return {
+                    datalist: [1, 2, 3],
+                    data1: [1, 2, 3, 4, 5, 6],
+                    data: ["周一", "周二", "周三", "周四", "周五", "周六", "周日"],
+                    color: ['pink', 'yellow', 'red'],
+                    x: 800,
+                    y: 800
+                };
+            },
+            coordinate: {
+                demo1: function () {
+                    return{
+                        link:function(value){
+                            return value*50+30;
+                        }
+                    }
+                }
+            }
+        });
+
+
+
+        console.log(lookview);
+
+        window.lookview = lookview;
+
+    </script>
+</body>
+
+</html>

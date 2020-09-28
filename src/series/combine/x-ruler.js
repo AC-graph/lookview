@@ -7,13 +7,13 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             'stroke-color': $colorBlack,
             'fill-color': $colorBlack,
             'line-width': $numOne,
-            'zero-x': $numRequired,//原点横坐标
-            'zero-y': $numRequired,//原点纵坐标
             'font-size': { type: "number", default: 10 },
             'font-family': { type: "string", default: "sans-serif" },
             'text-align': { type: "string", default: 'center' },
             'text-baseline': { type: "string", default: 'middle' },
             dash: $arrayNull,
+            'zero-x': $numRequired,//原点横坐标
+            'zero-y': $numRequired,//原点纵坐标
             data: $jsonRequired,//数据
             width: $numRequired,
             zero: $boolTrue,//判断原点是否需要绘制
@@ -79,8 +79,9 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     "lineDash": attr.dash,
                 }).beginPath().moveTo(originX, originY).lineTo(originX - cxlength + 30, originY).stroke()
                     // 画小箭头
-                    .beginPath().moveTo(originX - cxlength + 30, originY).lineTo(originX - cxlength + 25.7573, originY - 4.2426).stroke()
-                    .beginPath().moveTo(originX - cxlength + 30, originY).lineTo(originX - cxlength + 25.7573, originY + 4.2426).stroke()
+                    .moveTo(originX - cxlength + 30, originY).lineTo(originX - cxlength + 25.7573, originY - 4.2426).stroke()
+                    .moveTo(originX - cxlength + 30, originY).lineTo(originX - cxlength + 25.7573, originY + 4.2426).stroke()
+                    .closePath();
             } else {
                 painter.config({
                     "fillStyle": attr['fill-color'],
@@ -89,8 +90,9 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     "lineDash": attr.dash,
                 }).beginPath().moveTo(originX, originY).lineTo(originX - cxlength - 30, originY).stroke()
                     // 画小箭头
-                    .beginPath().moveTo(originX - cxlength - 30, originY).lineTo(originX - cxlength - 25.7573, originY - 4.2426).stroke()
-                    .beginPath().moveTo(originX - cxlength - 30, originY).lineTo(originX - cxlength - 25.7573, originY + 4.2426).stroke()
+                    .moveTo(originX - cxlength - 30, originY).lineTo(originX - cxlength - 25.7573, originY - 4.2426).stroke()
+                    .moveTo(originX - cxlength - 30, originY).lineTo(originX - cxlength - 25.7573, originY + 4.2426).stroke()
+                    .closePath();
             }
 
             // 画小刻度+刻度值
@@ -147,7 +149,8 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     "strokeStyle": attr['stroke-color'],
                     "lineWidth": attr['line-width'],
                     "lineDash": attr.dash,
-                }).beginPath().moveTo(originX, originY).lineTo(originX + flag * cxlength / Math.ceil(max / rule) + 0.05 * cxlength, originY).stroke()
+                }).beginPath()
+                .moveTo(originX, originY).lineTo(originX + flag * cxlength / Math.ceil(max / rule) + 0.05 * cxlength, originY).stroke()
 
                 // 画小刻度+刻度值
                 for (let i = 1; i <= flag; i++) {
