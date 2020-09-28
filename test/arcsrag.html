@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多个弧测试|按弧度划分</title>
+    <script src="../dist/lookview.js"></script>
+    <link rel="shortcut icon" href="../logo-100.png">
+</head>
+
+<body>
+    <div id="root" style='height:1000px'>
+        <arcsrad l-bind:data="data" l-bind:colors='color' cx="50w" cy="500" radius="200" ></arcsrad>
+    </div>
+
+
+    <script>
+
+        var lookview = new LookView({
+
+            // 挂载点
+            el: document.getElementById('root'),
+
+            // 数据
+            data: function () {
+                return {
+                    data1:[10, 20, 30, 40, 50, 60],
+                    data: [
+                        [10, 20, 30, 40, 50, 60],
+                        [10, 30, 60, 80, 40, 20],
+                        [10, 50, 60, 30, 40,70],
+                        
+                    ],
+                    color: ['pink', 'yellow', 'red','blue','green','gray']
+                };
+            },
+
+        });
+
+        console.log(lookview);
+
+        window.lookview = lookview;
+
+    </script>
+</body>
+
+</html>

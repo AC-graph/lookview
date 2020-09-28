@@ -227,8 +227,15 @@ export function painterMixin(LookView) {
 
             tempRenderArray.push(temp);
           }
-
-          doit(tempRenderArray);
+          if (pSeries != 'path') {
+            doit(tempRenderArray, true, pSeries);
+          } else {
+            let subAttrsTemp = doit(tempRenderArray, true, pSeries)
+            for (let index=0;index<subAttrsTemp.length;index++){
+              tempSubAttrs.push(subAttrsTemp[index]);
+            }
+            debugger
+          }
           continue;
         }
 
