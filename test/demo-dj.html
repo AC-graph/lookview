@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>demo | 测试</title>
+    <script src="../dist/lookview.js"></script>
+    <link rel="shortcut icon" href="../logo-100.png">
+</head>
+
+<body>
+
+    <div id="root" style='height:800px'>
+        <x-ruler zero-x=10w zero-y=80h width=60min l-bind:data='datedata' data-type='str'></x-ruler>
+        <y-ruler zero-x=10w zero-y=80h width=60min l-bind:data='money'></y-ruler>
+        <rects zero-x=10w zero-y=80h width=60min height=60min l-bind:data='money' l-bind:colors='color'></rects>
+        <!-- <path>
+
+        </path> -->
+    </div>
+
+    <script>
+
+        var lookview = new LookView({
+
+            // 挂载点
+            el: document.getElementById('root'),
+
+            // 数据
+            data: function () {
+                return {
+                    moneydata: [52, 46, 47, 53, 48, 67, 88],
+                    datedata: ['周一', '周二', '周三', '周四', '周五', '周六', '周日'],
+                    money: [
+                        [50, 46, 47, 53, 48, 67, 88],
+                        [50, 46, 47, 53, 48, 67, 88],
+                        [68, 46, 47, 53, 48, 67, 88]
+                    ],
+                    color: ['red', 'blue', 'aqua']
+                };
+            },
+
+        });
+
+        console.log(lookview);
+
+        window.lookview = lookview;
+
+    </script>
+
+</body>
+
+</html>
