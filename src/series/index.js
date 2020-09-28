@@ -12,6 +12,7 @@ import polarruler from './combine/polar-ruler';
 import rects from './combine/rects';
 import arcs from './combine/arcs';
 import arcsrad from './combine/arcsrad';
+import rectsgroup from './combine/rectsgroup';
 
 export function seriesMixin(LookView) {
 
@@ -32,6 +33,7 @@ export function seriesMixin(LookView) {
     rects: compiler(rects),
     arcs: compiler(arcs),
     arcsrad:compiler(arcsrad),
+    rectsgroup:compiler(rectsgroup),
 
   };
   LookView.prototype.$$getAttrOptionsBySeries = function (seriesName, pSeries) {

@@ -65,7 +65,7 @@
                         link: function (value) {
                             let rad = 0;
                             rad = Math.tan(50 / 250);
-                            return 300+Math.cos(value - rad) * 189;
+                            return 300+Math.cos(value - rad) * 255;
                         }
                     };
                 },
@@ -75,17 +75,17 @@
                             let rad = 0;
                             rad = Math.tan(50 / 250);
                             console.log(rad)
-                            return 300-Math.sin(value - rad) * 189;
+                            return 300-Math.sin(value - rad) * 255;
                         }
                     };
                 },
-
+ 
                 cp2x: function () {
                     return {
                         link: function (value) {
                             let rad = 0;
                             rad = Math.tan(50 / 250);
-                            return 300+Math.cos(value + rad) * 189;
+                            return 300+Math.cos(value + rad) * 255;
                         }
                     };
                 },
@@ -94,7 +94,7 @@
                         link: function (value) {
                             let rad = 0;
                             rad = Math.tan(50 / 250);
-                            return 300-Math.sin(value + rad) * 189;
+                            return 300-Math.sin(value + rad) * 255;
                         }
                     };
                 }
