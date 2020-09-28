@@ -21,25 +21,77 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             'data-type': { type: "string", default: 'num' }//处理的数据类型
         },
         link(painter, attr) {
-
             // rule为数据刻度小区间
             // max、min分别为传入数据的最大/小值
             // cylength为y轴刻度尺在画布中的长度
             // (originX,originY)为绘制起始点
             // flag记录往反方向延伸多少个小区间
             // dflag记录正负
-            let rule, max, min, cylength, originX, originY, flag, dflag;
+            let rule, max, min, cylength, originX, originY, flag, dflag, degree;
 
-            // 传入的数据全正||全负||有正有负时max的处理
-            if (Math.max(...attr.data) > 0 && Math.min(...attr.data) > 0) {
-                max = Math.max(...attr.data)
-            } else if (Math.max(...attr.data) > 0 && Math.min(...attr.data) < 0) {
-                max = Math.abs(Math.max(...attr.data)) > Math.abs(Math.min(...attr.data)) ? Math.abs(Math.max(...attr.data)) : Math.abs(Math.min(...attr.data));
-            } else if (Math.max(...attr.data) < 0 && Math.min(...attr.data) < 0) {
-                throw new Error('[LookView error]: Data error! Cannot be all nagative numbers!');
+            if (attr['data-type'] == 'num') {
+                // 判断传入的数据是几维数组（目前最多判断到四维，且要对称规则的数组）
+                for (let i = 0; i < attr.data.length; i++) {
+                    if (attr.data[i] != undefined) {
+                        degree = 1;
+                        for (let j = 0; j < attr.data[i].length; j++) {
+                            if (attr.data[i][j] != undefined) {
+                                degree = 2;
+                                for (let k = 0; k < attr.data[i][j].length; k++) {
+                                    if (attr.data[i][j][k] != undefined) {
+                                        degree = 3;
+                                        for (let l = 0; l < attr.data[i][j][k].length; l++) {
+                                            degree = 4;
+                                            break;
+                                        }
+                                    } else break;
+                                };
+                            } else break;
+                        };
+                    } else break;
+                };
+                console.log(degree);
+                // let degree = 0;
+                // function getDegree(data) {
+                //     debugger
+                //     let i;
+                //     for (i = 0; i < data.length; i++) {
+                //         if (data[i].length != undefined) {
+                //             degree += 1;
+                //             data = data[i];
+                //             getDegree(data)
+                //         } else break;
+                //     }
+                //     return degree;
+                // }
+                // getDegree(attr.data);
             }
 
-            min = Math.min(...attr.data);
+            if (degree == 1) {
+                // 传入的一维数组数据全正||全负||有正有负时max的处理(因为处理的数据暂不存在负数，所以暂时不需要判断)
+                if (Math.max(...attr.data) > 0 && Math.min(...attr.data) > 0) {
+                    max = Math.max(...attr.data)
+                } else if (Math.max(...attr.data) > 0 && Math.min(...attr.data) < 0) {
+                    max = Math.abs(Math.max(...attr.data)) > Math.abs(Math.min(...attr.data)) ? Math.abs(Math.max(...attr.data)) : Math.abs(Math.min(...attr.data));
+                } else if (Math.max(...attr.data) < 0 && Math.min(...attr.data) < 0) {
+                    throw new Error('[LookView error]: Data error! Cannot be all nagative numbers!');
+                }
+                min = Math.min(...attr.data);
+            } else if (degree == 2) {
+                // 获取二维数组每列的和的最大值
+                max = 0;
+                for (let i = 0; i < attr.data[0].length; i++) {
+                    let sum = [];
+                    sum[i] = 0;
+                    for (let j = 0; j < attr.data.length; j++) {
+                        sum[i] += attr.data[j][i];
+                        max = max < sum[i] ? sum[i] : max;
+                    }
+                }
+            } else {
+                throw new Error('[LookView error]: Data error! Cannot handle higher degree!');
+            }
+
             cylength = attr.width;
             originX = attr['zero-x'];
             originY = attr['zero-y'];
@@ -79,8 +131,8 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     "lineDash": attr.dash,
                 }).beginPath().moveTo(originX, originY).lineTo(originX, originY - cylength - 30).stroke()
                     // 画小箭头
-                    .beginPath().moveTo(originX, originY - cylength - 30).lineTo(originX + 4.2426, originY - cylength - 25.7573).stroke()
-                    .beginPath().moveTo(originX, originY - cylength - 30).lineTo(originX - 4.2426, originY - cylength - 25.7573).stroke()
+                    .moveTo(originX, originY - cylength - 30).lineTo(originX + 4.2426, originY - cylength - 25.7573).stroke()
+                    .moveTo(originX, originY - cylength - 30).lineTo(originX - 4.2426, originY - cylength - 25.7573).stroke()
 
                 if (attr['data-type'] == 'num') {
                     // 画小刻度+刻度值
@@ -121,7 +173,6 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                             .fillText(attr.data[i - 1], originX - 25 * dflag, originY - i * cylength / attr.data.length);
                     }
                 }
-
             } else {
                 painter.config({
                     "fillStyle": attr['fill-color'],
@@ -130,8 +181,8 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     "lineDash": attr.dash,
                 }).beginPath().moveTo(originX, originY).lineTo(originX, originY - cylength + 30).stroke()
                     // 画小箭头
-                    .beginPath().moveTo(originX, originY - cylength + 30).lineTo(originX + 4.2426, originY - cylength + 25.7573).stroke()
-                    .beginPath().moveTo(originX, originY - cylength + 30).lineTo(originX - 4.2426, originY - cylength + 25.7573).stroke()
+                    .moveTo(originX, originY - cylength + 30).lineTo(originX + 4.2426, originY - cylength + 25.7573).stroke()
+                    .moveTo(originX, originY - cylength + 30).lineTo(originX - 4.2426, originY - cylength + 25.7573).stroke()
 
                 if (attr['data-type'] == 'num') {
                     // 画小刻度+刻度值
@@ -169,15 +220,13 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                             .moveTo(originX, originY - i * cylength / attr.data.length)
                             .lineTo(originX - 6 * dflag, originY - i * cylength / attr.data.length).stroke()
                             // 刻度值
-                            .fillText(attr.data[i - 1], originX + 25 * dflag, originY - i * cylength / attr.data.length);
+                            .fillText(attr.data[i - 1], originX + 25 * dflag, originY - (2 * i - 1) * (0.5 * cylength) / attr.data.length);
                     }
                 }
-
-
             }
+
             // 画负方向刻度尺
             if (min < 0) {
-
                 // 判断需要反向延长几个刻度区间
                 for (flag = 1; flag > 0; flag++) {
                     if (Math.floor(min) >= -flag * rule) break
@@ -192,7 +241,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     "lineDash": attr.dash,
                 }).beginPath().moveTo(originX, originY).lineTo(originX, originY + flag * cylength / Math.ceil(max / rule) + 0.05 * cylength).stroke()
 
-                // 画小刻度+刻度值
+                // 画小刻度 + 刻度值
                 if (attr.width > 0) {
                     for (let i = 1; i <= flag; i++) {
                         painter.config({
