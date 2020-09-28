@@ -59,7 +59,7 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
       tem = (temp - wid) / 2;
       let arr = [];
       for (let i = 0; i < attr.data.length; i++) {
-        for (let j = 0; j < attr.data[i].length; j++) {
+        for (let j = 0; j < attr.data[i].length; j++) { 
           if (i == 0) {
             arr[j] = 0;
           }
