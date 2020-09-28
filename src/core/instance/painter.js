@@ -234,7 +234,6 @@ export function painterMixin(LookView) {
             for (let index=0;index<subAttrsTemp.length;index++){
               tempSubAttrs.push(subAttrsTemp[index]);
             }
-            debugger
           }
           continue;
         }

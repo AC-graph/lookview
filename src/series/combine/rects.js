@@ -14,7 +14,6 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
       data: $jsonRequired
     },
     link(painter, attr) {
-
       // 获取二维数组每列的和的最大值
       function maxvalue(data) {
         let max = 0;
@@ -29,6 +28,28 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
         }
         return max;
       }
+
+      // rule为数据刻度小区间
+      let rule;
+      // 对rule稍作处理
+      if (maxvalue(attr.data) > 0 && maxvalue(attr.data) < 9) {
+        rule = 0.5;
+        if (Math.ceil(maxvalue(attr.data) / rule) > 10 || Math.ceil(maxvalue(attr.data) / rule) < 4) {
+          for (let j = 0; ; j++) {
+            rule = 0.5 + 0.5 * j;
+            if (Math.ceil(maxvalue(attr.data) / rule) <= 10 && Math.ceil(maxvalue(attr.data) / rule) >= 4) break;
+          }
+        };
+      } else {
+        rule = 2;
+        if (Math.ceil(maxvalue(attr.data) / rule) > 10 || Math.ceil(maxvalue(attr.data) / rule) < 4) {
+          for (let j = 0; ; j++) {
+            rule = 2 + 2 * j;
+            if (Math.ceil(maxvalue(attr.data) / rule) <= 10 && Math.ceil(maxvalue(attr.data) / rule) >= 4) break;
+          }
+        };
+      }
+
       //开始画矩形
       let temp = 5;//temp宽度和数组长度有关，每个小矩形相对于temp居中
       let wid = 1;//每个小矩形的宽度
@@ -36,7 +57,6 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
       temp = attr.width / attr.data[0].length;
       wid = temp / 3;
       tem = (temp - wid) / 2;
-      //开始画矩形
       let arr = [];
       for (let i = 0; i < attr.data.length; i++) {
         for (let j = 0; j < attr.data[i].length; j++) {
@@ -47,9 +67,8 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
             .config({
               fillStyle: attr.colors[i]
             })
-            .fillRect(attr["zero-x"] + tem + temp * j, attr["zero-y"] - (arr[j] + attr.data[i][j]) * (attr.height / maxvalue(attr.data)), wid, attr.data[i][j] * (attr.height / maxvalue(attr.data)));
+            .fillRect(attr["zero-x"] + tem + temp * j, attr["zero-y"] - attr.height * (arr[j] + attr.data[i][j]) / (rule * (Math.ceil(maxvalue(attr.data) / rule))), wid, attr.height * attr.data[i][j] / (rule * (Math.ceil(maxvalue(attr.data) / rule))));
           arr[j] += attr.data[i][j];
-
         }
       }
 
