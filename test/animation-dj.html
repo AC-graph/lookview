@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数据改变的过渡动画</title>
+    <script src="../dist/lookview.js"></script>
+    <link rel="shortcut icon" href="../logo-100.png">
+</head>
+
+<body>
+
+    <div id="root" style='height:1000px'>
+        <rectsgroup l-bind:data="data" l-bind:colors='color' zero-x="calc(50w - 250)" zero-y="600" width="500"
+            height="500" l-on:click='doit'>
+        </rectsgroup>
+        <x-ruler zero-x='calc(50w - 250)' zero-y='600' l-bind:data='datax' width='500' zero='false' drant=1
+            data-type="str"></x-ruler>
+        <y-ruler zero-x='calc(50w - 250)' zero-y='600' l-bind:data='datay' width='500' zero='false' drant=1></y-ruler>
+    </div>
+
+    <script>
+        var lookview = new LookView({
+
+            // 挂载点
+            el: document.getElementById('root'),
+
+            // 数据
+            data: function () {
+                return {
+                    datay: [130, 140, 150, 160, 170, 180],
+                    datax: ["1", "2", "3", "4", "5", "6",],
+                    data: [
+                        [10, 20, 30, 40, 50, 60],
+                        [70, 80, 90, 100, 110, 120],
+                        [130, 140, 150, 160, 170, 180],
+                        [130, 140, 150, 160, 170, 180]
+
+                    ],
+                    color: ['red', 'blue', 'pink', 'yellow']
+
+                };
+            },
+
+            methods: {
+                doit: function () {
+                    console.log('点击了矩形');
+                }
+            }
+
+        });
+
+        console.log(lookview);
+
+        window.lookview = lookview;
+
+    </script>
+</body>
+
+</html>
