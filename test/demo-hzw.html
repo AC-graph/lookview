@@ -20,12 +20,12 @@
         <x-ruler zero-x='5w' zero-y='60h' l-bind:data="data" data-type='str' width='70w'></x-ruler>
         <y-ruler zero-x='5w' zero-y='60h' l-bind:data="data1" data-type='num' width='50h'></y-ruler>
         <rects zero-x='5w' zero-y='60h' width='70w' height='50h' l-bind:data='data2' l-bind:colors='color'></rects>
-        <path type="stroke" close="true">
+        <!-- <path type="stroke" close="true">
             <move-to x="300" y="300"></move-to>
             <line-to l-bind:x="x" l-bind:y="y"></line-to>
             <line-to l-bind:x::demo1="value" l-bind:y::demo1="key" l-for='(value, key) in datalist'></line-to>
             <bezier-to type="3" x="300" y="300" cp1x="250" cp1y="50" cp2x="350" cp2y="50"></bezier-to>
-        </path>
+        </path> -->
     </div>
 
 
@@ -65,7 +65,7 @@
 
 
 
-        console.log(lookview);
+        // console.log(lookview);
 
         window.lookview = lookview;
 
