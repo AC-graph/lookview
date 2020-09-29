@@ -1,7 +1,7 @@
 import $$ from '../../image2D'
 
 // 极坐标刻度尺
-export default ["color.black", "num.one", "num.required", "array.null", "json.required", function ($colorBlack, $numOne, $numRequired, $arrayNull, $jsonRequired) {
+export default ["color.black", "num.one", "num.required", "array.null", "json.required", "bool.true", function ($colorBlack, $numOne, $numRequired, $arrayNull, $jsonRequired, $boolTrue) {
     return {
         attrs: {
             'stroke-color': $colorBlack,
@@ -11,6 +11,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
             'font-family': { type: "string", default: "sans-serif" },
             'text-align': { type: "string", default: 'center' },
             'text-baseline': { type: "string", default: 'middle' },
+            zero: $boolTrue,
             cx: $numRequired,//圆心横坐标
             cy: $numRequired,//圆心纵坐标
             dash: $arrayNull,
@@ -45,7 +46,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                 painter.config({
                     "strokeStyle": attr["stroke-color"],
                     "lineWidth": attr["line-width"]
-                }).beginPath().arc(originX, originY, radius, begin, deg + 0.05 * deg).stroke()
+                }).beginPath().arc(originX, originY, radius, begin, deg + ((deg >= Math.PI * 1.9) ? 0 : (0.05 * deg))).stroke()
                     // 画箭头
                     .moveTo(dd[0], dd[1]).lineTo(dd1[0], dd1[1]).stroke()
                     .moveTo(dd[0], dd[1]).lineTo(dd2[0], dd2[1]).stroke()
@@ -55,7 +56,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                 painter.config({
                     "strokeStyle": attr["stroke-color"],
                     "lineWidth": attr["line-width"]
-                }).beginPath().arc(originX, originY, radius, begin, deg + 0.05 * deg).stroke()
+                }).beginPath().arc(originX, originY, radius, begin, deg + ((deg >= Math.PI * 1.9) ? 0 : (0.05 * deg))).stroke()
                     // 画箭头
                     .moveTo(dd[0], dd[1]).lineTo(dd3[0], dd3[1]).stroke()
                     .moveTo(dd[0], dd[1]).lineTo(dd4[0], dd4[1]).stroke()
@@ -87,8 +88,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                     throw new Error('[LookView error]: Data error! Cannot be all nagative numbers!');
                 }
 
-                for (let i = 0; i <= Math.ceil(max / rule); i++) {
-
+                for (let i = ((deg == Math.PI * 2) ? 1 : 0); i <= Math.ceil(max / rule); i++) {
                     // ddd存放刻度值旋转后的坐标
                     let ddd = [];
                     ddd = $$.rotate(originX, originY, deg * i / Math.ceil(max / rule), originX + (radius + 30) * Math.cos(begin), originY + (radius + 30) * Math.sin(begin))
@@ -99,7 +99,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                         // 画小刻度
                         .fillArc(originX, originY, radius, radius + 6, begin + (deg * i) / Math.ceil(max / rule) - 0.003, 0.006)
                         // 画原点
-                        .fillCircle(originX + radius * Math.cos(begin), originY + radius * Math.sin(begin), 5.5)
+                        .fillCircle(originX + radius * Math.cos(begin), originY + radius * Math.sin(begin), attr.zero ? 5.5 : 0)
 
                     // 画刻度值
                     painter.config({
@@ -125,7 +125,7 @@ export default ["color.black", "num.one", "num.required", "array.null", "json.re
                         // 画小刻度
                         .fillArc(originX, originY, radius, radius + 6, begin + (deg * i) / attr.data.length - 0.003, 0.006)
                         // 画原点
-                        .fillCircle(originX + radius * Math.cos(begin), originY + radius * Math.sin(begin), 5.5)
+                        .fillCircle(originX + radius * Math.cos(begin), originY + radius * Math.sin(begin), attr.zero ? 5.5 : 0)
 
                     // 画刻度值
                     painter.config({
