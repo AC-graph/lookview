@@ -13,7 +13,8 @@
     <div id="root" style='height:1000px'>
         <arcs l-bind:data="data" l-bind:colors='color' cx="300" cy="300" radius="189"></arcs>
 
-        <polar-ruler cx="300" cy="300" l-bind:data="data1" radius="189" begin="0deg" deg='350deg'></polar-ruler>
+        <polar-ruler cx="300" cy="300" l-bind:data="data1" radius="189" begin="0deg" deg='350deg' zero=false>
+        </polar-ruler>
         <x-ruler zero-x='300' zero-y='300' l-bind:data='data0' width='200' zero='false' drant=1></x-ruler>
 
         <path type="stroke" close="true" stroke-color="green" line-width="3">
@@ -24,14 +25,12 @@
             <bezier-to type="3" x="300" y="300" cp1x="50" cp1y="250" cp2x="50" cp2y="350"></bezier-to>
             <bezier-to type="3" x="300" y="300" cp1x::cp1x="45deg" cp1y::cp1y="45deg" cp2x::cp2x="45deg"
                 cp2y::cp2y="45deg"></bezier-to>
-                <bezier-to type="3" x="300" y="300" cp1x::cp1x="135deg" cp1y::cp1y="135deg" cp2x::cp2x="135deg"
+            <bezier-to type="3" x="300" y="300" cp1x::cp1x="135deg" cp1y::cp1y="135deg" cp2x::cp2x="135deg"
                 cp2y::cp2y="135deg"></bezier-to>
-                <bezier-to type="3" x="300" y="300" cp1x::cp1x="225deg" cp1y::cp1y="225deg" cp2x::cp2x="225deg"
+            <bezier-to type="3" x="300" y="300" cp1x::cp1x="225deg" cp1y::cp1y="225deg" cp2x::cp2x="225deg"
                 cp2y::cp2y="225deg"></bezier-to>
-                <bezier-to type="3" x="300" y="300" cp1x::cp1x="315deg" cp1y::cp1y="315deg" cp2x::cp2x="315deg"
+            <bezier-to type="3" x="300" y="300" cp1x::cp1x="315deg" cp1y::cp1y="315deg" cp2x::cp2x="315deg"
                 cp2y::cp2y="315deg"></bezier-to>
-
-
         </path>
     </div>
 
@@ -65,7 +64,7 @@
                         link: function (value) {
                             let rad = 0;
                             rad = Math.tan(50 / 250);
-                            return 300+Math.cos(value - rad) * 255;
+                            return 300 + Math.cos(value - rad) * 255;
                         }
                     };
                 },
@@ -75,17 +74,17 @@
                             let rad = 0;
                             rad = Math.tan(50 / 250);
                             console.log(rad)
-                            return 300-Math.sin(value - rad) * 255;
+                            return 300 - Math.sin(value - rad) * 255;
                         }
                     };
                 },
- 
+
                 cp2x: function () {
                     return {
                         link: function (value) {
                             let rad = 0;
                             rad = Math.tan(50 / 250);
-                            return 300+Math.cos(value + rad) * 255;
+                            return 300 + Math.cos(value + rad) * 255;
                         }
                     };
                 },
@@ -94,7 +93,7 @@
                         link: function (value) {
                             let rad = 0;
                             rad = Math.tan(50 / 250);
-                            return 300-Math.sin(value + rad) * 255;
+                            return 300 - Math.sin(value + rad) * 255;
                         }
                     };
                 }
