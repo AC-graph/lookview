@@ -227,13 +227,13 @@ export function painterMixin(LookView) {
 
             tempRenderArray.push(temp);
           }
-          if (pSeries != 'path') {
-            doit(tempRenderArray, true, pSeries);
-          } else {
+          if (pSeries == 'path') {
             let subAttrsTemp = doit(tempRenderArray, true, pSeries)
-            for (let index=0;index<subAttrsTemp.length;index++){
+            for (let index = 0; index < subAttrsTemp.length; index++) {
               tempSubAttrs.push(subAttrsTemp[index]);
             }
+          } else {
+            doit(tempRenderArray)
           }
           continue;
         }
@@ -383,11 +383,15 @@ export function painterMixin(LookView) {
 
         // 默认认为是普通的图形
         else {
+
           // 如果是内置的子标签，返回拼接成完整的
           // 比如path下的line-to的解析
           if (notPush) {
+
             tempSubAttrs.push(render);
+
           } else {
+
             renderSeries.push(render);
           }
         }

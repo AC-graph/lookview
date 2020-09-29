@@ -3,7 +3,7 @@ import $$ from '../../image2D';
 //根据一组数据画出多个矩形
 //给定坐标原点为zeroX，zeroY
 
-export default ["color.black", "num.required", "num.one", "array.null", "json.required", function ($colorBlack, $numRequired, $numOne, $arrayNull, $jsonRequired) {
+export default [ "num.required","json.required", function ($numRequired, $jsonRequired) {
   return {
     attrs: {
       "zero-x": $numRequired, //坐标原点
