@@ -2,55 +2,54 @@
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>多个矩形测试</title>
-  <script src="../dist/lookview.js"></script>
-  <link rel="shortcut icon" href="../logo-100.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多个矩形测试</title>
+    <script src="../dist/lookview.js"></script>
+    <link rel="shortcut icon" href="../logo-100.png">
 </head>
 
 <body>
 
-  <div id="root" style='height:1000px'>
-    <rectsgroup l-bind:data="data" l-bind:colors='color' zero-x="calc(50w - 250)" zero-y="500" width="500" height="500">
-    </rectsgroup>
-   
-    <x-ruler zero-x='calc(50w - 250)' zero-y='500' l-bind:data='datax' width='500' zero='false' drant=1 data-type="str"></x-ruler>
-    <y-ruler zero-x='calc(50w - 250)' zero-y='500' l-bind:data='datay' width='500' zero='false' drant=1></y-ruler>
-  </div>
+    <div id="root" style='height:1000px'>
+        <rectsgroup l-bind:data="data" l-bind:colors='color' zero-x="calc(50w - 250)" zero-y="500" width="500"
+            height="500">
+        </rectsgroup>
 
-  <script>
+        <x-ruler zero-x='calc(50w - 250)' zero-y='500' l-bind:data='datax' width='500' zero='false' drant=1
+            data-type="str"></x-ruler>
+        <y-ruler zero-x='calc(50w - 250)' zero-y='500' l-bind:data='datay' width='500' zero='false' drant=1></y-ruler>
+    </div>
 
-    var lookview = new LookView({
+    <script>
 
-      // 挂载点
-      el: document.getElementById('root'),
+        var lookview = new LookView({
 
-      // 数据
-      data: function () {
-        return {
-            datay:[130, 140, 150, 160, 170, 180],
-            datax:["周一","一天","天下","下海","海王","王大爷",],
+            // 挂载点
+            el: document.getElementById('root'),
 
-          data: [
-            [10, 20, 30, 40, 50, 60],
-            [70, 80, 90, 100, 110, 120],
-            [130, 140, 150, 160, 170, 180],
-            [130, 140, 150, 160, 170, 180]
-            
-          ],
-          color: ['red', 'blue', 'pink','yellow']
+            // 数据
+            data: function () {
+                return {
+                    datay: [10, 20, 30, 40, 50, 60],
+                    datax: ["周一", "一天", "天下", "下海", "海王", "王大爷"],
 
-        };
-      },
+                    data: [
+                        [10, 20, 30, 40, 50, 60],
+                       
+                    ],
+                    color: ['red', 'blue', 'pink', 'yellow']
 
-    });
+                };
+            },
 
-    console.log(lookview);
+        });
 
-    window.lookview = lookview;
+        console.log(lookview);
 
-  </script>
+        window.lookview = lookview;
+
+    </script>
 </body>
 
 </html>

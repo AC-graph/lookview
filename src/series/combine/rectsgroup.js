@@ -30,10 +30,14 @@ export default ["color.black", "num.required", "num.one", "array.null", "json.re
             let wid = 1;
             //t为一组矩形在temp中占的大位置边上的空白  te为每个矩形之间的距离
             let t = 10, te = 3;
+           
             if (attr.data.length >= 4) {
                 te = 1;
             }
             temp = attr.width / attr.data[0].length;
+             if(attr.data.length<2){
+                t=temp/3;
+            }
             wid = (temp - 2 * t - (attr.data.length - 1) * te) / attr.data.length
             //开始画矩形
             let arr = [];
